@@ -65,6 +65,7 @@ class GameSessionController extends Notifier<GameSession?> {
         gameId: Value(game.id),
         gameType: Value(data.gameType ?? game.gameType ?? ''),
         title: Value(game.title),
+        topic: Value(game.topic),
         difficult: Value(game.difficult),
         experience: Value(game.experience),
         totalQuestions: Value(game.totalQuestions),

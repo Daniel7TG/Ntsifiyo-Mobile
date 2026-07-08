@@ -23,6 +23,17 @@ class DictionaryService {
         : ((response as Map<String, dynamic>)['words'] ?? []) as List;
     return list.whereType<Map<String, dynamic>>().map(Word.fromJson).toList();
   }
+
+  /// GET /api/dictionary/words/{category}?page=#
+  Future<List<Word>> getWordsByCategory(String category,
+      {int page = 0}) async {
+    final response = await _api
+        .get('/api/dictionary/words/${Uri.encodeComponent(category)}?page=$page');
+    final list = response is List
+        ? response
+        : ((response as Map<String, dynamic>)['words'] ?? []) as List;
+    return list.whereType<Map<String, dynamic>>().map(Word.fromJson).toList();
+  }
 }
 
 /// Mirror de client/src/services/MediaService.js (lectura).

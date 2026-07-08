@@ -221,6 +221,7 @@ class GameSummaryDto {
   final String? description;
   final String? difficult;
   final String? gameType;
+  final String? topic;
   final int? experience;
   final int? totalQuestions;
   final List<GameConfig> gameConfigs;
@@ -231,6 +232,7 @@ class GameSummaryDto {
     this.description,
     this.difficult,
     this.gameType,
+    this.topic,
     this.experience,
     this.totalQuestions,
     this.gameConfigs = const [],
@@ -243,6 +245,7 @@ class GameSummaryDto {
         description: json['description'] as String?,
         difficult: json['difficult'] as String?,
         gameType: (json['gameType'] ?? json['type']) as String?,
+        topic: (json['topic'] ?? json['gameTopic']) as String?,
         experience: _asInt(json['experience']),
         totalQuestions: _asInt(json['totalQuestions']),
         gameConfigs:
@@ -258,6 +261,7 @@ class GameSummaryDto {
         'description': description,
         'difficult': difficult,
         'gameType': gameType,
+        'topic': topic,
         'experience': experience,
         'totalQuestions': totalQuestions,
         'gameConfigDTO': gameConfigs.map((c) => c.toJson()).toList(),

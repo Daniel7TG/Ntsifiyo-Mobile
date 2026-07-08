@@ -10,6 +10,7 @@ class CachedGames extends Table {
   IntColumn get gameId => integer()();
   TextColumn get gameType => text()();
   TextColumn get title => text()();
+  TextColumn get topic => text().nullable()();
   TextColumn get difficult => text().nullable()();
   IntColumn get experience => integer().nullable()();
   IntColumn get totalQuestions => integer().nullable()();
@@ -71,6 +72,9 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<CachedGame>> cachedGamesByType(String type) =>
       (select(cachedGames)..where((g) => g.gameType.equals(type))).get();
+
+  Future<List<CachedGame>> cachedGamesByTopic(String topic) =>
+      (select(cachedGames)..where((g) => g.topic.equals(topic))).get();
 
   Future<CachedGame?> cachedGame(int gameId) =>
       (select(cachedGames)..where((g) => g.gameId.equals(gameId)))

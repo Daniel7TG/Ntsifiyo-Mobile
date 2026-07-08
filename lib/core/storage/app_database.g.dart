@@ -38,6 +38,15 @@ class $CachedGamesTable extends CachedGames
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _topicMeta = const VerificationMeta('topic');
+  @override
+  late final GeneratedColumn<String> topic = GeneratedColumn<String>(
+    'topic',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _difficultMeta = const VerificationMeta(
     'difficult',
   );
@@ -98,6 +107,7 @@ class $CachedGamesTable extends CachedGames
     gameId,
     gameType,
     title,
+    topic,
     difficult,
     experience,
     totalQuestions,
@@ -137,6 +147,12 @@ class $CachedGamesTable extends CachedGames
       );
     } else if (isInserting) {
       context.missing(_titleMeta);
+    }
+    if (data.containsKey('topic')) {
+      context.handle(
+        _topicMeta,
+        topic.isAcceptableOrUnknown(data['topic']!, _topicMeta),
+      );
     }
     if (data.containsKey('difficult')) {
       context.handle(
@@ -199,6 +215,10 @@ class $CachedGamesTable extends CachedGames
         DriftSqlType.string,
         data['${effectivePrefix}title'],
       )!,
+      topic: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}topic'],
+      ),
       difficult: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}difficult'],
@@ -232,6 +252,7 @@ class CachedGame extends DataClass implements Insertable<CachedGame> {
   final int gameId;
   final String gameType;
   final String title;
+  final String? topic;
   final String? difficult;
   final int? experience;
   final int? totalQuestions;
@@ -241,6 +262,7 @@ class CachedGame extends DataClass implements Insertable<CachedGame> {
     required this.gameId,
     required this.gameType,
     required this.title,
+    this.topic,
     this.difficult,
     this.experience,
     this.totalQuestions,
@@ -253,6 +275,9 @@ class CachedGame extends DataClass implements Insertable<CachedGame> {
     map['game_id'] = Variable<int>(gameId);
     map['game_type'] = Variable<String>(gameType);
     map['title'] = Variable<String>(title);
+    if (!nullToAbsent || topic != null) {
+      map['topic'] = Variable<String>(topic);
+    }
     if (!nullToAbsent || difficult != null) {
       map['difficult'] = Variable<String>(difficult);
     }
@@ -272,6 +297,9 @@ class CachedGame extends DataClass implements Insertable<CachedGame> {
       gameId: Value(gameId),
       gameType: Value(gameType),
       title: Value(title),
+      topic: topic == null && nullToAbsent
+          ? const Value.absent()
+          : Value(topic),
       difficult: difficult == null && nullToAbsent
           ? const Value.absent()
           : Value(difficult),
@@ -295,6 +323,7 @@ class CachedGame extends DataClass implements Insertable<CachedGame> {
       gameId: serializer.fromJson<int>(json['gameId']),
       gameType: serializer.fromJson<String>(json['gameType']),
       title: serializer.fromJson<String>(json['title']),
+      topic: serializer.fromJson<String?>(json['topic']),
       difficult: serializer.fromJson<String?>(json['difficult']),
       experience: serializer.fromJson<int?>(json['experience']),
       totalQuestions: serializer.fromJson<int?>(json['totalQuestions']),
@@ -309,6 +338,7 @@ class CachedGame extends DataClass implements Insertable<CachedGame> {
       'gameId': serializer.toJson<int>(gameId),
       'gameType': serializer.toJson<String>(gameType),
       'title': serializer.toJson<String>(title),
+      'topic': serializer.toJson<String?>(topic),
       'difficult': serializer.toJson<String?>(difficult),
       'experience': serializer.toJson<int?>(experience),
       'totalQuestions': serializer.toJson<int?>(totalQuestions),
@@ -321,6 +351,7 @@ class CachedGame extends DataClass implements Insertable<CachedGame> {
     int? gameId,
     String? gameType,
     String? title,
+    Value<String?> topic = const Value.absent(),
     Value<String?> difficult = const Value.absent(),
     Value<int?> experience = const Value.absent(),
     Value<int?> totalQuestions = const Value.absent(),
@@ -330,6 +361,7 @@ class CachedGame extends DataClass implements Insertable<CachedGame> {
     gameId: gameId ?? this.gameId,
     gameType: gameType ?? this.gameType,
     title: title ?? this.title,
+    topic: topic.present ? topic.value : this.topic,
     difficult: difficult.present ? difficult.value : this.difficult,
     experience: experience.present ? experience.value : this.experience,
     totalQuestions: totalQuestions.present
@@ -343,6 +375,7 @@ class CachedGame extends DataClass implements Insertable<CachedGame> {
       gameId: data.gameId.present ? data.gameId.value : this.gameId,
       gameType: data.gameType.present ? data.gameType.value : this.gameType,
       title: data.title.present ? data.title.value : this.title,
+      topic: data.topic.present ? data.topic.value : this.topic,
       difficult: data.difficult.present ? data.difficult.value : this.difficult,
       experience: data.experience.present
           ? data.experience.value
@@ -363,6 +396,7 @@ class CachedGame extends DataClass implements Insertable<CachedGame> {
           ..write('gameId: $gameId, ')
           ..write('gameType: $gameType, ')
           ..write('title: $title, ')
+          ..write('topic: $topic, ')
           ..write('difficult: $difficult, ')
           ..write('experience: $experience, ')
           ..write('totalQuestions: $totalQuestions, ')
@@ -377,6 +411,7 @@ class CachedGame extends DataClass implements Insertable<CachedGame> {
     gameId,
     gameType,
     title,
+    topic,
     difficult,
     experience,
     totalQuestions,
@@ -390,6 +425,7 @@ class CachedGame extends DataClass implements Insertable<CachedGame> {
           other.gameId == this.gameId &&
           other.gameType == this.gameType &&
           other.title == this.title &&
+          other.topic == this.topic &&
           other.difficult == this.difficult &&
           other.experience == this.experience &&
           other.totalQuestions == this.totalQuestions &&
@@ -401,6 +437,7 @@ class CachedGamesCompanion extends UpdateCompanion<CachedGame> {
   final Value<int> gameId;
   final Value<String> gameType;
   final Value<String> title;
+  final Value<String?> topic;
   final Value<String?> difficult;
   final Value<int?> experience;
   final Value<int?> totalQuestions;
@@ -410,6 +447,7 @@ class CachedGamesCompanion extends UpdateCompanion<CachedGame> {
     this.gameId = const Value.absent(),
     this.gameType = const Value.absent(),
     this.title = const Value.absent(),
+    this.topic = const Value.absent(),
     this.difficult = const Value.absent(),
     this.experience = const Value.absent(),
     this.totalQuestions = const Value.absent(),
@@ -420,6 +458,7 @@ class CachedGamesCompanion extends UpdateCompanion<CachedGame> {
     this.gameId = const Value.absent(),
     required String gameType,
     required String title,
+    this.topic = const Value.absent(),
     this.difficult = const Value.absent(),
     this.experience = const Value.absent(),
     this.totalQuestions = const Value.absent(),
@@ -433,6 +472,7 @@ class CachedGamesCompanion extends UpdateCompanion<CachedGame> {
     Expression<int>? gameId,
     Expression<String>? gameType,
     Expression<String>? title,
+    Expression<String>? topic,
     Expression<String>? difficult,
     Expression<int>? experience,
     Expression<int>? totalQuestions,
@@ -443,6 +483,7 @@ class CachedGamesCompanion extends UpdateCompanion<CachedGame> {
       if (gameId != null) 'game_id': gameId,
       if (gameType != null) 'game_type': gameType,
       if (title != null) 'title': title,
+      if (topic != null) 'topic': topic,
       if (difficult != null) 'difficult': difficult,
       if (experience != null) 'experience': experience,
       if (totalQuestions != null) 'total_questions': totalQuestions,
@@ -455,6 +496,7 @@ class CachedGamesCompanion extends UpdateCompanion<CachedGame> {
     Value<int>? gameId,
     Value<String>? gameType,
     Value<String>? title,
+    Value<String?>? topic,
     Value<String?>? difficult,
     Value<int?>? experience,
     Value<int?>? totalQuestions,
@@ -465,6 +507,7 @@ class CachedGamesCompanion extends UpdateCompanion<CachedGame> {
       gameId: gameId ?? this.gameId,
       gameType: gameType ?? this.gameType,
       title: title ?? this.title,
+      topic: topic ?? this.topic,
       difficult: difficult ?? this.difficult,
       experience: experience ?? this.experience,
       totalQuestions: totalQuestions ?? this.totalQuestions,
@@ -484,6 +527,9 @@ class CachedGamesCompanion extends UpdateCompanion<CachedGame> {
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
+    }
+    if (topic.present) {
+      map['topic'] = Variable<String>(topic.value);
     }
     if (difficult.present) {
       map['difficult'] = Variable<String>(difficult.value);
@@ -509,6 +555,7 @@ class CachedGamesCompanion extends UpdateCompanion<CachedGame> {
           ..write('gameId: $gameId, ')
           ..write('gameType: $gameType, ')
           ..write('title: $title, ')
+          ..write('topic: $topic, ')
           ..write('difficult: $difficult, ')
           ..write('experience: $experience, ')
           ..write('totalQuestions: $totalQuestions, ')
@@ -1369,6 +1416,7 @@ typedef $$CachedGamesTableCreateCompanionBuilder =
       Value<int> gameId,
       required String gameType,
       required String title,
+      Value<String?> topic,
       Value<String?> difficult,
       Value<int?> experience,
       Value<int?> totalQuestions,
@@ -1380,6 +1428,7 @@ typedef $$CachedGamesTableUpdateCompanionBuilder =
       Value<int> gameId,
       Value<String> gameType,
       Value<String> title,
+      Value<String?> topic,
       Value<String?> difficult,
       Value<int?> experience,
       Value<int?> totalQuestions,
@@ -1408,6 +1457,11 @@ class $$CachedGamesTableFilterComposer
 
   ColumnFilters<String> get title => $composableBuilder(
     column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get topic => $composableBuilder(
+    column: $table.topic,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1461,6 +1515,11 @@ class $$CachedGamesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get topic => $composableBuilder(
+    column: $table.topic,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get difficult => $composableBuilder(
     column: $table.difficult,
     builder: (column) => ColumnOrderings(column),
@@ -1504,6 +1563,9 @@ class $$CachedGamesTableAnnotationComposer
 
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get topic =>
+      $composableBuilder(column: $table.topic, builder: (column) => column);
 
   GeneratedColumn<String> get difficult =>
       $composableBuilder(column: $table.difficult, builder: (column) => column);
@@ -1561,6 +1623,7 @@ class $$CachedGamesTableTableManager
                 Value<int> gameId = const Value.absent(),
                 Value<String> gameType = const Value.absent(),
                 Value<String> title = const Value.absent(),
+                Value<String?> topic = const Value.absent(),
                 Value<String?> difficult = const Value.absent(),
                 Value<int?> experience = const Value.absent(),
                 Value<int?> totalQuestions = const Value.absent(),
@@ -1570,6 +1633,7 @@ class $$CachedGamesTableTableManager
                 gameId: gameId,
                 gameType: gameType,
                 title: title,
+                topic: topic,
                 difficult: difficult,
                 experience: experience,
                 totalQuestions: totalQuestions,
@@ -1581,6 +1645,7 @@ class $$CachedGamesTableTableManager
                 Value<int> gameId = const Value.absent(),
                 required String gameType,
                 required String title,
+                Value<String?> topic = const Value.absent(),
                 Value<String?> difficult = const Value.absent(),
                 Value<int?> experience = const Value.absent(),
                 Value<int?> totalQuestions = const Value.absent(),
@@ -1590,6 +1655,7 @@ class $$CachedGamesTableTableManager
                 gameId: gameId,
                 gameType: gameType,
                 title: title,
+                topic: topic,
                 difficult: difficult,
                 experience: experience,
                 totalQuestions: totalQuestions,
