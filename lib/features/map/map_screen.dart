@@ -22,6 +22,9 @@ class _Zone {
   final double x, y, w, h;
 
   const _Zone(this.id, this.label, this.img, this.x, this.y, this.w, this.h);
+
+  bool contains(double mx, double my) =>
+      mx >= x && mx <= x + w && my >= y && my <= y + h;
 }
 
 /// Zonas del mapa con coordenadas sobre la imagen base (de GameMap.jsx).
@@ -78,68 +81,37 @@ final gamesByTopicProvider = FutureProvider.autoDispose
   }
 });
 
-/// Mapa interactivo por zonas (mirror móvil de GameMap.jsx).
-class MapScreen extends ConsumerWidget {
+/// Mapa interactivo por zonas, rotado 90° para aprovechar toda la pantalla
+/// en vertical. Un solo GestureDetector resuelve la zona tocada por
+/// coordenadas (más confiable que apilar detectores dentro del zoom).
+class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(title: const Text('Mapa de Aventuras')),
-      body: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              'Toca una zona del mapa para explorar sus juegos',
-              style: TextStyle(
-                  fontWeight: FontWeight.w600, color: AppColors.textMuted),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: InteractiveViewer(
-              maxScale: 4,
-              minScale: 1,
-              child: Center(
-                child: AspectRatio(
-                  aspectRatio: _mapW / _mapH,
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final scaleX = constraints.maxWidth / _mapW;
-                      final scaleY = constraints.maxHeight / _mapH;
-                      return Stack(
-                        children: [
-                          Positioned.fill(
-                            child: Image.asset('assets/map/map.webp',
-                                fit: BoxFit.fill),
-                          ),
-                          for (final zone in _zones)
-                            Positioned(
-                              left: zone.x * scaleX,
-                              top: zone.y * scaleY,
-                              width: zone.w * scaleX,
-                              height: zone.h * scaleY,
-                              child: GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: () => _openZone(context, zone),
-                              ),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+  ConsumerState<MapScreen> createState() => _MapScreenState();
+}
+
+class _MapScreenState extends ConsumerState<MapScreen> {
+  String? _highlightedZone;
+
+  void _onTapMap(Offset local, Size displaySize) {
+    final mx = local.dx / displaySize.width * _mapW;
+    final my = local.dy / displaySize.height * _mapH;
+
+    for (final zone in _zones) {
+      if (zone.contains(mx, my)) {
+        setState(() => _highlightedZone = zone.id);
+        Future.delayed(const Duration(milliseconds: 150), () {
+          if (!mounted) return;
+          setState(() => _highlightedZone = null);
+          _openZone(zone);
+        });
+        return;
+      }
+    }
   }
 
-  void _openZone(BuildContext context, _Zone zone) {
+  void _openZone(_Zone zone) {
     final topics = _topicsByZone[zone.id] ?? [];
     showModalBottomSheet(
       context: context,
@@ -149,6 +121,146 @@ class MapScreen extends ConsumerWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) => _ZoneSheet(zone: zone, topics: topics),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        title: const Text('Mapa de Aventuras'),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: Center(
+              child: Text(
+                'Toca una zona 👆',
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textMuted),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // Rotado 90°: el eje largo del mapa corre a lo largo del teléfono.
+          final viewportW = constraints.maxHeight; // ancho tras rotación
+          final viewportH = constraints.maxWidth; // alto tras rotación
+
+          // Llenar el alto disponible del viewport rotado; el resto se
+          // recorre con pan/zoom.
+          var displayH = viewportH;
+          var displayW = displayH * (_mapW / _mapH);
+          if (displayW < viewportW) {
+            displayW = viewportW;
+            displayH = displayW * (_mapH / _mapW);
+          }
+          final displaySize = Size(displayW, displayH);
+
+          return RotatedBox(
+            quarterTurns: 1,
+            child: InteractiveViewer(
+              constrained: false,
+              minScale: 0.8,
+              maxScale: 4,
+              boundaryMargin: const EdgeInsets.all(40),
+              child: SizedBox(
+                width: displayW,
+                height: displayH,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTapUp: (details) =>
+                      _onTapMap(details.localPosition, displaySize),
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Image.asset('assets/map/map.webp',
+                            fit: BoxFit.fill),
+                      ),
+
+                      // Resaltado de la zona tocada
+                      for (final zone in _zones)
+                        if (_highlightedZone == zone.id)
+                          Positioned(
+                            left: zone.x / _mapW * displayW,
+                            top: zone.y / _mapH * displayH,
+                            width: zone.w / _mapW * displayW,
+                            height: zone.h / _mapH * displayH,
+                            child: IgnorePointer(
+                              child: Image.asset(zone.img,
+                                  fit: BoxFit.fill),
+                            ),
+                          ),
+
+                      // Etiquetas de zona (contra-rotadas para leerse
+                      // derechas con el teléfono en vertical)
+                      for (final zone in _zones)
+                        Positioned(
+                          left: (zone.x + zone.w / 2) / _mapW * displayW - 44,
+                          top: (zone.y + zone.h / 2) / _mapH * displayH - 16,
+                          child: IgnorePointer(
+                            child: RotatedBox(
+                              quarterTurns: 3,
+                              child: _ZoneLabel(zone: zone),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ZoneLabel extends StatelessWidget {
+  final _Zone zone;
+  const _ZoneLabel({required this.zone});
+
+  @override
+  Widget build(BuildContext context) {
+    final hasGames = (_topicsByZone[zone.id] ?? []).isNotEmpty;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.92),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: hasGames ? AppColors.primary : AppColors.border,
+          width: 2,
+        ),
+        boxShadow: const [
+          BoxShadow(color: Color(0x33000000), offset: Offset(0, 2)),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            hasGames ? Icons.sports_esports : Icons.construction,
+            size: 14,
+            color: hasGames ? AppColors.primary : AppColors.textLight,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            zone.label,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w800,
+              fontSize: 12,
+              color: hasGames ? AppColors.textMain : AppColors.textLight,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

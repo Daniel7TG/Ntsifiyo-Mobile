@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/activity_config.dart';
 import '../../app/theme.dart';
 import '../../shared/widgets/kid_card.dart';
 
-/// Cuadrícula de los 10 juegos (equivalente a la navegación de juegos web).
+/// Cuadrícula de los 10 juegos con tarjetas propias (ícono material +
+/// color del juego), sin SVGs.
 class GamesHubScreen extends StatelessWidget {
   const GamesHubScreen({super.key});
 
@@ -21,22 +21,37 @@ class GamesHubScreen extends StatelessWidget {
           crossAxisCount: 2,
           mainAxisSpacing: 14,
           crossAxisSpacing: 14,
-          childAspectRatio: 0.92,
+          childAspectRatio: 0.95,
         ),
         itemCount: playableGameTypes.length,
         itemBuilder: (context, index) {
           final info = activityConfig[playableGameTypes[index]]!;
           return KidCard(
             accentColor: info.color,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(14),
             onTap: () => context.go('/juegos/${info.id}'),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child: SvgPicture.asset(info.svgAsset),
+                // Insignia circular del juego
+                Container(
+                  width: 68,
+                  height: 68,
+                  decoration: BoxDecoration(
+                    color: info.color,
+                    shape: BoxShape.circle,
+                    border:
+                        Border.all(color: darken(info.color, 0.15), width: 3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: darken(info.color, 0.3),
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Icon(info.icon, color: Colors.white, size: 34),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Text(
                   info.title,
                   textAlign: TextAlign.center,
@@ -45,14 +60,15 @@ class GamesHubScreen extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.w800,
-                    fontSize: 14,
+                    fontSize: 15,
                     color: info.color,
                   ),
                 ),
+                const SizedBox(height: 2),
                 Text(
                   info.subtitle,
                   textAlign: TextAlign.center,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 11,
