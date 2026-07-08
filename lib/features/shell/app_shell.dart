@@ -4,31 +4,70 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/theme.dart';
 import '../../core/connectivity/connectivity_service.dart';
+import '../../core/sync/game_cache_service.dart';
+import '../../core/sync/sync_service.dart';
 import '../../shared/widgets/states.dart';
+import '../dashboard/dashboard_providers.dart';
+import '../sync/sync_summary_sheet.dart';
 
 /// Shell principal con bottom navigation (reemplaza el sidebar de la web).
-class AppShell extends ConsumerWidget {
+/// También orquesta el modo offline: dispara la sincronización de resultados
+/// pendientes y el precacheo de juegos cuando hay conexión.
+class AppShell extends ConsumerStatefulWidget {
   final StatefulNavigationShell navigationShell;
 
   const AppShell({super.key, required this.navigationShell});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends ConsumerState<AppShell> {
+  @override
+  void initState() {
+    super.initState();
+    // Al entrar (post-login): sincronizar pendientes y cachear juegos.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(syncControllerProvider.notifier).trySync();
+      ref.read(gameCacheServiceProvider).cacheAllGames();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final isOnline = ref.watch(isOnlineProvider);
+
+    // Mostrar el resumen de sincronización cuando esté listo.
+    ref.listen(syncControllerProvider, (previous, summary) async {
+      if (summary != null && mounted) {
+        ref.read(syncControllerProvider.notifier).dismissSummary();
+        // El progreso cambió en el backend: refrescar dashboard.
+        ref.invalidate(dashboardProvider);
+        await showSyncSummarySheet(context, summary);
+      }
+    });
+
+    // Al recuperar conexión, reintentar el caché de juegos.
+    ref.listen(connectivityStreamProvider, (previous, next) {
+      if (next.value == true && previous?.value == false) {
+        ref.read(gameCacheServiceProvider).cacheAllGames();
+      }
+    });
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Column(
         children: [
-          if (!isOnline) SafeArea(bottom: false, child: const OfflineBanner()),
-          Expanded(child: navigationShell),
+          if (!isOnline)
+            const SafeArea(bottom: false, child: OfflineBanner()),
+          Expanded(child: widget.navigationShell),
         ],
       ),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) => navigationShell.goBranch(
+        selectedIndex: widget.navigationShell.currentIndex,
+        onDestinationSelected: (index) => widget.navigationShell.goBranch(
           index,
-          initialLocation: index == navigationShell.currentIndex,
+          initialLocation: index == widget.navigationShell.currentIndex,
         ),
         backgroundColor: Colors.white,
         indicatorColor: AppColors.primary.withValues(alpha: 0.12),

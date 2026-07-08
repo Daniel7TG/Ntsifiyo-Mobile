@@ -1,13 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 
 import '../../core/storage/app_database.dart';
+import '../../core/sync/asset_preloader.dart';
 import '../../data/models/models.dart';
 import '../../data/services/activity_service.dart';
 
@@ -59,7 +56,7 @@ class GameSessionController extends Notifier<GameSession?> {
     bool offline = false;
     try {
       data = await _service.startGame(game.id);
-      data = await _preloadAssets(data);
+      data = await preloadGameAssets(data);
       // Refrescar el caché offline con el contenido más reciente.
       await _db.upsertCachedGame(CachedGamesCompanion(
         gameId: Value(game.id),
@@ -93,7 +90,7 @@ class GameSessionController extends Notifier<GameSession?> {
   /// Inicia una actividad asignada (POST start/{activityId}). Solo online.
   Future<GameSession> startFromAssignment(int activityId) async {
     var data = await _service.startAssignedActivity(activityId);
-    data = await _preloadAssets(data);
+    data = await preloadGameAssets(data);
     final session = GameSession(
       gameId: activityId,
       data: data,
@@ -119,72 +116,6 @@ class GameSessionController extends Notifier<GameSession?> {
   }
 
   void clear() => state = null;
-
-  /// Descarga imágenes/audio referenciados a disco y reescribe las URLs
-  /// (equivalente persistente del preloadAssets de GameAccessPanel.jsx).
-  Future<GameData> _preloadAssets(GameData data) async {
-    final dir = await getApplicationSupportDirectory();
-    final mediaDir = Directory(p.join(dir.path, 'game_media'));
-    if (!mediaDir.existsSync()) mediaDir.createSync(recursive: true);
-    final dio = Dio();
-    final cache = <String, String>{};
-
-    Future<String?> localize(String? url) async {
-      if (url == null || url.isEmpty || !url.startsWith('http')) return url;
-      if (cache.containsKey(url)) return cache[url];
-      final name = url.hashCode.toRadixString(16) +
-          p.extension(Uri.parse(url).path);
-      final file = File(p.join(mediaDir.path, name));
-      if (!file.existsSync()) {
-        try {
-          await dio.download(url, file.path);
-        } catch (_) {
-          return url; // sin conexión o error: dejar URL remota
-        }
-      }
-      cache[url] = file.path;
-      return file.path;
-    }
-
-    Future<Word> localizeWord(Word w) async => w.copyWith(
-          imageUrl: await localize(w.imageUrl),
-          audioUrl: await localize(w.audioUrl),
-        );
-
-    final words = [for (final w in data.words) await localizeWord(w)];
-    final questions = <Question>[];
-    for (final q in data.questions) {
-      final answers = <Answer>[];
-      for (final a in q.responseList) {
-        answers.add(Answer(
-          id: a.id,
-          answerText: a.answerText,
-          isCorrect: a.isCorrect,
-          wordId: a.wordId,
-          word: a.word != null ? await localizeWord(a.word!) : null,
-        ));
-      }
-      questions.add(Question(
-        id: q.id,
-        question: q.question,
-        responseList: answers,
-        word: q.word != null ? await localizeWord(q.word!) : null,
-      ));
-    }
-
-    return GameData(
-      activityId: data.activityId,
-      gameType: data.gameType,
-      title: data.title,
-      difficult: data.difficult,
-      experience: data.experience,
-      totalQuestions: data.totalQuestions,
-      questions: questions,
-      words: words,
-      gameConfigs: data.gameConfigs,
-      mediaId: data.mediaId,
-    );
-  }
 
   /// Envía el resultado (o lo encola si no hay red).
   /// Devuelve el RewardResult, o null si quedó pendiente de sincronizar.
