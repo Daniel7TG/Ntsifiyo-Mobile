@@ -24,7 +24,7 @@ try:
 except ImportError:
     Image = None
 
-API = "https://mild-donella-daniel7g-b3e46241.koyeb.app"
+API = "https://ntsifiyo-ltolw.ondigitalocean.app"
 OUT_DIR = os.path.join(os.path.dirname(__file__), "..", "assets", "dictionary")
 IMG_DIR = os.path.join(OUT_DIR, "img")
 AUDIO_DIR = os.path.join(OUT_DIR, "audio")
@@ -85,7 +85,13 @@ def main():
     for category in categories:
         page = 0
         while True:
-            data = api_get(f"/api/dictionary/words/{category}?page={page}", args.token)
+            try:
+                data = api_get(f"/api/dictionary/words/{category}?page={page}", args.token)
+            except requests.HTTPError as e:
+                # El backend responde 404 al pasar la última página
+                if e.response is not None and e.response.status_code == 404:
+                    break
+                raise
             words = data.get("words", data if isinstance(data, list) else [])
             if not words:
                 break

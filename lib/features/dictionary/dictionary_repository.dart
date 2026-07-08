@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import '../../core/api/api_client.dart';
 import '../../data/models/models.dart';
 import '../../data/services/misc_services.dart';
 
@@ -44,12 +45,17 @@ class DictionaryRepository {
       final wordsByCategory = <String, List<Word>>{};
       for (final category in categories) {
         final words = <Word>[];
-        // Recorrer páginas hasta que una venga vacía.
+        // Recorrer páginas; el backend responde 404 al pasar la última.
         for (var page = 0; page < 50; page++) {
-          final pageWords =
-              await _service.getWordsByCategory(category, page: page);
-          words.addAll(pageWords);
-          if (pageWords.isEmpty) break;
+          try {
+            final pageWords =
+                await _service.getWordsByCategory(category, page: page);
+            if (pageWords.isEmpty) break;
+            words.addAll(pageWords);
+          } on ApiException catch (e) {
+            if (e.status == 404) break;
+            rethrow;
+          }
         }
         wordsByCategory[category] = words;
       }

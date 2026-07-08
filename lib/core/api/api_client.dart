@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../storage/session_store.dart';
 
-/// Backend Spring en Koyeb (mismo de la web, client/src/services/apiConfig.js).
+/// Backend Spring en DigitalOcean (mismo que usa la web vía client/.env).
 const apiBaseUrl = String.fromEnvironment(
   'API_URL',
-  defaultValue: 'https://mild-donella-daniel7g-b3e46241.koyeb.app',
+  defaultValue: 'https://ntsifiyo-ltolw.ondigitalocean.app',
 );
 
 /// Error de API con mensaje legible en español (mirror de handleResponse de la web).
