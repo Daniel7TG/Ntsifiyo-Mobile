@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <!-- Sombras profundas para el estilo isométrico flotante -->
+    <filter id="iso-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="5" flood-color="#4C1D95" flood-opacity="0.25"/>
+    </filter>
+
+    <!-- Resplandor de selección correcta -->
+    <filter id="neon-glow-green" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Gradientes -->
+    <linearGradient id="mainCardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED" />
+      <stop offset="100%" stop-color="#4C1D95" />
+    </linearGradient>
+
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#F5F3FF" stop-opacity="0.75" />
+    </linearGradient>
+
+    <linearGradient id="correctGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+  </defs>
+
+  <!-- Grupo completo con perspectiva, rotación y centrado corregido (translate 70, 68) -->
+  <g transform="translate(70, 68) scale(0.9, 0.75) rotate(-30)" filter="url(#iso-shadow)">
+    
+    <!-- 1. Tarjeta Trasera (La Pregunta) -->
+    <g transform="translate(-15, -35)">
+      <!-- Panel de pregunta principal -->
+      <rect x="-25" y="-30" width="50" height="50" rx="8" fill="url(#mainCardGrad)" stroke="#A78BFA" stroke-width="1.5" />
+      <!-- Brillo/Bisel de la tarjeta -->
+      <rect x="-23" y="-28" width="46" height="46" rx="6" fill="none" stroke="#C084FC" stroke-width="1" opacity="0.5" />
+      
+      <!-- Signo de interrogación grande en la tarjeta -->
+      <text x="0" y="7" font-family="system-ui, sans-serif" font-size="28" font-weight="900" fill="#FFFFFF" text-anchor="middle">?</text>
+    </g>
+
+    <!-- 2. Opciones de Respuesta flotando en frente (Simulando Quiz) -->
+    
+    <!-- Opción C (Abajo/Atrás, estado normal) -->
+    <g transform="translate(0, 28)">
+      <rect x="-35" y="-8" width="70" height="16" rx="8" fill="url(#glassGrad)" stroke="#DDD6FE" stroke-width="1.5" />
+      <circle cx="-27" cy="0" r="4" fill="#94A3B8" />
+      <rect x="-18" y="-3" width="36" height="5" rx="2.5" fill="#CBD5E1" />
+    </g>
+
+    <!-- Opción A (Arriba/Medio, estado incorrecto) -->
+    <g transform="translate(-8, -2)">
+      <rect x="-35" y="-8" width="70" height="16" rx="8" fill="url(#glassGrad)" stroke="#EF4444" stroke-width="1.5" stroke-opacity="0.8" />
+      <!-- Círculo indicador con cruz roja -->
+      <circle cx="-27" cy="0" r="4.5" fill="#EF4444" />
+      <path d="M-29,-2 L-25,2 M-25,-2 L-29,2" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" />
+      <!-- Texto simulado -->
+      <rect x="-18" y="-3" width="40" height="5" rx="2.5" fill="#FDA4AF" />
+    </g>
+
+    <!-- Opción B (Centro/Frente, estado Seleccionado Correcto) -->
+    <!-- Desplazado ligeramente hacia la derecha y arriba para simular click/elevación -->
+    <g transform="translate(10, 13)" filter="url(#neon-glow-green)">
+      <!-- Fondo verde brillante -->
+      <rect x="-35" y="-8" width="70" height="16" rx="8" fill="url(#correctGrad)" stroke="#34D399" stroke-width="2" />
+      
+      <!-- Círculo indicador con palomita blanca -->
+      <circle cx="-27" cy="0" r="5" fill="#FFFFFF" />
+      <path d="M-29,-0.5 L-27,1.5 L-24,-1.5" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      
+      <!-- Texto simulado de la opción correcta -->
+      <rect x="-18" y="-3" width="44" height="6" rx="3" fill="#FFFFFF" />
+    </g>
+  </g>
+
+  <!-- Pequeños destellos decorativos flotantes de éxito -->
+  <g fill="#FBBF24" opacity="0.9">
+    <path d="M 85,15 L 87,18 L 90,19 L 87,20 L 85,23 L 83,20 L 80,19 L 83,18 Z" />
+    <path d="M 22,85 L 24,88 L 27,89 L 24,90 L 22,93 L 20,90 L 17,89 L 20,88 Z" transform="scale(0.8)" />
+  </g>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="100%" height="100%">
+  <defs>
+    <!-- Gradiente de fondo -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE4E6" />
+      <stop offset="100%" stop-color="#FECDD3" />
+    </linearGradient>
+    <!-- Gradiente del libro -->
+    <linearGradient id="bookGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E11D48" />
+      <stop offset="100%" stop-color="#BE123C" />
+    </linearGradient>
+    <!-- Gradiente de la página blanca -->
+    <linearGradient id="pageGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F1F5F9" />
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo circular -->
+  <circle cx="32" cy="32" r="30" fill="url(#bgGrad)" />
+
+  <!-- Libro abierto con diálogos flotantes (Anécdotas/Historias) -->
+  <g transform="translate(32, 34)" filter="drop-shadow(0px 3px 2px rgba(190, 18, 60, 0.2))">
+    <!-- Pasta del libro (Libro abierto) -->
+    <path d="M-20,6 C-14,8 -6,6 0,0 C6,6 14,8 20,6 L22,-10 C16,-8 8,-10 0,-14 C-8,-10 -16,-8 -22,-10 Z" fill="url(#bookGrad)" />
+    
+    <!-- Páginas izquierdas -->
+    <path d="M-19,4 C-13,6 -6,4 0,-1 L-1,-11 C-7,-8 -14,-10 -20,-12 Z" fill="url(#pageGrad)" />
+    <!-- Páginas derechas -->
+    <path d="M19,4 C13,6 6,4 0,-1 L1,-11 C7,-8 14,-10 20,-12 Z" fill="url(#pageGrad)" />
+
+    <!-- Líneas de texto simuladas en las páginas -->
+    <line x1="-15" y1="-7" x2="-5" y2="-5" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round" />
+    <line x1="-15" y1="-3" x2="-7" y2="-1" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round" />
+    <line x1="-15" y1="1" x2="-9" y2="3" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round" />
+
+    <line x1="5" y1="-5" x2="15" y2="-7" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round" />
+    <line x1="7" y1="-1" x2="15" y2="-3" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round" />
+    <line x1="5" y1="3" x2="12" y2="1" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round" />
+
+    <!-- Globo de conversación flotante arriba ("Anécdotas") -->
+    <g transform="translate(10, -22)" filter="drop-shadow(0px 1px 1px rgba(225, 29, 72, 0.3))">
+      <rect x="-8" y="-6" width="16" height="11" rx="3.5" fill="#FDA4AF" />
+      <path d="M -3,5 L -5,8 L -1,5 Z" fill="#FDA4AF" />
+      <!-- Corazón/Destello pequeño en el globo -->
+      <circle cx="0" cy="-0.5" r="1.5" fill="#FFFFFF" />
+    </g>
+  </g>
+</svg>

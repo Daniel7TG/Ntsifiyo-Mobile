@@ -1,0 +1,117 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../features/auth/auth_controller.dart';
+import '../features/auth/screens/welcome_screen.dart';
+import '../features/auth/screens/auth_screen.dart';
+import '../features/shell/app_shell.dart';
+import '../features/dashboard/dashboard_screen.dart';
+import '../features/map/map_screen.dart';
+import '../features/games/games_hub_screen.dart';
+import '../features/games/game_access_screen.dart';
+import '../features/games/game_play_screen.dart';
+import '../features/dictionary/dictionary_screen.dart';
+import '../features/content/content_screen.dart';
+import '../features/content/media_player_screen.dart';
+import '../features/assignments/assignments_screen.dart';
+
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
+final routerProvider = Provider<GoRouter>((ref) {
+  // Redirige en cuanto cambia el estado de auth.
+  final isAuthenticated =
+      ref.watch(authControllerProvider.select((u) => u != null));
+
+  return GoRouter(
+    navigatorKey: _rootNavigatorKey,
+    initialLocation: isAuthenticated ? '/dashboard' : '/welcome',
+    redirect: (context, state) {
+      final loc = state.matchedLocation;
+      final inAuthFlow = loc == '/welcome' || loc == '/auth';
+      if (!isAuthenticated && !inAuthFlow) return '/welcome';
+      if (isAuthenticated && inAuthFlow) return '/dashboard';
+      return null;
+    },
+    routes: [
+      GoRoute(
+        path: '/welcome',
+        builder: (context, state) => const WelcomeScreen(),
+      ),
+      GoRoute(
+        path: '/auth',
+        builder: (context, state) => AuthScreen(
+          initialMode: state.uri.queryParameters['mode'] ?? 'login',
+        ),
+      ),
+
+      // Juego a pantalla completa (fuera del shell con bottom nav)
+      GoRoute(
+        path: '/games/:gameId/jugar',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => GamePlayScreen(
+          gameTypeId: state.pathParameters['gameId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/reproductor/:id',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => MediaPlayerScreen(
+          mediaId: int.parse(state.pathParameters['id']!),
+        ),
+      ),
+
+      // Shell con bottom navigation
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            AppShell(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(routes: [
+            GoRoute(
+              path: '/dashboard',
+              builder: (context, state) => const DashboardScreen(),
+              routes: [
+                GoRoute(
+                  path: 'asignaciones',
+                  builder: (context, state) => const AssignmentsScreen(),
+                ),
+              ],
+            ),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(
+              path: '/mapa',
+              builder: (context, state) => const MapScreen(),
+            ),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(
+              path: '/juegos',
+              builder: (context, state) => const GamesHubScreen(),
+              routes: [
+                GoRoute(
+                  path: ':gameId',
+                  builder: (context, state) => GameAccessScreen(
+                    gameTypeId: state.pathParameters['gameId']!,
+                  ),
+                ),
+              ],
+            ),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(
+              path: '/diccionario',
+              builder: (context, state) => const DictionaryScreen(),
+            ),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(
+              path: '/contenido',
+              builder: (context, state) => const ContentScreen(),
+            ),
+          ]),
+        ],
+      ),
+    ],
+  );
+});
