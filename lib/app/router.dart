@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../data/models/models.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/screens/welcome_screen.dart';
 import '../features/auth/screens/auth_screen.dart';
@@ -58,6 +59,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => MediaPlayerScreen(
           mediaId: int.parse(state.pathParameters['id']!),
+          item: state.extra is MediaItem ? state.extra as MediaItem : null,
         ),
       ),
 

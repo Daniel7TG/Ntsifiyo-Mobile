@@ -491,12 +491,20 @@ class SubtitleLine {
       );
 }
 
-/// StreamResourcesDTO.
+/// StreamResourcesDTO. El backend puede devolver la lista de subtítulos
+/// embebida o URLs de archivos VTT por idioma.
 class StreamResources {
   final String url;
   final List<SubtitleLine> subtitles;
+  final String? espSubtitlesUrl;
+  final String? mazSubtitlesUrl;
 
-  const StreamResources({required this.url, this.subtitles = const []});
+  const StreamResources({
+    required this.url,
+    this.subtitles = const [],
+    this.espSubtitlesUrl,
+    this.mazSubtitlesUrl,
+  });
 
   factory StreamResources.fromJson(Map<String, dynamic> json) =>
       StreamResources(
@@ -505,5 +513,7 @@ class StreamResources {
             .whereType<Map<String, dynamic>>()
             .map(SubtitleLine.fromJson)
             .toList(),
+        espSubtitlesUrl: json['espSubtitlesUrl'] as String?,
+        mazSubtitlesUrl: json['mazSubtitlesUrl'] as String?,
       );
 }
