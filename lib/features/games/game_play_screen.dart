@@ -7,6 +7,10 @@ import '../../shared/widgets/states.dart';
 import '../../shared/widgets/under_construction.dart';
 import 'game_session.dart';
 import 'views/questionnaire_game_view.dart';
+import 'views/memorama_game_view.dart';
+import 'views/memoria_rapida_game_view.dart';
+import 'views/pares_game_view.dart';
+import 'views/loteria_game_view.dart';
 
 /// Despacha la sesión de juego activa a la vista del tipo correspondiente
 /// (equivalente a las rutas /games/{type}/jugar/:activityId de la web).
@@ -46,6 +50,14 @@ class GamePlayScreen extends ConsumerWidget {
       case ActivityTypes.intruder:
       case ActivityTypes.fillBlank:
         return QuestionnaireGameView(session: session, onExit: exit);
+      case ActivityTypes.memoryGame:
+        return MemoramaGameView(session: session, onExit: exit);
+      case ActivityTypes.fastMemory:
+        return MemoriaRapidaGameView(session: session, onExit: exit);
+      case ActivityTypes.pairs:
+        return ParesGameView(session: session, onExit: exit);
+      case ActivityTypes.lottery:
+        return LoteriaGameView(session: session, onExit: exit);
       default:
         return UnderConstructionScreen(title: gameInfoFor(type).title);
     }
