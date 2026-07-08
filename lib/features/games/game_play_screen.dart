@@ -11,6 +11,9 @@ import 'views/memorama_game_view.dart';
 import 'views/memoria_rapida_game_view.dart';
 import 'views/pares_game_view.dart';
 import 'views/loteria_game_view.dart';
+import 'views/laberinto_game_view.dart';
+import 'views/tripas_game_view.dart';
+import 'views/sopa_letras_game_view.dart';
 
 /// Despacha la sesión de juego activa a la vista del tipo correspondiente
 /// (equivalente a las rutas /games/{type}/jugar/:activityId de la web).
@@ -58,6 +61,12 @@ class GamePlayScreen extends ConsumerWidget {
         return ParesGameView(session: session, onExit: exit);
       case ActivityTypes.lottery:
         return LoteriaGameView(session: session, onExit: exit);
+      case ActivityTypes.maze:
+        return LaberintoGameView(session: session, onExit: exit);
+      case ActivityTypes.catLines:
+        return TripasGameView(session: session, onExit: exit);
+      case ActivityTypes.findTheWord:
+        return SopaLetrasGameView(session: session, onExit: exit);
       default:
         return UnderConstructionScreen(title: gameInfoFor(type).title);
     }
