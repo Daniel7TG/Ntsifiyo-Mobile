@@ -55,16 +55,23 @@ class _GameSummaryViewState extends ConsumerState<GameSummaryView> {
     });
   }
 
+  /// Coyote mascota según desempeño (mirror de GameSummary.jsx + coyote web).
   (String, String, String) _headerContent() {
-    if (_percentage == 100) return ('🎉', '¡PERFECTO!', '¡No fallaste ni una!');
-    if (_percentage >= 80) return ('⭐', '¡Increíble!', '¡Muy buen trabajo!');
-    if (_percentage >= 60) return ('✅', '¡Bien hecho!', '¡Sigue así!');
-    return ('💪', '¡Sigue practicando!', '¡Tú puedes!');
+    if (_percentage == 100) {
+      return ('assets/coyote/celebracion.webp', '¡PERFECTO!', '¡No fallaste ni una!');
+    }
+    if (_percentage >= 80) {
+      return ('assets/coyote/celebracion.webp', '¡Increíble!', '¡Muy buen trabajo!');
+    }
+    if (_percentage >= 60) {
+      return ('assets/coyote/saludo.webp', '¡Bien hecho!', '¡Sigue así!');
+    }
+    return ('assets/coyote/esperando.webp', '¡Sigue practicando!', '¡Tú puedes!');
   }
 
   @override
   Widget build(BuildContext context) {
-    final (emoji, title, subtitle) = _headerContent();
+    final (coyoteAsset, title, subtitle) = _headerContent();
     final stars = (_percentage / 100 * 5).round();
 
     return Scaffold(
@@ -81,7 +88,14 @@ class _GameSummaryViewState extends ConsumerState<GameSummaryView> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(emoji, style: const TextStyle(fontSize: 56)),
+                      TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0, end: 1),
+                        duration: const Duration(milliseconds: 600),
+                        curve: Curves.elasticOut,
+                        builder: (context, value, child) =>
+                            Transform.scale(scale: value, child: child),
+                        child: Image.asset(coyoteAsset, height: 120),
+                      ),
                       const SizedBox(height: 8),
                       Text(
                         title,
