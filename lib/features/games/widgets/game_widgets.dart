@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -33,15 +34,29 @@ class WordImage extends StatelessWidget {
       );
     }
     if (p.startsWith('http')) {
-      return Image.network(p,
-          fit: fit,
-          width: width,
-          height: height,
-          errorBuilder: (context, error, stackTrace) => Container(
-                color: AppColors.borderLight,
-                child: const Icon(Icons.broken_image,
-                    color: AppColors.textLight),
-              ));
+      // Caché en disco: la imagen solo se descarga una vez.
+      return CachedNetworkImage(
+        imageUrl: p,
+        fit: fit,
+        width: width,
+        height: height,
+        placeholder: (context, url) => Container(
+          color: AppColors.borderLight,
+          child: const Center(
+            child: SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(
+                  strokeWidth: 2.5, color: AppColors.textLight),
+            ),
+          ),
+        ),
+        errorWidget: (context, url, error) => Container(
+          color: AppColors.borderLight,
+          child:
+              const Icon(Icons.broken_image, color: AppColors.textLight),
+        ),
+      );
     }
     if (p.startsWith('assets/')) {
       return Image.asset(p, fit: fit, width: width, height: height);

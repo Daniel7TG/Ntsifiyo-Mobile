@@ -56,6 +56,14 @@ class GameSessionController extends Notifier<GameSession?> {
     bool offline = false;
     try {
       data = await _service.startGame(game.id);
+      // El start no siempre trae metadatos: completarlos desde el listado.
+      data = data.copyWith(
+        gameType: data.gameType ?? game.gameType,
+        title: data.title ?? game.title,
+        difficult: data.difficult ?? game.difficult,
+        experience: data.experience ?? game.experience,
+        totalQuestions: data.totalQuestions ?? game.totalQuestions,
+      );
       data = await preloadGameAssets(data);
       // Refrescar el caché offline con el contenido más reciente.
       await _db.upsertCachedGame(CachedGamesCompanion(

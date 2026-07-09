@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/activity_config.dart';
@@ -82,22 +83,18 @@ class _GameAccessScreenState extends ConsumerState<GameAccessScreen> {
                   Row(
                     children: [
                       Container(
-                        width: 64,
-                        height: 64,
+                        width: 76,
+                        height: 76,
                         decoration: BoxDecoration(
-                          color: info.color,
+                          color: info.color.withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                              color: darken(info.color, 0.15), width: 3),
-                          boxShadow: [
-                            BoxShadow(
-                              color: darken(info.color, 0.3),
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
+                              color: info.color.withValues(alpha: 0.3),
+                              width: 2),
                         ),
-                        child:
-                            Icon(info.icon, color: Colors.white, size: 32),
+                        padding: const EdgeInsets.all(8),
+                        child: SvgPicture.asset(info.svgAsset,
+                            fit: BoxFit.contain),
                       ),
                       const SizedBox(width: 12),
                       Expanded(

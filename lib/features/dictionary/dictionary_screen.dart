@@ -62,7 +62,8 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
           IconButton(
             tooltip: 'Actualizar',
             icon: const Icon(Icons.refresh),
-            onPressed: () => ref.invalidate(dictionaryProvider),
+            onPressed: () =>
+                ref.read(dictionaryProvider.notifier).refresh(),
           ),
         ],
       ),
@@ -71,7 +72,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
             const LoadingState(message: 'Cargando diccionario...'),
         error: (e, _) => ErrorState(
           message: e.toString(),
-          onRetry: () => ref.invalidate(dictionaryProvider),
+          onRetry: () => ref.read(dictionaryProvider.notifier).refresh(),
         ),
         data: (data) => _selectedCategory == null
             ? _buildCategoryGrid(data)

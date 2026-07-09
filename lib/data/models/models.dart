@@ -300,6 +300,28 @@ class GameData {
   GameConfig get answerConfig =>
       gameConfigs.length > 1 ? gameConfigs[1] : promptConfig;
 
+  /// El backend no siempre incluye metadatos en el start; se completan
+  /// desde el GameSummaryDto del listado.
+  GameData copyWith({
+    String? gameType,
+    String? title,
+    String? difficult,
+    int? experience,
+    int? totalQuestions,
+  }) =>
+      GameData(
+        activityId: activityId,
+        gameType: gameType ?? this.gameType,
+        title: title ?? this.title,
+        difficult: difficult ?? this.difficult,
+        experience: experience ?? this.experience,
+        totalQuestions: totalQuestions ?? this.totalQuestions,
+        questions: questions,
+        words: words,
+        gameConfigs: gameConfigs,
+        mediaId: mediaId,
+      );
+
   factory GameData.fromJson(Map<String, dynamic> json) => GameData(
         activityId: _asInt(json['activityId']),
         gameType: (json['gameType'] ?? json['type']) as String?,

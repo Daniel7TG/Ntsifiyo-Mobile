@@ -47,7 +47,14 @@ class GamePlayScreen extends ConsumerWidget {
       }
     }
 
-    final type = session.data.gameType ?? '';
+    // Igual que la web: la ruta decide el juego a montar. El gameType del
+    // response es solo fallback (el backend no siempre lo incluye).
+    final byRoute = activityConfig.values
+        .where((g) => g.id == gameTypeId)
+        .map((g) => g.type);
+    final type = byRoute.isNotEmpty
+        ? byRoute.first
+        : (session.data.gameType ?? '');
     switch (type) {
       case ActivityTypes.questionnaire:
       case ActivityTypes.intruder:

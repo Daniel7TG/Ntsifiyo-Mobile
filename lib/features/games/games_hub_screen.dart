@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/activity_config.dart';
 import '../../app/theme.dart';
 import '../../shared/widgets/kid_card.dart';
 
-/// Cuadrícula de los 10 juegos con tarjetas propias (ícono material +
-/// color del juego), sin SVGs.
+/// Cuadrícula de los 10 juegos con sus SVGs premium (mirror de las tarjetas
+/// del panel de juegos de la web).
 class GamesHubScreen extends StatelessWidget {
   const GamesHubScreen({super.key});
 
@@ -21,37 +22,34 @@ class GamesHubScreen extends StatelessWidget {
           crossAxisCount: 2,
           mainAxisSpacing: 14,
           crossAxisSpacing: 14,
-          childAspectRatio: 0.95,
+          childAspectRatio: 0.82,
         ),
         itemCount: playableGameTypes.length,
         itemBuilder: (context, index) {
           final info = activityConfig[playableGameTypes[index]]!;
           return KidCard(
             accentColor: info.color,
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.all(12),
             onTap: () => context.go('/juegos/${info.id}'),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Insignia circular del juego
-                Container(
-                  width: 68,
-                  height: 68,
-                  decoration: BoxDecoration(
-                    color: info.color,
-                    shape: BoxShape.circle,
-                    border:
-                        Border.all(color: darken(info.color, 0.15), width: 3),
-                    boxShadow: [
-                      BoxShadow(
-                        color: darken(info.color, 0.3),
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+                // Ilustración SVG del juego sobre fondo suave del color
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: info.color.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                          color: info.color.withValues(alpha: 0.25),
+                          width: 2),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    child: SvgPicture.asset(info.svgAsset,
+                        fit: BoxFit.contain),
                   ),
-                  child: Icon(info.icon, color: Colors.white, size: 34),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
                 Text(
                   info.title,
                   textAlign: TextAlign.center,
@@ -68,7 +66,7 @@ class GamesHubScreen extends StatelessWidget {
                 Text(
                   info.subtitle,
                   textAlign: TextAlign.center,
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 11,

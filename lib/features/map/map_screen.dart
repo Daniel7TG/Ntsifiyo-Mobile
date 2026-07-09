@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,6 +11,22 @@ import '../../data/services/activity_service.dart';
 import '../../shared/widgets/kid_card.dart';
 import '../../shared/widgets/states.dart';
 import '../games/game_session.dart';
+
+/// El mapa se vive en horizontal: pantalla completa, sin AppBar ni bottom
+/// nav. Estas helpers cambian la orientación/system UI al entrar y salir.
+Future<void> enterMapChrome() async {
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+}
+
+Future<void> exitMapChrome() async {
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
+      overlays: SystemUiOverlay.values);
+}
 
 /// Dimensiones naturales de map.webp (mirror de GameMap.jsx).
 const _mapW = 2729.0;
@@ -81,9 +98,9 @@ final gamesByTopicProvider = FutureProvider.autoDispose
   }
 });
 
-/// Mapa interactivo por zonas, rotado 90° para aprovechar toda la pantalla
-/// en vertical. Un solo GestureDetector resuelve la zona tocada por
-/// coordenadas (más confiable que apilar detectores dentro del zoom).
+/// Mapa interactivo por zonas, a pantalla completa y en horizontal.
+/// Al elegir un juego la vista regresa a vertical; al volver del juego se
+/// restaura el horizontal.
 class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
 
@@ -93,6 +110,7 @@ class MapScreen extends ConsumerStatefulWidget {
 
 class _MapScreenState extends ConsumerState<MapScreen> {
   String? _highlightedZone;
+  bool _sheetOpen = false;
 
   void _onTapMap(Offset local, Size displaySize) {
     final mx = local.dx / displaySize.width * _mapW;
@@ -111,9 +129,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     }
   }
 
-  void _openZone(_Zone zone) {
+  Future<void> _openZone(_Zone zone) async {
+    if (_sheetOpen) return;
+    _sheetOpen = true;
     final topics = _topicsByZone[zone.id] ?? [];
-    showModalBottomSheet(
+    // El sheet devuelve la ruta del juego elegido (o null si solo se cerró).
+    final route = await showModalBottomSheet<String>(
       context: context,
       backgroundColor: Colors.white,
       isScrollControlled: true,
@@ -122,37 +143,30 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       ),
       builder: (context) => _ZoneSheet(zone: zone, topics: topics),
     );
+    _sheetOpen = false;
+    if (route == null || !mounted) return;
+
+    // Juego elegido: volver a vertical, jugar y, al salir, regresar al
+    // horizontal del mapa.
+    await exitMapChrome();
+    if (!mounted) return;
+    await context.push(route);
+    if (mounted) await enterMapChrome();
   }
+
+  void _exitMap() => context.go('/dashboard');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: const Text('Mapa de Aventuras'),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: Center(
-              child: Text(
-                'Toca una zona 👆',
-                style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textMuted),
-              ),
-            ),
-          ),
-        ],
-      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          // Rotado 90°: el eje largo del mapa corre a lo largo del teléfono.
-          final viewportW = constraints.maxHeight; // ancho tras rotación
-          final viewportH = constraints.maxWidth; // alto tras rotación
+          final viewportW = constraints.maxWidth;
+          final viewportH = constraints.maxHeight;
 
-          // Llenar el alto disponible del viewport rotado; el resto se
-          // recorre con pan/zoom.
+          // Cubrir el viewport completo; el excedente se recorre con
+          // pan/zoom del InteractiveViewer.
           var displayH = viewportH;
           var displayW = displayH * (_mapW / _mapH);
           if (displayW < viewportW) {
@@ -161,61 +175,128 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           }
           final displaySize = Size(displayW, displayH);
 
-          return RotatedBox(
-            quarterTurns: 1,
-            child: InteractiveViewer(
-              constrained: false,
-              minScale: 0.8,
-              maxScale: 4,
-              boundaryMargin: const EdgeInsets.all(40),
-              child: SizedBox(
-                width: displayW,
-                height: displayH,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTapUp: (details) =>
-                      _onTapMap(details.localPosition, displaySize),
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: Image.asset('assets/map/map.webp',
-                            fit: BoxFit.fill),
+          return Stack(
+            children: [
+              Positioned.fill(
+                child: InteractiveViewer(
+                  constrained: false,
+                  minScale: 0.8,
+                  maxScale: 4,
+                  boundaryMargin: const EdgeInsets.all(40),
+                  child: SizedBox(
+                    width: displayW,
+                    height: displayH,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTapUp: (details) =>
+                          _onTapMap(details.localPosition, displaySize),
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: Image.asset('assets/map/map.webp',
+                                fit: BoxFit.fill),
+                          ),
+
+                          // Resaltado de la zona tocada
+                          for (final zone in _zones)
+                            if (_highlightedZone == zone.id)
+                              Positioned(
+                                left: zone.x / _mapW * displayW,
+                                top: zone.y / _mapH * displayH,
+                                width: zone.w / _mapW * displayW,
+                                height: zone.h / _mapH * displayH,
+                                child: IgnorePointer(
+                                  child: Image.asset(zone.img,
+                                      fit: BoxFit.fill),
+                                ),
+                              ),
+
+                          // Etiquetas de zona (en horizontal se leen
+                          // derechas igual que el mapa)
+                          for (final zone in _zones)
+                            Positioned(
+                              left:
+                                  (zone.x + zone.w / 2) / _mapW * displayW -
+                                      44,
+                              top: (zone.y + zone.h / 2) / _mapH * displayH -
+                                  16,
+                              child: IgnorePointer(
+                                child: _ZoneLabel(zone: zone),
+                              ),
+                            ),
+                        ],
                       ),
-
-                      // Resaltado de la zona tocada
-                      for (final zone in _zones)
-                        if (_highlightedZone == zone.id)
-                          Positioned(
-                            left: zone.x / _mapW * displayW,
-                            top: zone.y / _mapH * displayH,
-                            width: zone.w / _mapW * displayW,
-                            height: zone.h / _mapH * displayH,
-                            child: IgnorePointer(
-                              child: Image.asset(zone.img,
-                                  fit: BoxFit.fill),
-                            ),
-                          ),
-
-                      // Etiquetas de zona (contra-rotadas para leerse
-                      // derechas con el teléfono en vertical)
-                      for (final zone in _zones)
-                        Positioned(
-                          left: (zone.x + zone.w / 2) / _mapW * displayW - 44,
-                          top: (zone.y + zone.h / 2) / _mapH * displayH - 16,
-                          child: IgnorePointer(
-                            child: RotatedBox(
-                              quarterTurns: 3,
-                              child: _ZoneLabel(zone: zone),
-                            ),
-                          ),
-                        ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
+
+              // Botón para salir del mapa (única navegación visible)
+              Positioned(
+                top: 12,
+                left: 12,
+                child: SafeArea(
+                  child: _RoundMapButton(
+                    icon: Icons.close,
+                    onTap: _exitMap,
+                  ),
+                ),
+              ),
+
+              // Pista de uso
+              Positioned(
+                top: 12,
+                right: 12,
+                child: SafeArea(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.9),
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(color: AppColors.border, width: 2),
+                    ),
+                    child: const Text(
+                      'Toca una zona 👆',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textMuted,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _RoundMapButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _RoundMapButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          border: Border.all(color: AppColors.border, width: 2),
+          boxShadow: const [
+            BoxShadow(color: Color(0x33000000), offset: Offset(0, 3)),
+          ],
+        ),
+        child: Icon(icon, color: AppColors.textMain, size: 24),
       ),
     );
   }
@@ -291,8 +372,8 @@ class _ZoneSheetState extends ConsumerState<_ZoneSheet> {
       await ref.read(gameSessionProvider.notifier).startFromGame(game);
       if (!mounted) return;
       final info = gameInfoFor(game.gameType);
-      Navigator.of(context).pop();
-      context.push('/games/${info.id}/jugar');
+      // Devolver la ruta al MapScreen, que maneja el cambio de orientación.
+      Navigator.of(context).pop('/games/${info.id}/jugar');
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -307,12 +388,12 @@ class _ZoneSheetState extends ConsumerState<_ZoneSheet> {
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       expand: false,
-      initialChildSize: 0.65,
-      maxChildSize: 0.92,
+      initialChildSize: 0.75,
+      maxChildSize: 0.95,
       builder: (context, scrollController) => Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: Row(
               children: [
                 ClipRRect(
@@ -329,6 +410,11 @@ class _ZoneSheetState extends ConsumerState<_ZoneSheet> {
                     fontSize: 22,
                     color: AppColors.primary,
                   ),
+                ),
+                const Spacer(),
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close, color: AppColors.textMuted),
                 ),
               ],
             ),

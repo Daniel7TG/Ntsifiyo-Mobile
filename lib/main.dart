@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -10,6 +11,9 @@ import 'features/auth/auth_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // La app vive en vertical; solo el mapa cambia a horizontal.
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   // Cargar la sesión guardada antes de decidir la pantalla inicial.
   final sessionStore = SessionStore(const FlutterSecureStorage());
