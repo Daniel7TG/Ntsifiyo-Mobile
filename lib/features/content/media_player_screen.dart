@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,6 +34,11 @@ class _MediaPlayerScreenState extends ConsumerState<MediaPlayerScreen> {
   List<SubtitleLine> _espSubs = [];
   String _mazText = '...';
   String _espText = '...';
+  // Duración del cue activo: alimenta la animación palabra-por-palabra.
+  int _mazCueSeconds = 3;
+  int _espCueSeconds = 3;
+  // Cambia cada vez que aparece un cue nuevo para reiniciar la animación.
+  int _cueKey = 0;
   Timer? _subTimer;
 
   @override
@@ -138,22 +144,29 @@ class _MediaPlayerScreenState extends ConsumerState<MediaPlayerScreen> {
     if (controller == null || !controller.value.isInitialized) return;
     final seconds = controller.value.position.inSeconds;
 
-    String pick(List<SubtitleLine> subs, bool maz) {
+    // Devuelve (texto, duración del cue en segundos).
+    (String, int) pick(List<SubtitleLine> subs, bool maz) {
       for (final s in subs) {
         if (seconds >= s.timeStart && seconds < s.timeEnd) {
           final text = maz ? s.mazahuaText : s.spanishText;
-          if (text != null && text.isNotEmpty) return text;
+          if (text != null && text.isNotEmpty) {
+            final dur = (s.timeEnd - s.timeStart).clamp(1, 60);
+            return (text, dur);
+          }
         }
       }
-      return '...';
+      return ('...', 3);
     }
 
-    final maz = pick(_mazSubs, true);
-    final esp = pick(_espSubs, false);
+    final (maz, mazDur) = pick(_mazSubs, true);
+    final (esp, espDur) = pick(_espSubs, false);
     if (maz != _mazText || esp != _espText) {
       setState(() {
         _mazText = maz;
         _espText = esp;
+        _mazCueSeconds = mazDur;
+        _espCueSeconds = espDur;
+        _cueKey++;
       });
     }
   }
@@ -208,23 +221,7 @@ class _MediaPlayerScreenState extends ConsumerState<MediaPlayerScreen> {
         Expanded(
           child: Center(
             child: _isAudio
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 180,
-                        height: 180,
-                        decoration: BoxDecoration(
-                          color: AppColors.accentPink.withValues(alpha: 0.12),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: AppColors.accentPink, width: 3),
-                        ),
-                        child: const Icon(Icons.music_note,
-                            size: 80, color: AppColors.accentPink),
-                      ),
-                    ],
-                  )
+                ? _AudioCover(overviewImage: widget.item?.overviewImage)
                 : AspectRatio(
                     aspectRatio: controller.value.aspectRatio,
                     child: VideoPlayer(controller),
@@ -244,9 +241,10 @@ class _MediaPlayerScreenState extends ConsumerState<MediaPlayerScreen> {
           ),
           child: Column(
             children: [
-              Text(
-                _mazText,
-                textAlign: TextAlign.center,
+              _ProgressiveSubtitle(
+                key: ValueKey('maz-$_cueKey'),
+                text: _mazText,
+                seconds: _mazCueSeconds,
                 style: const TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w800,
@@ -256,9 +254,10 @@ class _MediaPlayerScreenState extends ConsumerState<MediaPlayerScreen> {
               ),
               if (_showSpanish) ...[
                 const SizedBox(height: 6),
-                Text(
-                  _espText,
-                  textAlign: TextAlign.center,
+                _ProgressiveSubtitle(
+                  key: ValueKey('esp-$_cueKey'),
+                  text: _espText,
+                  seconds: _espCueSeconds,
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
@@ -323,4 +322,116 @@ class _MediaPlayerScreenState extends ConsumerState<MediaPlayerScreen> {
 
   String _fmt(Duration d) =>
       '${d.inMinutes}:${(d.inSeconds % 60).toString().padLeft(2, '0')}';
+}
+
+/// Portada del audio: usa la imagen del contenido y, si no hay, un disco.
+class _AudioCover extends StatelessWidget {
+  final String? overviewImage;
+  const _AudioCover({this.overviewImage});
+
+  @override
+  Widget build(BuildContext context) {
+    if ((overviewImage ?? '').isNotEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadius.kidCard),
+        child: CachedNetworkImage(
+          imageUrl: overviewImage!,
+          width: 220,
+          height: 220,
+          fit: BoxFit.cover,
+          errorWidget: (context, url, error) => const _AudioDisc(),
+        ),
+      );
+    }
+    return const _AudioDisc();
+  }
+}
+
+class _AudioDisc extends StatelessWidget {
+  const _AudioDisc();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 180,
+      height: 180,
+      decoration: BoxDecoration(
+        color: AppColors.accentPink.withValues(alpha: 0.12),
+        shape: BoxShape.circle,
+        border: Border.all(color: AppColors.accentPink, width: 3),
+      ),
+      child: const Icon(Icons.music_note, size: 80, color: AppColors.accentPink),
+    );
+  }
+}
+
+/// Subtítulo que revela las palabras progresivamente a lo largo del cue
+/// (mirror de ProgressiveSubtitle en MediaPlayerView.jsx).
+class _ProgressiveSubtitle extends StatefulWidget {
+  final String text;
+  final int seconds;
+  final TextStyle style;
+
+  const _ProgressiveSubtitle({
+    super.key,
+    required this.text,
+    required this.seconds,
+    required this.style,
+  });
+
+  @override
+  State<_ProgressiveSubtitle> createState() => _ProgressiveSubtitleState();
+}
+
+class _ProgressiveSubtitleState extends State<_ProgressiveSubtitle>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // 95% del cue para que termine antes de que aparezca el siguiente.
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(
+          milliseconds: (widget.seconds * 950).clamp(500, 60000).toInt()),
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final words = widget.text.split(RegExp(r'\s+'))..removeWhere((w) => w.isEmpty);
+    if (words.isEmpty) {
+      return Text(widget.text,
+          textAlign: TextAlign.center, style: widget.style);
+    }
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        final revealed = (_controller.value * words.length).ceil();
+        return RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            children: [
+              for (var i = 0; i < words.length; i++)
+                TextSpan(
+                  text: i == 0 ? words[i] : ' ${words[i]}',
+                  style: widget.style.copyWith(
+                    color: (widget.style.color ?? AppColors.textMain)
+                        .withValues(alpha: i < revealed ? 1 : 0.25),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }

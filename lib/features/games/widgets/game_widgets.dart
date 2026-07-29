@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../../../app/theme.dart';
+import '../../coyote/coyote_controller.dart';
 
 /// Muestra la imagen de una palabra (ruta local precargada o URL remota).
 class WordImage extends StatelessWidget {
@@ -59,17 +61,26 @@ class WordImage extends StatelessWidget {
       );
     }
     if (p.startsWith('assets/')) {
-      return Image.asset(p, fit: fit, width: width, height: height);
+      return Image.asset(p,
+          fit: fit,
+          width: width,
+          height: height,
+          errorBuilder: (context, error, stackTrace) => _broken());
     }
     return Image.file(File(p),
         fit: fit,
         width: width,
         height: height,
-        errorBuilder: (context, error, stackTrace) => Container(
-              color: AppColors.borderLight,
-              child:
-                  const Icon(Icons.broken_image, color: AppColors.textLight),
-            ));
+        errorBuilder: (context, error, stackTrace) => _broken());
+  }
+
+  Widget _broken() {
+    return Container(
+      width: width,
+      height: height,
+      color: AppColors.borderLight,
+      child: const Icon(Icons.broken_image, color: AppColors.textLight),
+    );
   }
 }
 
@@ -139,6 +150,64 @@ class WordAudioButton extends StatelessWidget {
           size: size * 0.5,
           color: enabled ? color : AppColors.textLight,
         ),
+      ),
+    );
+  }
+}
+
+/// Cuenta regresiva con reloj y barra, que se pone roja al agotarse el tiempo
+/// (mirror de .game-top-bar__timer / .timer-low de la web).
+class GameTimerBar extends StatelessWidget {
+  final int timeLeft;
+  final int total;
+
+  /// Segundos restantes a partir de los cuales el reloj se pinta en rojo.
+  final int lowTimeThreshold;
+
+  const GameTimerBar({
+    super.key,
+    required this.timeLeft,
+    required this.total,
+    this.lowTimeThreshold = 15,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final lowTime = timeLeft <= lowTimeThreshold;
+    final color = lowTime ? AppColors.error : AppColors.primary;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Row(
+        children: [
+          AnimatedScale(
+            scale: lowTime ? 1.15 : 1,
+            duration: const Duration(milliseconds: 300),
+            child: Icon(Icons.timer, size: 20, color: color),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            '${timeLeft ~/ 60}:${(timeLeft % 60).toString().padLeft(2, '0')}',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w900,
+              fontSize: 16,
+              color: color,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: total == 0 ? 0 : timeLeft / total,
+                minHeight: 7,
+                backgroundColor: Colors.white,
+                color: color,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -246,8 +315,12 @@ class GameCardWidget extends StatelessWidget {
   }
 }
 
-/// Feedback flotante de acierto/error (mirror de GameAlert.jsx).
-void showGameFeedback(BuildContext context, {required bool correct}) {
+/// Feedback flotante de acierto/error (mirror de GameAlert.jsx), que además
+/// hace reaccionar al coyote como en la web.
+void showGameFeedback(BuildContext context, WidgetRef ref,
+    {required bool correct}) {
+  ref.read(coyoteProvider.notifier).triggerReaction(correct: correct);
+
   final overlay = Overlay.of(context);
   late final OverlayEntry entry;
   entry = OverlayEntry(

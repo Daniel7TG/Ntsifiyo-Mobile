@@ -103,7 +103,7 @@ class _ParesGameViewState extends ConsumerState<ParesGameView> {
         _matched.add(card.wordId);
         _selectedLeft = null;
       });
-      showGameFeedback(context, correct: true);
+      showGameFeedback(context, ref, correct: true);
       if (_matched.length == _left.length) {
         Future.delayed(const Duration(milliseconds: 700), () {
           if (mounted) setState(() => _finished = true);
@@ -111,7 +111,7 @@ class _ParesGameViewState extends ConsumerState<ParesGameView> {
       }
     } else {
       setState(() => _wrongRight = card.wordId);
-      showGameFeedback(context, correct: false);
+      showGameFeedback(context, ref, correct: false);
       Future.delayed(const Duration(milliseconds: 700), () {
         if (mounted) {
           setState(() {

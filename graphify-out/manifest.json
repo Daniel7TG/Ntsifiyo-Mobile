@@ -1,0 +1,2222 @@
+{
+  ".claude/settings.local.json": {
+    "mtime": 1783658779.7673314,
+    "ast_hash": "8eab99fd82b9bffd88e0203f8bd692e5",
+    "semantic_hash": "8eab99fd82b9bffd88e0203f8bd692e5"
+  },
+  "android/app/build.gradle.kts": {
+    "mtime": 1783491679.2795131,
+    "ast_hash": "4c2a5696101f62035db0de3ab0fa982f",
+    "semantic_hash": "4c2a5696101f62035db0de3ab0fa982f"
+  },
+  "android/app/src/main/kotlin/com/jnatrjo/jnatrjo_mobile/MainActivity.kt": {
+    "mtime": 1783490582.4820051,
+    "ast_hash": "5c9b71eb736c3eeb6d6aa7409fa2f7b7",
+    "semantic_hash": "5c9b71eb736c3eeb6d6aa7409fa2f7b7"
+  },
+  "android/build.gradle.kts": {
+    "mtime": 1783490582.4862626,
+    "ast_hash": "803fe22651fbe96ed401eb0b66a492d1",
+    "semantic_hash": "803fe22651fbe96ed401eb0b66a492d1"
+  },
+  "android/settings.gradle.kts": {
+    "mtime": 1783490582.6225142,
+    "ast_hash": "087a01c04d081ae02a8e5db89f4bf3f3",
+    "semantic_hash": "087a01c04d081ae02a8e5db89f4bf3f3"
+  },
+  "assets/dictionary/manifest.json": {
+    "mtime": 1783520005.3420901,
+    "ast_hash": "ca8a6f2a05e72da53d1a56eaa9e03e40",
+    "semantic_hash": "ca8a6f2a05e72da53d1a56eaa9e03e40"
+  },
+  "lib/app/activity_config.dart": {
+    "mtime": 1783490864.1871736,
+    "ast_hash": "e87332c7faf5a27988dabbf3feec720b",
+    "semantic_hash": "e87332c7faf5a27988dabbf3feec720b"
+  },
+  "lib/app/router.dart": {
+    "mtime": 1783711793.179074,
+    "ast_hash": "02fd2e84fbd8c31e4ff936d835e6e1aa",
+    "semantic_hash": "02fd2e84fbd8c31e4ff936d835e6e1aa"
+  },
+  "lib/app/theme.dart": {
+    "mtime": 1783490822.3809342,
+    "ast_hash": "c451ca9e8e5a32490a66f44aa3793fa3",
+    "semantic_hash": "c451ca9e8e5a32490a66f44aa3793fa3"
+  },
+  "lib/core/api/api_client.dart": {
+    "mtime": 1783519779.0977244,
+    "ast_hash": "29e43d2d434226e552a219ff92504e87",
+    "semantic_hash": "29e43d2d434226e552a219ff92504e87"
+  },
+  "lib/core/connectivity/connectivity_service.dart": {
+    "mtime": 1783491014.440753,
+    "ast_hash": "d71da9d346a598db7d5cf0a8551d3e8c",
+    "semantic_hash": "d71da9d346a598db7d5cf0a8551d3e8c"
+  },
+  "lib/core/storage/app_database.dart": {
+    "mtime": 1783518205.1132865,
+    "ast_hash": "936c9b6ea2c69c4ad87659a39908a6b4",
+    "semantic_hash": "936c9b6ea2c69c4ad87659a39908a6b4"
+  },
+  "lib/core/storage/app_database.g.dart": {
+    "mtime": 1783518418.5387752,
+    "ast_hash": "34cabd28caaecf0763e7d79ca4beb347",
+    "semantic_hash": "34cabd28caaecf0763e7d79ca4beb347"
+  },
+  "lib/core/storage/session_store.dart": {
+    "mtime": 1783491001.8279874,
+    "ast_hash": "920a4853f410bddec6b8b4760ab34622",
+    "semantic_hash": "920a4853f410bddec6b8b4760ab34622"
+  },
+  "lib/core/sync/asset_preloader.dart": {
+    "mtime": 1783518652.3736484,
+    "ast_hash": "79d14ac6d8e626a3fe592486183a2207",
+    "semantic_hash": "79d14ac6d8e626a3fe592486183a2207"
+  },
+  "lib/core/sync/game_cache_service.dart": {
+    "mtime": 1783518719.7898047,
+    "ast_hash": "d994571ff12e6866256e578ac7b75c71",
+    "semantic_hash": "d994571ff12e6866256e578ac7b75c71"
+  },
+  "lib/core/sync/sync_service.dart": {
+    "mtime": 1783518746.5722294,
+    "ast_hash": "ee74503554e025f0f27a9a17bfbef1fb",
+    "semantic_hash": "ee74503554e025f0f27a9a17bfbef1fb"
+  },
+  "lib/data/models/models.dart": {
+    "mtime": 1783656630.4948394,
+    "ast_hash": "e7ba49194faf677c7a7114f4fcdb24ad",
+    "semantic_hash": "e7ba49194faf677c7a7114f4fcdb24ad"
+  },
+  "lib/data/services/activity_service.dart": {
+    "mtime": 1783491220.269731,
+    "ast_hash": "79d31f5cbd9a58d6074f7ac5785154f2",
+    "semantic_hash": "79d31f5cbd9a58d6074f7ac5785154f2"
+  },
+  "lib/data/services/auth_service.dart": {
+    "mtime": 1783711751.3406231,
+    "ast_hash": "f1e367e18a3f2882257604a82efa4316",
+    "semantic_hash": "f1e367e18a3f2882257604a82efa4316"
+  },
+  "lib/data/services/misc_services.dart": {
+    "mtime": 1783518298.9325423,
+    "ast_hash": "f6d5d1bf94241091b790e6626dcde044",
+    "semantic_hash": "f6d5d1bf94241091b790e6626dcde044"
+  },
+  "lib/features/about/about_view.dart": {
+    "mtime": 1783711695.2206264,
+    "ast_hash": "a49d392ce09299c3fb48d2cd2222ab4d",
+    "semantic_hash": "a49d392ce09299c3fb48d2cd2222ab4d"
+  },
+  "lib/features/assignments/assignments_screen.dart": {
+    "mtime": 1783492323.5215464,
+    "ast_hash": "38c56512156c1a58e2a2f5e4a03e48a5",
+    "semantic_hash": "38c56512156c1a58e2a2f5e4a03e48a5"
+  },
+  "lib/features/auth/auth_controller.dart": {
+    "mtime": 1783491252.9492252,
+    "ast_hash": "81fae6223102080c6f1698423e77c960",
+    "semantic_hash": "81fae6223102080c6f1698423e77c960"
+  },
+  "lib/features/auth/google_sign_in_helper.dart": {
+    "mtime": 1783491420.3396072,
+    "ast_hash": "c549a67fd9ac6f46e3dc49c40b2493f6",
+    "semantic_hash": "c549a67fd9ac6f46e3dc49c40b2493f6"
+  },
+  "lib/features/auth/screens/auth_screen.dart": {
+    "mtime": 1783491537.714742,
+    "ast_hash": "d024b38a20b21d262d30ef5e28230b6f",
+    "semantic_hash": "d024b38a20b21d262d30ef5e28230b6f"
+  },
+  "lib/features/auth/screens/verify_email_screen.dart": {
+    "mtime": 1783711771.6334918,
+    "ast_hash": "1238fb9083f5b28546fa3a5b2987c29d",
+    "semantic_hash": "1238fb9083f5b28546fa3a5b2987c29d"
+  },
+  "lib/features/auth/screens/welcome_screen.dart": {
+    "mtime": 1783711745.3925915,
+    "ast_hash": "1723bbdd8c3d61131d78e932ba4354fa",
+    "semantic_hash": "1723bbdd8c3d61131d78e932ba4354fa"
+  },
+  "lib/features/content/content_screen.dart": {
+    "mtime": 1783704414.1296425,
+    "ast_hash": "a36d31384ec3a120ce4cad71b5319c26",
+    "semantic_hash": "a36d31384ec3a120ce4cad71b5319c26"
+  },
+  "lib/features/content/media_player_screen.dart": {
+    "mtime": 1783704505.4405563,
+    "ast_hash": "2dde547c9a6718b3d96de0546b029bf4",
+    "semantic_hash": "2dde547c9a6718b3d96de0546b029bf4"
+  },
+  "lib/features/coyote/coyote_companion.dart": {
+    "mtime": 1783704377.221464,
+    "ast_hash": "e21c010b8243643cd7a3d369cd345960",
+    "semantic_hash": "e21c010b8243643cd7a3d369cd345960"
+  },
+  "lib/features/coyote/coyote_controller.dart": {
+    "mtime": 1783656457.1347752,
+    "ast_hash": "d9653d06d3193cf1c914c7834d260195",
+    "semantic_hash": "d9653d06d3193cf1c914c7834d260195"
+  },
+  "lib/features/coyote/coyote_messages.dart": {
+    "mtime": 1783656475.1974776,
+    "ast_hash": "015f54efb4f302e36aab012b51031b5c",
+    "semantic_hash": "015f54efb4f302e36aab012b51031b5c"
+  },
+  "lib/features/dashboard/dashboard_providers.dart": {
+    "mtime": 1783491765.8420277,
+    "ast_hash": "8c5ae97ec51237ac55686931f09b1acd",
+    "semantic_hash": "8c5ae97ec51237ac55686931f09b1acd"
+  },
+  "lib/features/dashboard/dashboard_screen.dart": {
+    "mtime": 1783711804.4571922,
+    "ast_hash": "d5c63f37e9f638b915d45f7c9d363985",
+    "semantic_hash": "d5c63f37e9f638b915d45f7c9d363985"
+  },
+  "lib/features/dictionary/dictionary_repository.dart": {
+    "mtime": 1783620865.4488754,
+    "ast_hash": "fdceeccd551bd22b8e8d5f1008a534f4",
+    "semantic_hash": "fdceeccd551bd22b8e8d5f1008a534f4"
+  },
+  "lib/features/dictionary/dictionary_screen.dart": {
+    "mtime": 1783620880.6424263,
+    "ast_hash": "2b7b4849311ff0c1ce5d682383af2074",
+    "semantic_hash": "2b7b4849311ff0c1ce5d682383af2074"
+  },
+  "lib/features/games/game_access_screen.dart": {
+    "mtime": 1783620926.224463,
+    "ast_hash": "b1cdb6411160c6d189892a9175932b56",
+    "semantic_hash": "b1cdb6411160c6d189892a9175932b56"
+  },
+  "lib/features/games/game_play_screen.dart": {
+    "mtime": 1783656601.7460732,
+    "ast_hash": "7705c43dec9c1c286dc4c6a9d9bcccea",
+    "semantic_hash": "7705c43dec9c1c286dc4c6a9d9bcccea"
+  },
+  "lib/features/games/game_session.dart": {
+    "mtime": 1783656904.725116,
+    "ast_hash": "93ddf9d91a3c045a6124bb5103e20d80",
+    "semantic_hash": "93ddf9d91a3c045a6124bb5103e20d80"
+  },
+  "lib/features/games/games_hub_screen.dart": {
+    "mtime": 1783620913.933658,
+    "ast_hash": "f4c32c245d999cb163360b2349ab4b15",
+    "semantic_hash": "f4c32c245d999cb163360b2349ab4b15"
+  },
+  "lib/features/games/games_providers.dart": {
+    "mtime": 1783492059.6674283,
+    "ast_hash": "e89536432f939cb14df80611c783088b",
+    "semantic_hash": "e89536432f939cb14df80611c783088b"
+  },
+  "lib/features/games/logic/maze_generator.dart": {
+    "mtime": 1783517928.4768593,
+    "ast_hash": "39cc4eb869b8625ccc54048060a1d3d4",
+    "semantic_hash": "39cc4eb869b8625ccc54048060a1d3d4"
+  },
+  "lib/features/games/logic/word_search_generator.dart": {
+    "mtime": 1783517912.9964395,
+    "ast_hash": "4f3d67692101b26b836343ac15b1a4c2",
+    "semantic_hash": "4f3d67692101b26b836343ac15b1a4c2"
+  },
+  "lib/features/games/views/intruso_game_view.dart": {
+    "mtime": 1783656801.5243936,
+    "ast_hash": "d3ddc80e7830f9851664734a11776eb5",
+    "semantic_hash": "d3ddc80e7830f9851664734a11776eb5"
+  },
+  "lib/features/games/views/laberinto_game_view.dart": {
+    "mtime": 1783656544.4594738,
+    "ast_hash": "80e7b3e78d396e731702810f3832d612",
+    "semantic_hash": "80e7b3e78d396e731702810f3832d612"
+  },
+  "lib/features/games/views/loteria_game_view.dart": {
+    "mtime": 1783517808.9798355,
+    "ast_hash": "776f8a812aa88dd41aa1646199a2353c",
+    "semantic_hash": "776f8a812aa88dd41aa1646199a2353c"
+  },
+  "lib/features/games/views/memorama_game_view.dart": {
+    "mtime": 1783517809.0160985,
+    "ast_hash": "17d335c259af3e9faa6801dbdafab19c",
+    "semantic_hash": "17d335c259af3e9faa6801dbdafab19c"
+  },
+  "lib/features/games/views/memoria_rapida_game_view.dart": {
+    "mtime": 1783656544.4594738,
+    "ast_hash": "d480995d55115a9b4be78fdf4b2a406a",
+    "semantic_hash": "d480995d55115a9b4be78fdf4b2a406a"
+  },
+  "lib/features/games/views/pares_game_view.dart": {
+    "mtime": 1783656544.4680734,
+    "ast_hash": "03cd65083a9ae1d97ac41d61d2cf7f81",
+    "semantic_hash": "03cd65083a9ae1d97ac41d61d2cf7f81"
+  },
+  "lib/features/games/views/questionnaire_game_view.dart": {
+    "mtime": 1783656758.8133976,
+    "ast_hash": "8e7d00d8c793bd6f85da013ab2f58cec",
+    "semantic_hash": "8e7d00d8c793bd6f85da013ab2f58cec"
+  },
+  "lib/features/games/views/sopa_letras_game_view.dart": {
+    "mtime": 1783656858.4300408,
+    "ast_hash": "4ffc20a86a02d64dcc762dc403abb15b",
+    "semantic_hash": "4ffc20a86a02d64dcc762dc403abb15b"
+  },
+  "lib/features/games/views/tripas_game_view.dart": {
+    "mtime": 1783656544.4811423,
+    "ast_hash": "200630844882f2645b893ee7c576dcdd",
+    "semantic_hash": "200630844882f2645b893ee7c576dcdd"
+  },
+  "lib/features/games/widgets/game_summary_view.dart": {
+    "mtime": 1783657126.7261033,
+    "ast_hash": "4604e630f9fef8e0c151e39f502fc8ac",
+    "semantic_hash": "4604e630f9fef8e0c151e39f502fc8ac"
+  },
+  "lib/features/games/widgets/game_widgets.dart": {
+    "mtime": 1783656777.1251137,
+    "ast_hash": "083867eb2b8196de6263fc1d31213697",
+    "semantic_hash": "083867eb2b8196de6263fc1d31213697"
+  },
+  "lib/features/map/map_screen.dart": {
+    "mtime": 1783621121.8918285,
+    "ast_hash": "193fbae3b5211fd2c0e2fa63fb47e517",
+    "semantic_hash": "193fbae3b5211fd2c0e2fa63fb47e517"
+  },
+  "lib/features/shell/app_shell.dart": {
+    "mtime": 1783656576.4303124,
+    "ast_hash": "044cd4ced76aa04d8d14a8ca046bdb77",
+    "semantic_hash": "044cd4ced76aa04d8d14a8ca046bdb77"
+  },
+  "lib/features/sync/sync_summary_sheet.dart": {
+    "mtime": 1783518778.2697468,
+    "ast_hash": "ab89cf24b5383691eba66f4dac777cae",
+    "semantic_hash": "ab89cf24b5383691eba66f4dac777cae"
+  },
+  "lib/main.dart": {
+    "mtime": 1783629741.7711167,
+    "ast_hash": "e20cd44daeac71b3ab500af18598ee36",
+    "semantic_hash": "e20cd44daeac71b3ab500af18598ee36"
+  },
+  "lib/shared/widgets/kid_card.dart": {
+    "mtime": 1783491155.0480053,
+    "ast_hash": "75867937f468e5a524984c208fa23770",
+    "semantic_hash": "75867937f468e5a524984c208fa23770"
+  },
+  "lib/shared/widgets/progress_ring.dart": {
+    "mtime": 1783491742.4834065,
+    "ast_hash": "9222cbbc80d6ed41d1b538589d88df49",
+    "semantic_hash": "9222cbbc80d6ed41d1b538589d88df49"
+  },
+  "lib/shared/widgets/stat_card.dart": {
+    "mtime": 1783491752.909629,
+    "ast_hash": "c8b1d2cab2ecff5d4b127570dbb74fc4",
+    "semantic_hash": "c8b1d2cab2ecff5d4b127570dbb74fc4"
+  },
+  "lib/shared/widgets/states.dart": {
+    "mtime": 1783491176.3271163,
+    "ast_hash": "8b6bc384d53e0050c294bebd000f5229",
+    "semantic_hash": "8b6bc384d53e0050c294bebd000f5229"
+  },
+  "lib/shared/widgets/under_construction.dart": {
+    "mtime": 1783491351.715756,
+    "ast_hash": "9a020f515fb552a23bbbdfae8afb3a38",
+    "semantic_hash": "9a020f515fb552a23bbbdfae8afb3a38"
+  },
+  "scripts/export_dictionary.py": {
+    "mtime": 1783519867.1629424,
+    "ast_hash": "0ecd00c63cef94539383b9d31f8aed60",
+    "semantic_hash": "0ecd00c63cef94539383b9d31f8aed60"
+  },
+  "test/generators_test.dart": {
+    "mtime": 1783518112.4151192,
+    "ast_hash": "0a27be2e446ec48b895e1f10fd203f45",
+    "semantic_hash": "0a27be2e446ec48b895e1f10fd203f45"
+  },
+  "test/sync_queue_test.dart": {
+    "mtime": 1783518849.6970804,
+    "ast_hash": "27554a315cead865d510a56cd1c0d476",
+    "semantic_hash": "27554a315cead865d510a56cd1c0d476"
+  },
+  "test/widget_test.dart": {
+    "mtime": 1783491620.6837869,
+    "ast_hash": "2da39ad9bb525c0052a2fabfb4588a1c",
+    "semantic_hash": "2da39ad9bb525c0052a2fabfb4588a1c"
+  },
+  "CLAUDE.md": {
+    "mtime": 1785294378.404585,
+    "ast_hash": "4709dffe1b8f9fadb0b2420071a1118e",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1783519069.2463684,
+    "ast_hash": "b93495b15f95e091f37d09918b204b10",
+    "semantic_hash": "b93495b15f95e091f37d09918b204b10"
+  },
+  "analysis_options.yaml": {
+    "mtime": 1783490582.4547505,
+    "ast_hash": "9e65f4b9beebb674c0dc252f70a5c177",
+    "semantic_hash": "9e65f4b9beebb674c0dc252f70a5c177"
+  },
+  "flutter_launcher_icons.yaml": {
+    "mtime": 1783518988.878917,
+    "ast_hash": "adcccddcde5300ac2dd24e3e69925c06",
+    "semantic_hash": "adcccddcde5300ac2dd24e3e69925c06"
+  },
+  "pubspec.yaml": {
+    "mtime": 1783632763.3575854,
+    "ast_hash": "7c43e1bde70917659468ce2c41150c34",
+    "semantic_hash": "7c43e1bde70917659468ce2c41150c34"
+  },
+  ".claude/settings.json": {
+    "mtime": 1785294322.37671,
+    "ast_hash": "3d7a4d3e6353e3a587ab02b58b91c5f2",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/res/drawable-hdpi/ic_launcher_foreground.png": {
+    "mtime": 1783519013.840582,
+    "ast_hash": "382c757344612faffebc3517f2f14aae",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/res/drawable-mdpi/ic_launcher_foreground.png": {
+    "mtime": 1783519013.840582,
+    "ast_hash": "d7188ca38fa497de0f6ad2c0ed3b23c3",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/res/drawable-xhdpi/ic_launcher_foreground.png": {
+    "mtime": 1783519013.840582,
+    "ast_hash": "676089926970ab5406ea29e61ebf75d9",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/res/drawable-xxhdpi/ic_launcher_foreground.png": {
+    "mtime": 1783519013.8415895,
+    "ast_hash": "79e0e761654e0eaf22ccac6b4214e6c5",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/res/drawable-xxxhdpi/ic_launcher_foreground.png": {
+    "mtime": 1783519013.840582,
+    "ast_hash": "b7e40a6ab6f6cf6d37df52ca42bda55f",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher.png": {
+    "mtime": 1783519013.8415895,
+    "ast_hash": "f3e92dc36d22e4255f98811a256d5c37",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher.png": {
+    "mtime": 1783519013.8415895,
+    "ast_hash": "3618ddfb2e69fa9bb6c896125e5b756b",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png": {
+    "mtime": 1783519013.8415895,
+    "ast_hash": "a38967593b56b39aacc74d0cf2fe5592",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png": {
+    "mtime": 1783519013.8415895,
+    "ast_hash": "be3dd6cf1930ab6c732daa062d0dd2f9",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png": {
+    "mtime": 1783519013.8415895,
+    "ast_hash": "212870d91ba517db59c454819c830433",
+    "semantic_hash": ""
+  },
+  "assets/coyote/celebracion.webp": {
+    "mtime": 1783490711.742771,
+    "ast_hash": "d059832564d5c4021a6f273a7dac09e4",
+    "semantic_hash": ""
+  },
+  "assets/coyote/esperando.webp": {
+    "mtime": 1783490711.8959355,
+    "ast_hash": "6f35efcb68b84209ebaef5cd05cfd7a8",
+    "semantic_hash": ""
+  },
+  "assets/coyote/pensando.webp": {
+    "mtime": 1783490712.0479581,
+    "ast_hash": "84a65b4587adf93c1a460e414efd851c",
+    "semantic_hash": ""
+  },
+  "assets/coyote/saludo.webp": {
+    "mtime": 1783490712.2147949,
+    "ast_hash": "b7402173c8631ed85b57f8cef6f68763",
+    "semantic_hash": ""
+  },
+  "assets/coyote/sorpresa.webp": {
+    "mtime": 1783490712.3632338,
+    "ast_hash": "3cadc16edc860fe67b3192204704ce01",
+    "semantic_hash": ""
+  },
+  "assets/coyote/triste.webp": {
+    "mtime": 1783490712.515937,
+    "ast_hash": "025a60e93ead91a46c9fe714c899c631",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/1.webp": {
+    "mtime": 1783519994.1308525,
+    "ast_hash": "6641240790a947a17266c6fff0b91a2d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/10.webp": {
+    "mtime": 1783519899.3159018,
+    "ast_hash": "b1468033cfb0b2d0197bb149a4974fea",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/100.webp": {
+    "mtime": 1783519970.2794926,
+    "ast_hash": "37da836d1f2cb2d331dbf8cd47f05907",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/101.webp": {
+    "mtime": 1783519970.7714736,
+    "ast_hash": "ac6de8b81be65cb4475e1261785a02af",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/102.webp": {
+    "mtime": 1783519971.4136395,
+    "ast_hash": "1740324936f5f131a204c4e07c634da9",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/103.webp": {
+    "mtime": 1783519971.9471912,
+    "ast_hash": "346d99830423fc71181ee89086ad345e",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/104.webp": {
+    "mtime": 1783519972.7684524,
+    "ast_hash": "35811116bc35f937258625705a097e97",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/105.webp": {
+    "mtime": 1783519973.3582172,
+    "ast_hash": "15e301d4d6a7e53940afc94481d96bc2",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/106.webp": {
+    "mtime": 1783519974.7744234,
+    "ast_hash": "4c1c60bb2798b70d2e3e8022ef795a99",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/107.webp": {
+    "mtime": 1783519975.7569542,
+    "ast_hash": "aadbafeb4afccecf3ad8289dab7c57b4",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/108.webp": {
+    "mtime": 1783519977.4728005,
+    "ast_hash": "ecdf45cd838b9fa87f5c0fc573bc40f1",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/109.webp": {
+    "mtime": 1783519930.0363607,
+    "ast_hash": "8211c97236ec8d89c285ee36d4811f1e",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/11.webp": {
+    "mtime": 1783519900.019382,
+    "ast_hash": "15ab2f9e4afea05de23186c8ab94e8fe",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/110.webp": {
+    "mtime": 1783519930.6873085,
+    "ast_hash": "5c642a6dda2401a3568169135c7e5bd4",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/111.webp": {
+    "mtime": 1783519931.2084997,
+    "ast_hash": "2fb4a3671b0b10018a2955e78bd5ff06",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/112.webp": {
+    "mtime": 1783519931.7176332,
+    "ast_hash": "0c63a8a9c7a7b3e76d9a58357e05c204",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/113.webp": {
+    "mtime": 1783519932.333662,
+    "ast_hash": "aac632f962dda0dcf62634dbbffc24e4",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/114.webp": {
+    "mtime": 1783519932.776148,
+    "ast_hash": "2798ffb3002fe2bea0bb91d807f6ba12",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/115.webp": {
+    "mtime": 1783519933.4253721,
+    "ast_hash": "196e7a72bd55a7ba0e8362f6d0688517",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/116.webp": {
+    "mtime": 1783519934.2159245,
+    "ast_hash": "7693a339afbd584af14fb352dd80eca5",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/117.webp": {
+    "mtime": 1783519996.8679242,
+    "ast_hash": "109c5425f5b15a0438c64261822430e2",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/118.webp": {
+    "mtime": 1783519935.8952107,
+    "ast_hash": "78459ecc6047ec5b2404a5be73d50ec0",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/119.webp": {
+    "mtime": 1783519936.512677,
+    "ast_hash": "bdc412c101ff3209281fdcef3d36e4a8",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/12.webp": {
+    "mtime": 1783519902.4345627,
+    "ast_hash": "5b7655483a973d5ce74c4a4b6f0882f8",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/120.webp": {
+    "mtime": 1783519937.250067,
+    "ast_hash": "b76b5e5e95a5a374cd9ac5fcbaa064d3",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/121.webp": {
+    "mtime": 1783519937.9402266,
+    "ast_hash": "305853d83a7745a1fe1d2834930d020d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/122.webp": {
+    "mtime": 1783519938.6920617,
+    "ast_hash": "1a2482c9bf2f3706db2e4afad27a755f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/123.webp": {
+    "mtime": 1783519939.5672104,
+    "ast_hash": "8bc683603114cc08a2cc763982b1aaad",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/124.webp": {
+    "mtime": 1783519940.0594301,
+    "ast_hash": "b975955f0043c0436c08e26fbc51a10f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/126.webp": {
+    "mtime": 1783519940.6698823,
+    "ast_hash": "0ddfa55217eb322ae2e5d93a47bb2220",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/127.webp": {
+    "mtime": 1783519941.3272536,
+    "ast_hash": "68c9d738d38971834dfb5f325327b095",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/128.webp": {
+    "mtime": 1783519941.937477,
+    "ast_hash": "2904d1b419d216f63791a7ba76f41003",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/129.webp": {
+    "mtime": 1783519942.6579826,
+    "ast_hash": "1a2482c9bf2f3706db2e4afad27a755f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/13.webp": {
+    "mtime": 1783519902.9429677,
+    "ast_hash": "98cc0da1da15e7ed778ab20bc402290e",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/130.webp": {
+    "mtime": 1783519943.4068177,
+    "ast_hash": "bdfebc612ca77421f8b60602bad620c2",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/131.webp": {
+    "mtime": 1783519944.0614076,
+    "ast_hash": "46f5bbf3ec685ed4bdad284661ab90c1",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/132.webp": {
+    "mtime": 1783519944.791399,
+    "ast_hash": "8bc683603114cc08a2cc763982b1aaad",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/133.webp": {
+    "mtime": 1783519945.4588923,
+    "ast_hash": "6f5991165e56b6778c52b25342dbc6a9",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/134.webp": {
+    "mtime": 1783519981.395279,
+    "ast_hash": "ee4c838f0bc55d6cc8cd2cc0cae60304",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/135.webp": {
+    "mtime": 1783519982.113074,
+    "ast_hash": "9ae46427dc45bce9e060b795c7bfdc26",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/136.webp": {
+    "mtime": 1783519982.9976962,
+    "ast_hash": "898cb8d2004cdcbb036f3f079c83517e",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/137.webp": {
+    "mtime": 1783519985.1045856,
+    "ast_hash": "763eeaa5e8de9ad08f5d79ebf3dd1e7f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/138.webp": {
+    "mtime": 1783519986.0353844,
+    "ast_hash": "c5d4dc9067ccd7bf26719231e74b2fb1",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/139.webp": {
+    "mtime": 1783519986.7895398,
+    "ast_hash": "71b56a0d5b8eca51a817698147807de7",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/14.webp": {
+    "mtime": 1783519903.4974399,
+    "ast_hash": "2c00e9710505c418f24893d54dd14e90",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/140.webp": {
+    "mtime": 1783519987.5672371,
+    "ast_hash": "ee4c838f0bc55d6cc8cd2cc0cae60304",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/141.webp": {
+    "mtime": 1783519988.4056523,
+    "ast_hash": "d9be38041a5fc47444f02adc21963715",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/142.webp": {
+    "mtime": 1783519989.0242252,
+    "ast_hash": "39a91196c1af686266ae45dfdb834100",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/143.webp": {
+    "mtime": 1783519991.3605607,
+    "ast_hash": "d9be38041a5fc47444f02adc21963715",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/144.webp": {
+    "mtime": 1783519992.2120478,
+    "ast_hash": "39a91196c1af686266ae45dfdb834100",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/145.webp": {
+    "mtime": 1783519963.0279405,
+    "ast_hash": "0776a67087d666fb97a056e83499c761",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/146.webp": {
+    "mtime": 1783519963.5193422,
+    "ast_hash": "bf08648e28325691a0ddfe3b1ce40aaa",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/147.webp": {
+    "mtime": 1783519964.052978,
+    "ast_hash": "714543e2b86c11a871c9865c4a90d06b",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/15.webp": {
+    "mtime": 1783519904.0885344,
+    "ast_hash": "5ad4ad97ec88c567038652797eee1480",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/16.webp": {
+    "mtime": 1783519904.5818577,
+    "ast_hash": "02b9a91237ab4515ee0516371db4fe42",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/17.webp": {
+    "mtime": 1783519905.1337757,
+    "ast_hash": "f3b0a86d5b464018a5bfd93fe9ef2167",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/18.webp": {
+    "mtime": 1783519905.567683,
+    "ast_hash": "7cbbbf6da632f164b702bc232372fd7f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/19.webp": {
+    "mtime": 1783519906.0802853,
+    "ast_hash": "e27011969bd6ffe3da312b0c57318260",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/2.webp": {
+    "mtime": 1783519995.4160292,
+    "ast_hash": "0dfaa7942cf326a284d504356de43c2f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/20.webp": {
+    "mtime": 1783519906.7156231,
+    "ast_hash": "8385c8300f21f35613025f6ef473230c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/21.webp": {
+    "mtime": 1783519907.2526903,
+    "ast_hash": "c1373857975f6ebd11e4ba519e89250d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/22.webp": {
+    "mtime": 1783519908.0388248,
+    "ast_hash": "59893bfe88e67f724b715784183e29c1",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/23.webp": {
+    "mtime": 1783519908.5716202,
+    "ast_hash": "fdac45f374c767109edd0e5554339983",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/24.webp": {
+    "mtime": 1783519909.0726087,
+    "ast_hash": "f83a7033ba1ded03ddcafbef69f089d1",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/25.webp": {
+    "mtime": 1783519910.0908537,
+    "ast_hash": "a224494b5a3cc0255489c0b01e3ce554",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/26.webp": {
+    "mtime": 1783519910.6908345,
+    "ast_hash": "550d1715d203ebd2ce69226189210540",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/27.webp": {
+    "mtime": 1783519911.308964,
+    "ast_hash": "eedd4a8dd04f074f28b20eb1be688194",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/28.webp": {
+    "mtime": 1783519911.965391,
+    "ast_hash": "763ed87ef17fb14fead190fc7097b0a2",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/29.webp": {
+    "mtime": 1783519912.8705091,
+    "ast_hash": "cb85547e59990715fc79ac35c8f8e9fa",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/3.webp": {
+    "mtime": 1783519995.849866,
+    "ast_hash": "d6a525cd0da269c6b0988a21b8523c80",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/30.webp": {
+    "mtime": 1783519913.3828053,
+    "ast_hash": "fcdd139240bcaadeba2f3d103d79940f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/31.webp": {
+    "mtime": 1783519914.0793576,
+    "ast_hash": "79d4b3a5049ec42a4dbfabaa41a7eec4",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/32.webp": {
+    "mtime": 1783519914.7807796,
+    "ast_hash": "b67ee2230b15158fb2d39fdbe0fcdc3d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/33.webp": {
+    "mtime": 1783519915.5182064,
+    "ast_hash": "93491408471c9579e4850a424dfba855",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/34.webp": {
+    "mtime": 1783519916.199651,
+    "ast_hash": "a77f3a1a159e1e25ff150700aec9db44",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/35.webp": {
+    "mtime": 1783519916.8386807,
+    "ast_hash": "f1813fef6832225a89bd117b3157d083",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/36.webp": {
+    "mtime": 1783519917.5558753,
+    "ast_hash": "3197f8584fa0b856e00f29704937ec6b",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/37.webp": {
+    "mtime": 1783519918.2200034,
+    "ast_hash": "dd619b1ef38b9e65fd0d0489d38e55dc",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/38.webp": {
+    "mtime": 1783519918.8869638,
+    "ast_hash": "39c9855d7040e7fbb37f1b241d116bb6",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/39.webp": {
+    "mtime": 1783519919.410694,
+    "ast_hash": "ca1874ebc516c576179ccd7805533a21",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/4.webp": {
+    "mtime": 1783519996.3541782,
+    "ast_hash": "4229622670a9f66797f30f170d11695f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/40.webp": {
+    "mtime": 1783519920.0379908,
+    "ast_hash": "4003e097dd7c7c163eacff3cff8c7dda",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/41.webp": {
+    "mtime": 1783519920.5371802,
+    "ast_hash": "d306290d0cb798a878c538d9ff6a0b53",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/42.webp": {
+    "mtime": 1783519920.9570062,
+    "ast_hash": "39dcb6dd6be51587f2e763ebdec087c8",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/43.webp": {
+    "mtime": 1783519921.4408388,
+    "ast_hash": "f4c18d2015ca722925f41aa6dce80416",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/44.webp": {
+    "mtime": 1783519921.9922886,
+    "ast_hash": "f3c71b4c5e66f4c6c2dba7e517660139",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/45.webp": {
+    "mtime": 1783519923.1775172,
+    "ast_hash": "9db8bced11783f3f4e149b2984682abc",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/46.webp": {
+    "mtime": 1783519923.6958606,
+    "ast_hash": "e0a95883dcad5d544930a8bf6d3e7035",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/47.webp": {
+    "mtime": 1783519924.311799,
+    "ast_hash": "477effe3752947d87285571cd3ddff56",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/48.webp": {
+    "mtime": 1783519924.7456002,
+    "ast_hash": "f038610f56e6ed4b271569c3863739ac",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/49.webp": {
+    "mtime": 1783519925.2735846,
+    "ast_hash": "c5c7a64c104efa797fcbfebdd8367cb2",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/5.webp": {
+    "mtime": 1783519895.7471578,
+    "ast_hash": "c2192874359db3b29cfb3fc8b9b9719f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/50.webp": {
+    "mtime": 1783519925.8634682,
+    "ast_hash": "44633fdaa6b618674c2ec3e47f2d84de",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/51.webp": {
+    "mtime": 1783519926.6027782,
+    "ast_hash": "a8cb1319d98b47ef11ff833db6defcaa",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/52.webp": {
+    "mtime": 1783519927.0823288,
+    "ast_hash": "dfe35517dcbf100be778cfb76a0f7e19",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/53.webp": {
+    "mtime": 1783519927.5799196,
+    "ast_hash": "7338550b8848e3ec407c98a05019e568",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/54.webp": {
+    "mtime": 1783519928.2176902,
+    "ast_hash": "60981c924aa332f6de89d780043b4cf2",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/55.webp": {
+    "mtime": 1783519998.5370429,
+    "ast_hash": "6cf9e157be1b7b87051a4eb68d19e6ff",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/56.webp": {
+    "mtime": 1783519999.0881698,
+    "ast_hash": "b2a1e97711d1c6b47d826bb2175fad85",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/57.webp": {
+    "mtime": 1783519999.5225792,
+    "ast_hash": "f559628e51b5ea9348ff38c3403679e2",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/58.webp": {
+    "mtime": 1783519999.9726846,
+    "ast_hash": "8252b25135a735d24d21d4c3164990bd",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/59.webp": {
+    "mtime": 1783520000.474309,
+    "ast_hash": "ba3ee22bc7758b475c1d6262c68fe45c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/6.webp": {
+    "mtime": 1783519896.1444037,
+    "ast_hash": "eca5c5cf7a3a27508a2b7bdc629d41c8",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/60.webp": {
+    "mtime": 1783520001.2185266,
+    "ast_hash": "a0ba01b5f7d41d4cfea0ddf27006cd92",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/61.webp": {
+    "mtime": 1783520001.7613022,
+    "ast_hash": "9ec1d693570a55991051d0b1275ecd9b",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/62.webp": {
+    "mtime": 1783520002.2554586,
+    "ast_hash": "a255468abc687c472f108877ab1aa92b",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/63.webp": {
+    "mtime": 1783520002.88201,
+    "ast_hash": "205b66b0ee234487b5f9ee44523cc15a",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/64.webp": {
+    "mtime": 1783520003.2920141,
+    "ast_hash": "dbab97a33c1917d3ac337fa13ba41121",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/65.webp": {
+    "mtime": 1783520003.893835,
+    "ast_hash": "6e582237bff14024f9200215dd6d8e43",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/66.webp": {
+    "mtime": 1783520004.5851526,
+    "ast_hash": "c70e1e018d02e63b53c3518e8bdae0ad",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/67.webp": {
+    "mtime": 1783519947.3486845,
+    "ast_hash": "50feed299ba164a6f67c60bd3ac1220a",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/68.webp": {
+    "mtime": 1783519948.1941524,
+    "ast_hash": "7d59d2647c75494c1c22e72ada5fd4d0",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/69.webp": {
+    "mtime": 1783519948.7968085,
+    "ast_hash": "dc4b7ea5616c6bdc4044a729a83affe5",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/7.webp": {
+    "mtime": 1783519897.0772471,
+    "ast_hash": "3848002173f73720f8ce5b4c0a0d2448",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/70.webp": {
+    "mtime": 1783519949.4647753,
+    "ast_hash": "f5f90e8d647f72a6a5711cd6d20d80db",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/71.webp": {
+    "mtime": 1783519949.898843,
+    "ast_hash": "481ccc9c4522a87ca7e5f96d4e1f1401",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/72.webp": {
+    "mtime": 1783519950.30972,
+    "ast_hash": "48c0d2b771e4f26e03e2c0364ace18ae",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/73.webp": {
+    "mtime": 1783519950.8264675,
+    "ast_hash": "0f766269064cbd8055d51d0a19f94751",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/74.webp": {
+    "mtime": 1783519951.353262,
+    "ast_hash": "9f1f61f3d2a8fd0f4788929316238318",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/75.webp": {
+    "mtime": 1783519951.9685278,
+    "ast_hash": "0a5e0497b37aaf8e0a97d9492dfb9197",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/76.webp": {
+    "mtime": 1783519952.4190621,
+    "ast_hash": "e244cba1cf29467194f2e113ce725e7a",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/77.webp": {
+    "mtime": 1783519953.070925,
+    "ast_hash": "f0f8940e8448afa452c2b43772d7dd91",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/78.webp": {
+    "mtime": 1783519953.5722659,
+    "ast_hash": "eb28b9b5b4ea7d746f6ee31995786781",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/79.webp": {
+    "mtime": 1783519954.1056051,
+    "ast_hash": "705720e96e476d99f9504e98f8f77c91",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/8.webp": {
+    "mtime": 1783519897.7507987,
+    "ast_hash": "641294ee8798771bc397cec9504762f2",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/80.webp": {
+    "mtime": 1783519954.7291167,
+    "ast_hash": "c32b5720166c3f3be86d9dada7a95383",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/81.webp": {
+    "mtime": 1783519955.3405814,
+    "ast_hash": "3300af4742fb5557b813af47dc296e2d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/82.webp": {
+    "mtime": 1783519956.048848,
+    "ast_hash": "7ef73cffdc4de37a1e8d637be1cb04b7",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/83.webp": {
+    "mtime": 1783519956.6591823,
+    "ast_hash": "f625fe5db3dc7e961af9e8ae7fffa9f2",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/84.webp": {
+    "mtime": 1783519957.1760032,
+    "ast_hash": "222c1eaf94d9fe580b2cfd22cd905207",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/85.webp": {
+    "mtime": 1783519957.8942406,
+    "ast_hash": "87a8fede8220e9c914e70b3deca81e69",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/86.webp": {
+    "mtime": 1783519958.5121024,
+    "ast_hash": "021d9ed595a797ee1806d5e86a285064",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/87.webp": {
+    "mtime": 1783519960.1890886,
+    "ast_hash": "39489be00ad2ae618d7ffa96f45a031c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/88.webp": {
+    "mtime": 1783519960.7817855,
+    "ast_hash": "8fd1979063f20ed666d67ed4110751a1",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/89.webp": {
+    "mtime": 1783519961.4998505,
+    "ast_hash": "def9f4cc0a4aafeec563a647ef0b4624",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/9.webp": {
+    "mtime": 1783519898.4796946,
+    "ast_hash": "b97951d5e66b796f93b782f36fc0bbaf",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/90.webp": {
+    "mtime": 1783519961.899237,
+    "ast_hash": "3e2bbdfbc4181f0cc004b251bdd34521",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/91.webp": {
+    "mtime": 1783519962.4012964,
+    "ast_hash": "aa70db266c0c2fcacc242b9178837186",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/92.webp": {
+    "mtime": 1783519965.9755743,
+    "ast_hash": "dc4b7ea5616c6bdc4044a729a83affe5",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/93.webp": {
+    "mtime": 1783519966.5904105,
+    "ast_hash": "9ff0ebb721a8e74736b478533675717c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/94.webp": {
+    "mtime": 1783519967.0270145,
+    "ast_hash": "ef3b92f8367237b72035be62f33af153",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/95.webp": {
+    "mtime": 1783519967.525221,
+    "ast_hash": "48c0d2b771e4f26e03e2c0364ace18ae",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/96.webp": {
+    "mtime": 1783519968.0552444,
+    "ast_hash": "270b5bb0bdeb4f3b6b3b26f92bba63ee",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/97.webp": {
+    "mtime": 1783519968.6432827,
+    "ast_hash": "9de018e3e4496f20e25e5b983b61dd31",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/98.webp": {
+    "mtime": 1783519969.266972,
+    "ast_hash": "c73790f49c62f5edb550d167fff772e2",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/img/99.webp": {
+    "mtime": 1783519969.8730886,
+    "ast_hash": "c127d88d0b45f1795bad7fff4c61f874",
+    "semantic_hash": ""
+  },
+  "assets/icon.png": {
+    "mtime": 1783518935.342134,
+    "ast_hash": "6ff9af8dc7f1820abd65eb51c7dbc928",
+    "semantic_hash": ""
+  },
+  "assets/icon_foreground.png": {
+    "mtime": 1783518935.4530475,
+    "ast_hash": "ca02634ebf917a1a2584eb4adb9a4884",
+    "semantic_hash": ""
+  },
+  "assets/map/clinic.webp": {
+    "mtime": 1783490695.3960848,
+    "ast_hash": "a02e1defc851055367f5be4f0d831047",
+    "semantic_hash": ""
+  },
+  "assets/map/community.webp": {
+    "mtime": 1783490695.4364552,
+    "ast_hash": "6febfd54986afe673d5b5c38738956c4",
+    "semantic_hash": ""
+  },
+  "assets/map/farm.webp": {
+    "mtime": 1783490695.3799808,
+    "ast_hash": "f25b1350c254cd1f51c662f5a3c92edd",
+    "semantic_hash": ""
+  },
+  "assets/map/forest.webp": {
+    "mtime": 1783490695.4194922,
+    "ast_hash": "c68e0a2ee9904d691a068236a28f1c60",
+    "semantic_hash": ""
+  },
+  "assets/map/kitchen.webp": {
+    "mtime": 1783490695.3724375,
+    "ast_hash": "987783ad6deeab0740f9b179ea2f6dec",
+    "semantic_hash": ""
+  },
+  "assets/map/map.webp": {
+    "mtime": 1783490695.365431,
+    "ast_hash": "24cc5840abeceb3d4a53f885f712d5ce",
+    "semantic_hash": ""
+  },
+  "assets/map/market.webp": {
+    "mtime": 1783490695.404089,
+    "ast_hash": "b326d366883eb6fec84cdab8f55d6fcf",
+    "semantic_hash": ""
+  },
+  "assets/map/park.webp": {
+    "mtime": 1783490695.3879917,
+    "ast_hash": "e87d2df316a77c5c0765697a83f6608c",
+    "semantic_hash": ""
+  },
+  "assets/map/plain.webp": {
+    "mtime": 1783490695.4273686,
+    "ast_hash": "1f3788810b2566161cf6ed6f962f683f",
+    "semantic_hash": ""
+  },
+  "assets/map/school.webp": {
+    "mtime": 1783490695.4109874,
+    "ast_hash": "b770417caea9440f6c3ae99d63b9d58a",
+    "semantic_hash": ""
+  },
+  "assets/svgs/QuestionMark.svg": {
+    "mtime": 1783490695.0933237,
+    "ast_hash": "dd2a4fc92db73f7cb6a93d6f63af645e",
+    "semantic_hash": ""
+  },
+  "assets/svgs/celebration.svg": {
+    "mtime": 1783490695.103323,
+    "ast_hash": "0eb1b0606ffee11c1fe53cf7178c37e6",
+    "semantic_hash": ""
+  },
+  "assets/svgs/construction.svg": {
+    "mtime": 1783490695.114193,
+    "ast_hash": "6d732672659dcb00b70b315e21311bf7",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_anecdotas.svg": {
+    "mtime": 1783490695.124565,
+    "ast_hash": "d47379e077586384d734fcd8f849e7be",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_animales.svg": {
+    "mtime": 1783490695.125565,
+    "ast_hash": "56d0631e34bfca5f03b7fbebac1a1b40",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_canciones.svg": {
+    "mtime": 1783490695.1315734,
+    "ast_hash": "101effd4e37d988074353f61ef40a0ca",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_colores.svg": {
+    "mtime": 1783490695.1265655,
+    "ast_hash": "f50b2cf15736cab6ba2c99ca08387b88",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_comida.svg": {
+    "mtime": 1783490695.1295736,
+    "ast_hash": "020756d8a1cb6958443065ba27b8a0d6",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_cuerpo.svg": {
+    "mtime": 1783490695.1265655,
+    "ast_hash": "d39fc372a5155e329f063c745bf8c60a",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_frutas.svg": {
+    "mtime": 1783490695.136575,
+    "ast_hash": "c3c7f29c566879fa9b9ab8ac7b651ad4",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_leyendas.svg": {
+    "mtime": 1783490695.1325743,
+    "ast_hash": "d80746fce818d8cb1acd687ec0086a39",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_poemas.svg": {
+    "mtime": 1783490695.1285732,
+    "ast_hash": "883a05df453ddf0de64c3470325bd0b1",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_pronombres.svg": {
+    "mtime": 1783490695.1275678,
+    "ast_hash": "7603446e07bdcab69c1c5bf442dc3216",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_ropa.svg": {
+    "mtime": 1783490695.130575,
+    "ast_hash": "9592fde464f9ccb83ba0f810f8d92091",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_saludos.svg": {
+    "mtime": 1783490695.137575,
+    "ast_hash": "78adfe222ebbce4269fc46b57a7fa486",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_sentidos.svg": {
+    "mtime": 1783490695.1335752,
+    "ast_hash": "23b9f6febcc8a2c21210c9fc6a31ee82",
+    "semantic_hash": ""
+  },
+  "assets/svgs/diccionario/topic_vocales.svg": {
+    "mtime": 1783490695.1355743,
+    "ast_hash": "477ed5ddd050303c2774083d6078321c",
+    "semantic_hash": ""
+  },
+  "assets/svgs/empty_box.svg": {
+    "mtime": 1783490695.139574,
+    "ast_hash": "a452c2ecc299131d8985405791f40c0e",
+    "semantic_hash": ""
+  },
+  "assets/svgs/error_cross.svg": {
+    "mtime": 1783490695.1478074,
+    "ast_hash": "e197623f29c1cc74a9c6eeb49c8b4209",
+    "semantic_hash": ""
+  },
+  "assets/svgs/inactive.svg": {
+    "mtime": 1783490695.1572375,
+    "ast_hash": "17678de5cf7245811ad96adbd868e251",
+    "semantic_hash": ""
+  },
+  "assets/svgs/juegos/buscar_premium.svg": {
+    "mtime": 1783490695.166242,
+    "ast_hash": "82c51a526f9363a5b0e2239658cb7a7e",
+    "semantic_hash": ""
+  },
+  "assets/svgs/juegos/completar_oracion_premium.svg": {
+    "mtime": 1783490695.1767445,
+    "ast_hash": "ae30af63ba5b916f2abf69b563ba45d3",
+    "semantic_hash": ""
+  },
+  "assets/svgs/juegos/intruso_premium.svg": {
+    "mtime": 1783490695.1717377,
+    "ast_hash": "baf52b6733ebff01cc5a45c3d629e957",
+    "semantic_hash": ""
+  },
+  "assets/svgs/juegos/laberinto_premium.svg": {
+    "mtime": 1783490695.1727438,
+    "ast_hash": "93f40ab71d422576c301107cb342c37f",
+    "semantic_hash": ""
+  },
+  "assets/svgs/juegos/loteria_premium.svg": {
+    "mtime": 1783490695.1652439,
+    "ast_hash": "3297a9813e76b672512a6d6a3f5c1cb8",
+    "semantic_hash": ""
+  },
+  "assets/svgs/juegos/memorama_premium.svg": {
+    "mtime": 1783490695.1687317,
+    "ast_hash": "a959c36ab75a78144d70764f72f366a3",
+    "semantic_hash": ""
+  },
+  "assets/svgs/juegos/memoria_rapida_premium.svg": {
+    "mtime": 1783490695.1672244,
+    "ast_hash": "eac84d1e399e29f40d7d51a07bf1275c",
+    "semantic_hash": ""
+  },
+  "assets/svgs/juegos/pares_premium.svg": {
+    "mtime": 1783490695.170738,
+    "ast_hash": "087da188dbe70eba61a3aceaa55b2223",
+    "semantic_hash": ""
+  },
+  "assets/svgs/juegos/quiz_premium.svg": {
+    "mtime": 1783490695.1697378,
+    "ast_hash": "39319569a8d7f439f552a819debcbf15",
+    "semantic_hash": ""
+  },
+  "assets/svgs/juegos/rompecabezas_premium.svg": {
+    "mtime": 1783490695.1747441,
+    "ast_hash": "37efddce181344316eb6cb866c169f66",
+    "semantic_hash": ""
+  },
+  "assets/svgs/juegos/sopa_letras_premium.svg": {
+    "mtime": 1783490695.1672244,
+    "ast_hash": "3f08f0118b631d5c8470e4f405a50b8c",
+    "semantic_hash": ""
+  },
+  "assets/svgs/juegos/tripas_premium.svg": {
+    "mtime": 1783490695.1737454,
+    "ast_hash": "c7793f77c1b1ddb063a6341d61cdc476",
+    "semantic_hash": ""
+  },
+  "assets/svgs/loading_hourglass.svg": {
+    "mtime": 1783490695.1777449,
+    "ast_hash": "3e132a072b58f39a2c60db9a48fc2278",
+    "semantic_hash": ""
+  },
+  "assets/svgs/motivation.svg": {
+    "mtime": 1783490695.1872475,
+    "ast_hash": "b42608d85f33214e9116173c8cfb17ee",
+    "semantic_hash": ""
+  },
+  "assets/svgs/success_assignment.svg": {
+    "mtime": 1783490695.1967595,
+    "ast_hash": "e76936a920861b1ba28647425c6dc90c",
+    "semantic_hash": ""
+  },
+  "assets/svgs/success_game.svg": {
+    "mtime": 1783490695.2076035,
+    "ast_hash": "9cfbbcb261dd4da969a31d7059598193",
+    "semantic_hash": ""
+  },
+  "assets/svgs/topic_anecdotes.svg": {
+    "mtime": 1783490695.2166145,
+    "ast_hash": "b825da1cde91561267a61a9308bb39cf",
+    "semantic_hash": ""
+  },
+  "assets/svgs/topic_animals.svg": {
+    "mtime": 1783490695.2261095,
+    "ast_hash": "cc8081a6e9a22ed813ad1754206539a6",
+    "semantic_hash": ""
+  },
+  "assets/svgs/topic_body_parts.svg": {
+    "mtime": 1783490695.2366278,
+    "ast_hash": "7a36f909dc8523ffabc8d16b35da2cd1",
+    "semantic_hash": ""
+  },
+  "assets/svgs/topic_clothes.svg": {
+    "mtime": 1783490695.2461357,
+    "ast_hash": "46ad535a0b04bf1cc2978a12c9fc50fd",
+    "semantic_hash": ""
+  },
+  "assets/svgs/topic_colors.svg": {
+    "mtime": 1783490695.254248,
+    "ast_hash": "8bb71e45959d4b002d1d74f9dc4f867c",
+    "semantic_hash": ""
+  },
+  "assets/svgs/topic_five_senses.svg": {
+    "mtime": 1783490695.2623315,
+    "ast_hash": "f1346766bca7faea42f68f328b3c1d28",
+    "semantic_hash": ""
+  },
+  "assets/svgs/topic_food.svg": {
+    "mtime": 1783490695.2709653,
+    "ast_hash": "e15a57c907dd93360f8f3ace111796c2",
+    "semantic_hash": ""
+  },
+  "assets/svgs/topic_fruits.svg": {
+    "mtime": 1783490695.279458,
+    "ast_hash": "4b7e0d509a27058df23f7a5100e294b0",
+    "semantic_hash": ""
+  },
+  "assets/svgs/topic_greetings.svg": {
+    "mtime": 1783490695.2889018,
+    "ast_hash": "851dfd327bd7ce22ec6aab645248c514",
+    "semantic_hash": ""
+  },
+  "assets/svgs/topic_legends.svg": {
+    "mtime": 1783490695.298017,
+    "ast_hash": "b5a13e7cefa2ce8b5294b882ac2c1b65",
+    "semantic_hash": ""
+  },
+  "assets/svgs/topic_pronouns.svg": {
+    "mtime": 1783490695.3080192,
+    "ast_hash": "aa3a376a30559630be7f2daa20720a4d",
+    "semantic_hash": ""
+  },
+  "assets/svgs/topic_songs.svg": {
+    "mtime": 1783490695.317019,
+    "ast_hash": "a6257fe26944ebdc732e3204f0695cc0",
+    "semantic_hash": ""
+  },
+  "assets/svgs/topic_vowels.svg": {
+    "mtime": 1783490695.326404,
+    "ast_hash": "a658983a8b69f9382a26e76b865986cd",
+    "semantic_hash": ""
+  },
+  "assets/svgs/warning.svg": {
+    "mtime": 1783490695.33541,
+    "ast_hash": "0d9022b78f1ab9a36cb6f39825ac0bf9",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/1.mp3": {
+    "mtime": 1783519994.2882636,
+    "ast_hash": "3b5c6db42493112a526beb8f15895925",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/10.mp3": {
+    "mtime": 1783519899.6602857,
+    "ast_hash": "827f1c491862d59d1be5fe1a6847fe1f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/100.mp3": {
+    "mtime": 1783519970.4793828,
+    "ast_hash": "f400d6aef231eef9caf15eb1ba7d265c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/101.mp3": {
+    "mtime": 1783519971.175861,
+    "ast_hash": "d310f7050a426ac8f3654d2c61206159",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/102.mp3": {
+    "mtime": 1783519971.6841018,
+    "ast_hash": "763d059d0fc92cb5471a794d698e7895",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/103.mp3": {
+    "mtime": 1783519972.3990214,
+    "ast_hash": "3762ace55bc7f1a418d8e5170af7606f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/104.mp3": {
+    "mtime": 1783519973.0837333,
+    "ast_hash": "64885022388953b4ce32d046354a95ba",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/105.mp3": {
+    "mtime": 1783519973.8334937,
+    "ast_hash": "a35dcb9b91500c3af5cd6bec543586c4",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/106.mp3": {
+    "mtime": 1783519975.2879114,
+    "ast_hash": "49ff002f81d1ee76eeec86160a24f39e",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/107.mp3": {
+    "mtime": 1783519976.8386998,
+    "ast_hash": "11093b0985313cd9def62635709994b4",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/108.mp3": {
+    "mtime": 1783519979.7379787,
+    "ast_hash": "2bcc4c875199324f1dcbfc537576000a",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/109.mp3": {
+    "mtime": 1783519930.4214518,
+    "ast_hash": "ffdc975f0c0c7ce0d28f5bb9ab0ca325",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/11.mp3": {
+    "mtime": 1783519901.0953965,
+    "ast_hash": "73c5dc873ef07e0dd74da96ac8fa4cd6",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/110.mp3": {
+    "mtime": 1783519930.9845443,
+    "ast_hash": "715e5e7b82b0b4bd38385215f48c67ba",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/111.mp3": {
+    "mtime": 1783519931.4392538,
+    "ast_hash": "15e38cd1727796d2f26a343196fe4b8e",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/112.mp3": {
+    "mtime": 1783519932.048586,
+    "ast_hash": "43198289bc58dc94a7be6330102ac74f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/113.mp3": {
+    "mtime": 1783519932.558906,
+    "ast_hash": "ae7a8ebed2acb9a7fb117acf54b67037",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/114.mp3": {
+    "mtime": 1783519932.9763,
+    "ast_hash": "714e9600a99fc2036675f6fd291c424f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/115.mp3": {
+    "mtime": 1783519933.7930954,
+    "ast_hash": "2136fb03cf368f75c6847b80640e562a",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/116.mp3": {
+    "mtime": 1783519934.4022746,
+    "ast_hash": "eeea92224604c6d50fe5ebb9e45b2dfb",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/117.mp3": {
+    "mtime": 1783519997.0700479,
+    "ast_hash": "2312799d52187f7b5e0966e37a3e427a",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/118.mp3": {
+    "mtime": 1783519936.178036,
+    "ast_hash": "e870e023b2bdff0badf8636abc3abf55",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/119.mp3": {
+    "mtime": 1783519936.7991588,
+    "ast_hash": "8fc010de2f6ead144fb2319083cd603f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/12.mp3": {
+    "mtime": 1783519902.6736717,
+    "ast_hash": "99d88c630dd4a785a734cd26837688a6",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/120.mp3": {
+    "mtime": 1783519937.4804225,
+    "ast_hash": "fec3dcaf5a630989b8f7d7f7f3a65326",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/121.mp3": {
+    "mtime": 1783519938.3285463,
+    "ast_hash": "d927e021bdf7089c38b924a5a8553af8",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/122.mp3": {
+    "mtime": 1783519939.0893195,
+    "ast_hash": "b79d4218bc06b53c73f01531d6700660",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/123.mp3": {
+    "mtime": 1783519939.7352197,
+    "ast_hash": "9f0c0a00a33d6f5f6c387d288a4738c5",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/124.mp3": {
+    "mtime": 1783519940.3377306,
+    "ast_hash": "4fd98a5085881e7d8637eb5bfbc758a0",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/126.mp3": {
+    "mtime": 1783519941.0582063,
+    "ast_hash": "8820a6ae9a8b0f097a859c1519032705",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/127.mp3": {
+    "mtime": 1783519941.5927277,
+    "ast_hash": "4f97b79f7efd8373c35874b65ce1a04d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/128.mp3": {
+    "mtime": 1783519942.3983836,
+    "ast_hash": "9b17526a8f40c2f24a733a019cd67e92",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/129.mp3": {
+    "mtime": 1783519943.122712,
+    "ast_hash": "b79d4218bc06b53c73f01531d6700660",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/13.mp3": {
+    "mtime": 1783519903.163686,
+    "ast_hash": "2602cd51f17ddc3bd31fef2fd7d58462",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/130.mp3": {
+    "mtime": 1783519943.7410598,
+    "ast_hash": "9505114c33ea5a02a768f052b6784515",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/131.mp3": {
+    "mtime": 1783519944.3638308,
+    "ast_hash": "980f6971b6b673d60d69688029c7a9e5",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/132.mp3": {
+    "mtime": 1783519945.077688,
+    "ast_hash": "9f0c0a00a33d6f5f6c387d288a4738c5",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/133.mp3": {
+    "mtime": 1783519945.7267823,
+    "ast_hash": "b9055f060d92735fafe0160929e4fc6c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/134.mp3": {
+    "mtime": 1783519981.7962692,
+    "ast_hash": "3825288397eab7c19f9702fa062b9a4f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/135.mp3": {
+    "mtime": 1783519982.6222575,
+    "ast_hash": "a93a0077ea5e796ff8b9763dc8f9d40c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/136.mp3": {
+    "mtime": 1783519983.5197637,
+    "ast_hash": "e11f170c57cb2bed09128ff4ac2e9f2c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/137.mp3": {
+    "mtime": 1783519985.5575957,
+    "ast_hash": "bc7c2990405f50f934da98a91002dd75",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/138.mp3": {
+    "mtime": 1783519986.4156058,
+    "ast_hash": "fdcc11d9b9f004c286dadb73bdcf7737",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/139.mp3": {
+    "mtime": 1783519987.22802,
+    "ast_hash": "8d3e10be404dc295bd0aeab5724df309",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/14.mp3": {
+    "mtime": 1783519903.6750405,
+    "ast_hash": "8756423c91bef462522fd90f6b72c302",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/140.mp3": {
+    "mtime": 1783519987.9559093,
+    "ast_hash": "d7ab4ef602bddb6b40fd4b7c5bba84ca",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/141.mp3": {
+    "mtime": 1783519988.569095,
+    "ast_hash": "dcc1b02238f144de24bbb3b1e99268fe",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/142.mp3": {
+    "mtime": 1783519991.0203724,
+    "ast_hash": "2ea9c25a41571667723e0280f62681ea",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/143.mp3": {
+    "mtime": 1783519991.709997,
+    "ast_hash": "2f9e2753954449d8743c6181dbb8410a",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/144.mp3": {
+    "mtime": 1783519992.6798532,
+    "ast_hash": "9ebb2fd0a778201115f0da279b7c5e03",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/145.mp3": {
+    "mtime": 1783519963.2851126,
+    "ast_hash": "2c9279fc91a494bb4d86bfd4b437e392",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/146.mp3": {
+    "mtime": 1783519963.8024242,
+    "ast_hash": "ce11b43db0863b0c0e26bc1dbd7da394",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/147.mp3": {
+    "mtime": 1783519964.311791,
+    "ast_hash": "fdf082ad9a07f43a30e66b4478473df4",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/15.mp3": {
+    "mtime": 1783519904.3337967,
+    "ast_hash": "40778f3f218c40e5aee5b092f42bdadd",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/16.mp3": {
+    "mtime": 1783519904.8331325,
+    "ast_hash": "0a75f4fb12d9673918ca5b3c1259b76f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/17.mp3": {
+    "mtime": 1783519905.334709,
+    "ast_hash": "00a60144460b00cd6a7126e9b0a02991",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/18.mp3": {
+    "mtime": 1783519905.7521982,
+    "ast_hash": "5012ddd562bb26055a99c1ed413a93f4",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/19.mp3": {
+    "mtime": 1783519906.4218314,
+    "ast_hash": "b0886db0e0ec92226d4c2c23baa37c65",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/2.mp3": {
+    "mtime": 1783519995.6423955,
+    "ast_hash": "dab34d23429753f38952fb7396af8288",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/20.mp3": {
+    "mtime": 1783519906.8697965,
+    "ast_hash": "13b2122e95225b9e3847697b7df5fb56",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/21.mp3": {
+    "mtime": 1783519907.6833754,
+    "ast_hash": "9494ded16544f10448837b683052763d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/22.mp3": {
+    "mtime": 1783519908.2344296,
+    "ast_hash": "b75de859c887541f3549c6faa7dc092e",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/23.mp3": {
+    "mtime": 1783519908.8078046,
+    "ast_hash": "c89b4fb6ebdc02ee95d1336bf359bbca",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/24.mp3": {
+    "mtime": 1783519909.253616,
+    "ast_hash": "67935f45c4195c44e7a5544174ff148c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/25.mp3": {
+    "mtime": 1783519910.3987226,
+    "ast_hash": "ee168c6054e505cecd33fadb7f26cc87",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/26.mp3": {
+    "mtime": 1783519911.0594473,
+    "ast_hash": "b1c91f47a1c623a1f7f7b6762781e92d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/27.mp3": {
+    "mtime": 1783519911.6439257,
+    "ast_hash": "d66513659fb2ef8a25bea31d1000d517",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/28.mp3": {
+    "mtime": 1783519912.5946689,
+    "ast_hash": "982f329e54108286060ff5586b566e9e",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/29.mp3": {
+    "mtime": 1783519913.0954032,
+    "ast_hash": "f77f1bb45f5c33a4ff99fba9ead76a61",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/3.mp3": {
+    "mtime": 1783519996.0507312,
+    "ast_hash": "57e8fda3922cc6c522ed2f397df8628e",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/30.mp3": {
+    "mtime": 1783519913.7223022,
+    "ast_hash": "ea97f1b58f4c7a31685915a353c7e7f9",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/31.mp3": {
+    "mtime": 1783519914.3334756,
+    "ast_hash": "cc5824f6aea7473574db2b4b88b7808d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/32.mp3": {
+    "mtime": 1783519915.1250918,
+    "ast_hash": "803f8eaddbc4afc9d4501608eaaff0cc",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/33.mp3": {
+    "mtime": 1783519915.8685493,
+    "ast_hash": "743e3a3bdc3b526f7d11c24b5c362433",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/34.mp3": {
+    "mtime": 1783519916.41671,
+    "ast_hash": "2ff9043f40c10c3f54c44743b201058b",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/35.mp3": {
+    "mtime": 1783519917.2116017,
+    "ast_hash": "5abfa47c760a68ac0a78fa9cd5654767",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/36.mp3": {
+    "mtime": 1783519917.809291,
+    "ast_hash": "205681b381bf346e95b6c63bed869231",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/37.mp3": {
+    "mtime": 1783519918.5379412,
+    "ast_hash": "f2be39bbda684e1b6d5faf099ec6dea6",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/38.mp3": {
+    "mtime": 1783519919.072825,
+    "ast_hash": "6250db83617b6f69b66dd57c1487d62a",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/39.mp3": {
+    "mtime": 1783519919.7569532,
+    "ast_hash": "cbd457e5b0cdab5b8135c01317cfebd6",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/4.mp3": {
+    "mtime": 1783519996.6456766,
+    "ast_hash": "a052e7edbaa208244da5c883952f12b2",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/40.mp3": {
+    "mtime": 1783519920.309111,
+    "ast_hash": "04ef4f1cf2522d5dfaefd382cd52779c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/41.mp3": {
+    "mtime": 1783519920.68637,
+    "ast_hash": "b7eae9bc6a813bd0ed8b8b8801ae1e22",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/42.mp3": {
+    "mtime": 1783519921.1237535,
+    "ast_hash": "4c6d3167b91507e554bf5ddb3a974cae",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/43.mp3": {
+    "mtime": 1783519921.6739476,
+    "ast_hash": "c906f8f666d73d5f3cf525a31d51b423",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/44.mp3": {
+    "mtime": 1783519922.191806,
+    "ast_hash": "aa05d26e1f4ab3623a2dc0b86a6e571f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/45.mp3": {
+    "mtime": 1783519923.4475412,
+    "ast_hash": "43fb06108b2636a3e3aa03f04cd0cffe",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/46.mp3": {
+    "mtime": 1783519923.9746256,
+    "ast_hash": "8da9942d4df708a7decea1d145c87450",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/47.mp3": {
+    "mtime": 1783519924.5127757,
+    "ast_hash": "c6bc83effbebe5342bdbb01bb0b5ea32",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/48.mp3": {
+    "mtime": 1783519925.002294,
+    "ast_hash": "7f2bca03cce1fd15c52bb5e4431c8a96",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/49.mp3": {
+    "mtime": 1783519925.5983582,
+    "ast_hash": "cbe0b736ec6c5dc7748f94775f491292",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/5.mp3": {
+    "mtime": 1783519895.8945806,
+    "ast_hash": "433255ec1843f2eee012706fb9dfa2ad",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/50.mp3": {
+    "mtime": 1783519926.2145877,
+    "ast_hash": "843a5bfcbf09c50e75802f7a9def15c3",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/51.mp3": {
+    "mtime": 1783519926.84467,
+    "ast_hash": "cfe641768f1b80474cfb7242f92c5318",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/52.mp3": {
+    "mtime": 1783519927.3329008,
+    "ast_hash": "a96480e81ae9bf8c338ba9ddca087802",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/53.mp3": {
+    "mtime": 1783519927.8512547,
+    "ast_hash": "5a3527c39c36baa19edf93d96347cc6d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/54.mp3": {
+    "mtime": 1783519928.4855282,
+    "ast_hash": "7cdb63132757b2b8981b292f495aec3d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/55.mp3": {
+    "mtime": 1783519998.779603,
+    "ast_hash": "113ad6b9ca3596ef5fe71868c92c915b",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/56.mp3": {
+    "mtime": 1783519999.2990544,
+    "ast_hash": "80cc0f7aebcd846fd6a87eeabb369810",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/57.mp3": {
+    "mtime": 1783519999.689355,
+    "ast_hash": "692237191cc04c6e441fa65c7ff22335",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/58.mp3": {
+    "mtime": 1783520000.1736884,
+    "ast_hash": "b27e26bd9c01fe7a8a6779c870ef953f",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/59.mp3": {
+    "mtime": 1783520000.6798265,
+    "ast_hash": "1055f3eaf9f5494cfb93174708731a3e",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/6.mp3": {
+    "mtime": 1783519896.4802966,
+    "ast_hash": "a349d799b58e8af4be450b91b28b468c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/60.mp3": {
+    "mtime": 1783520001.485385,
+    "ast_hash": "f5861d934906448f370c8571e4890862",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/61.mp3": {
+    "mtime": 1783520002.007354,
+    "ast_hash": "ef865adb30f06e6f407086aa83cc019d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/62.mp3": {
+    "mtime": 1783520002.6217651,
+    "ast_hash": "2af80ca19d228261e39ff20530d3a2e7",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/63.mp3": {
+    "mtime": 1783520003.1190355,
+    "ast_hash": "7c8d1d51fec103c4d096d85013a838ea",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/64.mp3": {
+    "mtime": 1783520003.543107,
+    "ast_hash": "003370602e418487ad64a8b5faf3c42c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/65.mp3": {
+    "mtime": 1783520004.2576807,
+    "ast_hash": "bc84d10f3c9d9e9d1c2e02ff979ab9ec",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/66.mp3": {
+    "mtime": 1783520004.7731075,
+    "ast_hash": "65751d3591561836874bdca17f84b5b1",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/67.mp3": {
+    "mtime": 1783519947.702824,
+    "ast_hash": "29983ade29bd7c7604e65a1306186469",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/68.mp3": {
+    "mtime": 1783519948.432521,
+    "ast_hash": "7f6efe892984821d46c3bb38bd78842a",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/69.mp3": {
+    "mtime": 1783519949.1493273,
+    "ast_hash": "f89cb1e2021641605e38ab15d8343d67",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/7.mp3": {
+    "mtime": 1783519897.4981704,
+    "ast_hash": "03854f3c01c065ce74d39d830114eddf",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/70.mp3": {
+    "mtime": 1783519949.6723056,
+    "ast_hash": "088e7d2fb0871ece74f9c9462d62cb73",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/71.mp3": {
+    "mtime": 1783519950.0886045,
+    "ast_hash": "dfb301f996191de3ab7afd40ff033db6",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/72.mp3": {
+    "mtime": 1783519950.5974247,
+    "ast_hash": "579dc7b4a67fcbbf8bbb4c8bbb27347d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/73.mp3": {
+    "mtime": 1783519951.0404696,
+    "ast_hash": "e6c465dea91abf7cfba811a65f97bcb3",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/74.mp3": {
+    "mtime": 1783519951.586417,
+    "ast_hash": "6f20b16ce1678e4a5887bf3d9c0431ee",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/75.mp3": {
+    "mtime": 1783519952.129121,
+    "ast_hash": "39da913f850473f0d36b8eb59e8131d8",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/76.mp3": {
+    "mtime": 1783519952.6372707,
+    "ast_hash": "06297dbe4187ba2deea366d91f00dc26",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/77.mp3": {
+    "mtime": 1783519953.3379383,
+    "ast_hash": "e456ec191b79d083d1c14bb364f94c43",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/78.mp3": {
+    "mtime": 1783519953.8713548,
+    "ast_hash": "2bc4a58e8f28ebcab74927bd958d54b3",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/79.mp3": {
+    "mtime": 1783519954.4785347,
+    "ast_hash": "bff9b443af49fe102d7c3b0dd804e27b",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/8.mp3": {
+    "mtime": 1783519897.950287,
+    "ast_hash": "5657951771309c68ae4103238243f636",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/80.mp3": {
+    "mtime": 1783519954.9908078,
+    "ast_hash": "0ed63d2e0459565fef02c27a2e4407ec",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/81.mp3": {
+    "mtime": 1783519955.6085303,
+    "ast_hash": "c3e9b1606d92ad5668fd0f723345e8ce",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/82.mp3": {
+    "mtime": 1783519956.4286563,
+    "ast_hash": "1ec575e1b29c0b751ffe12088a72c2c6",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/83.mp3": {
+    "mtime": 1783519956.899021,
+    "ast_hash": "5b63ef96014a5e5e75a4de9565fff383",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/84.mp3": {
+    "mtime": 1783519957.5112934,
+    "ast_hash": "60f824218d8f501fe6d10def750072fa",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/85.mp3": {
+    "mtime": 1783519958.1672146,
+    "ast_hash": "8f67a890526b613934df576feda6a66a",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/86.mp3": {
+    "mtime": 1783519958.8822923,
+    "ast_hash": "bc677002117b9629d1b4a34142086e06",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/87.mp3": {
+    "mtime": 1783519960.5254734,
+    "ast_hash": "594cc90783eb579bde24287b6d40b3e6",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/88.mp3": {
+    "mtime": 1783519961.1429403,
+    "ast_hash": "7db79adf179cbcc621f596108b22961a",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/89.mp3": {
+    "mtime": 1783519961.65423,
+    "ast_hash": "cc82136e1b644bb0d4dabe922fedc85d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/9.mp3": {
+    "mtime": 1783519898.7631218,
+    "ast_hash": "6f7ef2f2bd0ecd6603bf62a86b758e68",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/90.mp3": {
+    "mtime": 1783519962.1607082,
+    "ast_hash": "37644245b68d6e776cf8cc986b712e47",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/91.mp3": {
+    "mtime": 1783519962.7098305,
+    "ast_hash": "c4ed8b1431693cadb92fee5f3be2500c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/92.mp3": {
+    "mtime": 1783519966.2740858,
+    "ast_hash": "f89cb1e2021641605e38ab15d8343d67",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/93.mp3": {
+    "mtime": 1783519966.8125894,
+    "ast_hash": "1f58796213a073b8cb63991b947c1b42",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/94.mp3": {
+    "mtime": 1783519967.2916377,
+    "ast_hash": "f8c30d0e470efb5d9e84ec75b8354d1e",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/95.mp3": {
+    "mtime": 1783519967.7917783,
+    "ast_hash": "579dc7b4a67fcbbf8bbb4c8bbb27347d",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/96.mp3": {
+    "mtime": 1783519968.3012867,
+    "ast_hash": "519457666de8eaf4fe3e040f7cfa9376",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/97.mp3": {
+    "mtime": 1783519968.9272583,
+    "ast_hash": "babad34ffbeb81f03315cc875885697c",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/98.mp3": {
+    "mtime": 1783519969.5408137,
+    "ast_hash": "63550b17922eaf952c6e60aa7b5da6a2",
+    "semantic_hash": ""
+  },
+  "assets/dictionary/audio/99.mp3": {
+    "mtime": 1783519970.0633564,
+    "ast_hash": "9ac99868351be012fac9dc703fd83ed1",
+    "semantic_hash": ""
+  }
+}

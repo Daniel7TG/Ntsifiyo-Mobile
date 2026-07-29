@@ -168,7 +168,7 @@ class _MemoriaRapidaGameViewState
       }
     });
 
-    showGameFeedback(context, correct: isCorrect);
+    showGameFeedback(context, ref, correct: isCorrect);
     Future.delayed(const Duration(milliseconds: 350), () {
       if (mounted && _phase == 'playing') _nextCard(_topIndex + 1);
     });

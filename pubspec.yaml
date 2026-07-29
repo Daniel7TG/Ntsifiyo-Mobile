@@ -48,7 +48,10 @@ flutter:
     - assets/svgs/diccionario/
     - assets/map/
     - assets/coyote/
+    # Los directorios de assets no son recursivos: img/ y audio/ deben listarse.
     - assets/dictionary/
+    - assets/dictionary/img/
+    - assets/dictionary/audio/
 
   fonts:
     - family: Poppins

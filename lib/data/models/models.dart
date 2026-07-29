@@ -361,19 +361,44 @@ class GameData {
 }
 
 /// ResponseLogDTO — respuesta registrada durante un juego.
+///
+/// Los campos de presentación (`wordText`, `questionText`, `correct*`,
+/// `selected*`) solo alimentan el panel "Revisar respuestas" del resumen;
+/// nunca viajan al backend (ver [toApiJson]).
 class ResponseLog {
   final int? questionId;
   final int? responseAnswerId;
   final bool isCorrect;
 
-  /// Solo para el resumen local en juegos de pares (no se envía).
+  /// Solo para el resumen local en juegos de pares.
   final String? wordText;
+
+  final String? questionText;
+  final String? questionImage;
+  final String? questionAudio;
+
+  final String? correctText;
+  final String? correctImage;
+  final String? correctAudio;
+
+  final String? selectedText;
+  final String? selectedImage;
+  final String? selectedAudio;
 
   const ResponseLog({
     this.questionId,
     this.responseAnswerId,
     required this.isCorrect,
     this.wordText,
+    this.questionText,
+    this.questionImage,
+    this.questionAudio,
+    this.correctText,
+    this.correctImage,
+    this.correctAudio,
+    this.selectedText,
+    this.selectedImage,
+    this.selectedAudio,
   });
 
   factory ResponseLog.fromJson(Map<String, dynamic> json) => ResponseLog(
@@ -382,6 +407,15 @@ class ResponseLog {
             _asInt(json['responseAnswerId'] ?? json['answerId']),
         isCorrect: _asBool(json['isCorrect']),
         wordText: json['wordText'] as String?,
+        questionText: json['questionText'] as String?,
+        questionImage: json['questionImage'] as String?,
+        questionAudio: json['questionAudio'] as String?,
+        correctText: json['correctText'] as String?,
+        correctImage: json['correctImage'] as String?,
+        correctAudio: json['correctAudio'] as String?,
+        selectedText: json['selectedText'] as String?,
+        selectedImage: json['selectedImage'] as String?,
+        selectedAudio: json['selectedAudio'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -389,6 +423,15 @@ class ResponseLog {
         'responseAnswerId': responseAnswerId,
         'isCorrect': isCorrect,
         if (wordText != null) 'wordText': wordText,
+        if (questionText != null) 'questionText': questionText,
+        if (questionImage != null) 'questionImage': questionImage,
+        if (questionAudio != null) 'questionAudio': questionAudio,
+        if (correctText != null) 'correctText': correctText,
+        if (correctImage != null) 'correctImage': correctImage,
+        if (correctAudio != null) 'correctAudio': correctAudio,
+        if (selectedText != null) 'selectedText': selectedText,
+        if (selectedImage != null) 'selectedImage': selectedImage,
+        if (selectedAudio != null) 'selectedAudio': selectedAudio,
       };
 
   /// Payload que espera POST /api/activities/complete.

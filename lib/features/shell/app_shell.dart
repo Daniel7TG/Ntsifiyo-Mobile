@@ -7,6 +7,9 @@ import '../../core/connectivity/connectivity_service.dart';
 import '../../core/sync/game_cache_service.dart';
 import '../../core/sync/sync_service.dart';
 import '../../shared/widgets/states.dart';
+import '../coyote/coyote_companion.dart';
+import '../coyote/coyote_controller.dart';
+import '../coyote/coyote_messages.dart';
 import '../dashboard/dashboard_providers.dart';
 import '../map/map_screen.dart' show enterMapChrome, exitMapChrome;
 import '../sync/sync_summary_sheet.dart';
@@ -25,6 +28,16 @@ class AppShell extends ConsumerStatefulWidget {
 
 class _AppShellState extends ConsumerState<AppShell> {
   static const _mapBranch = 1;
+
+  /// Rutas de cada rama, en el mismo orden que el StatefulShellRoute.
+  static const _branchPaths = [
+    '/dashboard',
+    '/mapa',
+    '/juegos',
+    '/diccionario',
+    '/contenido',
+  ];
+
   int _lastChromeIndex = -1;
 
   bool get _isMapTab => widget.navigationShell.currentIndex == _mapBranch;
@@ -50,6 +63,22 @@ class _AppShellState extends ConsumerState<AppShell> {
     } else {
       exitMapChrome();
     }
+    _speakForTab(index);
+  }
+
+  /// El coyote saluda al entrar a cada sección (mirror de ROUTE_MESSAGES).
+  void _speakForTab(int index) {
+    final message = coyoteSectionMessages[_branchPaths[index]];
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final coyote = ref.read(coyoteProvider.notifier);
+      if (index == _mapBranch || message == null) {
+        // En el mapa el coyote no se dibuja: no dejes una burbuja colgando.
+        coyote.clear();
+        return;
+      }
+      coyote.speak(message.$1, emotion: message.$2);
+    });
   }
 
   @override
@@ -81,15 +110,18 @@ class _AppShellState extends ConsumerState<AppShell> {
       }
     });
 
+    final content = Column(
+      children: [
+        if (!isOnline && !_isMapTab)
+          const SafeArea(bottom: false, child: OfflineBanner()),
+        Expanded(child: widget.navigationShell),
+      ],
+    );
+
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Column(
-        children: [
-          if (!isOnline && !_isMapTab)
-            const SafeArea(bottom: false, child: OfflineBanner()),
-          Expanded(child: widget.navigationShell),
-        ],
-      ),
+      // El mapa es inmersivo: sin coyote encima.
+      body: _isMapTab ? content : CoyoteOverlay(child: content),
       // El mapa es pantalla completa: sin barra de navegación.
       bottomNavigationBar: _isMapTab
           ? null

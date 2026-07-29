@@ -10,6 +10,7 @@ import '../../shared/widgets/progress_ring.dart';
 import '../../shared/widgets/stat_card.dart';
 import '../../shared/widgets/states.dart';
 import '../auth/auth_controller.dart';
+import '../games/game_session.dart';
 import 'dashboard_providers.dart';
 
 /// Dashboard de estudiante y visitante (mirror móvil de
@@ -31,6 +32,11 @@ class DashboardScreen extends ConsumerWidget {
             tooltip: 'Actualizar',
             icon: const Icon(Icons.refresh),
             onPressed: () => ref.invalidate(dashboardProvider),
+          ),
+          IconButton(
+            tooltip: 'Acerca de',
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => context.go('/dashboard/acerca'),
           ),
           IconButton(
             tooltip: 'Cerrar sesión',
@@ -263,7 +269,7 @@ class _PendingActivitiesCard extends StatelessWidget {
             for (final activity
                 in pending.take(3).whereType<Map<String, dynamic>>())
               _PendingTile(activity: activity),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Align(
             alignment: Alignment.centerRight,
             child: TextButton.icon(
@@ -279,57 +285,104 @@ class _PendingActivitiesCard extends StatelessWidget {
   }
 }
 
-class _PendingTile extends StatelessWidget {
+class _PendingTile extends ConsumerStatefulWidget {
   final Map<String, dynamic> activity;
   const _PendingTile({required this.activity});
 
   @override
+  ConsumerState<_PendingTile> createState() => _PendingTileState();
+}
+
+class _PendingTileState extends ConsumerState<_PendingTile> {
+  bool _starting = false;
+
+  Map<String, dynamic> get _game =>
+      widget.activity['game'] is Map<String, dynamic>
+          ? widget.activity['game'] as Map<String, dynamic>
+          : widget.activity;
+
+  /// Inicia la asignación directamente (mirror del NextLessonCard clicable).
+  Future<void> _play() async {
+    final id = widget.activity['id'] ?? _game['id'] ?? _game['activityId'];
+    if (id is! int) {
+      context.go('/dashboard/asignaciones');
+      return;
+    }
+    final info = gameInfoFor(_game['gameType'] as String?);
+
+    setState(() => _starting = true);
+    try {
+      await ref.read(gameSessionProvider.notifier).startFromAssignment(id);
+      if (!mounted) return;
+      context.push('/games/${info.id}/jugar');
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('No se pudo iniciar la actividad: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _starting = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final game = activity['game'] is Map<String, dynamic>
-        ? activity['game'] as Map<String, dynamic>
-        : activity;
+    final game = _game;
     final info = gameInfoFor(game['gameType'] as String?);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: info.color,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(info.icon, color: Colors.white, size: 22),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  (game['title'] ?? info.title) as String,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: FontWeight.w700),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.input),
+        onTap: _starting ? null : _play,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: info.color,
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                Text(
-                  info.title,
-                  style: const TextStyle(
-                      fontSize: 12, color: AppColors.textMuted),
+                child: Icon(info.icon, color: Colors.white, size: 22),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      (game['title'] ?? info.title) as String,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                    Text(
+                      info.title,
+                      style: const TextStyle(
+                          fontSize: 12, color: AppColors.textMuted),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              Text(
+                '+${game['experience'] ?? 0} XP',
+                style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 12,
+                    color: AppColors.warning),
+              ),
+              const SizedBox(width: 6),
+              Icon(
+                _starting ? Icons.hourglass_empty : Icons.play_circle_fill,
+                color: info.color,
+                size: 26,
+              ),
+            ],
           ),
-          Text(
-            '+${game['experience'] ?? 0} XP',
-            style: const TextStyle(
-                fontWeight: FontWeight.w800,
-                fontSize: 12,
-                color: AppColors.warning),
-          ),
-        ],
+        ),
       ),
     );
   }

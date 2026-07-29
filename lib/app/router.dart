@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../data/models/models.dart';
+import '../features/about/about_view.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/screens/welcome_screen.dart';
 import '../features/auth/screens/auth_screen.dart';
+import '../features/auth/screens/verify_email_screen.dart';
 import '../features/shell/app_shell.dart';
 import '../features/dashboard/dashboard_screen.dart';
 import '../features/map/map_screen.dart';
@@ -29,6 +31,8 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: isAuthenticated ? '/dashboard' : '/welcome',
     redirect: (context, state) {
       final loc = state.matchedLocation;
+      // /verify-email es pública: se abre desde el correo sin sesión.
+      if (loc == '/verify-email') return null;
       final inAuthFlow = loc == '/welcome' || loc == '/auth';
       if (!isAuthenticated && !inAuthFlow) return '/welcome';
       if (isAuthenticated && inAuthFlow) return '/dashboard';
@@ -43,6 +47,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/auth',
         builder: (context, state) => AuthScreen(
           initialMode: state.uri.queryParameters['mode'] ?? 'login',
+        ),
+      ),
+      GoRoute(
+        path: '/verify-email',
+        builder: (context, state) => VerifyEmailScreen(
+          token: state.uri.queryParameters['token'],
         ),
       ),
 
@@ -76,6 +86,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                 GoRoute(
                   path: 'asignaciones',
                   builder: (context, state) => const AssignmentsScreen(),
+                ),
+                GoRoute(
+                  path: 'acerca',
+                  builder: (context, state) => const AboutScreen(),
                 ),
               ],
             ),

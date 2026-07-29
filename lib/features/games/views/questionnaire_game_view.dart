@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,11 +8,12 @@ import '../game_session.dart';
 import '../widgets/game_widgets.dart';
 import '../widgets/game_summary_view.dart';
 
-/// Motor compartido de juegos de cuestionario (mirror de QuizGameView.jsx,
-/// IntrusoGameView.jsx y FillBlankGameView.jsx):
+/// Motor compartido de juegos de cuestionario (mirror de QuizGameView.jsx y
+/// FillBlankGameView.jsx):
 /// - QUIZ: pregunta (texto/imagen/audio) + opciones
-/// - INTRUDER: opciones barajadas, encuentra la que no pertenece
 /// - FILL_BLANK: oración con '___' que se rellena con la opción elegida
+///
+/// El Intruso tiene vista propia (contrarreloj): ver intruso_game_view.dart.
 class QuestionnaireGameView extends ConsumerStatefulWidget {
   final GameSession session;
   final VoidCallback onExit;
@@ -40,7 +39,6 @@ class _QuestionnaireGameViewState
   final List<ResponseLog> _logs = [];
 
   String get _gameType => widget.session.data.gameType ?? '';
-  bool get _isIntruder => _gameType == ActivityTypes.intruder;
   bool get _isFillBlank => _gameType == ActivityTypes.fillBlank;
 
   GameConfig get _config1 => widget.session.data.promptConfig;
@@ -54,29 +52,20 @@ class _QuestionnaireGameViewState
 
   void _setup() {
     _questions = widget.session.data.questions;
-    if (_isIntruder) {
-      // El intruso baraja las opciones (mirror de IntrusoGameView).
-      final random = Random();
-      _questions = [
-        for (final q in _questions)
-          Question(
-            id: q.id,
-            question: q.question,
-            word: q.word,
-            responseList: [...q.responseList]..shuffle(random),
-          ),
-      ];
-    }
   }
 
   Question get _current => _questions[_index];
 
   String? _wordText(Word? word, GameConfig config) => word?.textFor(config);
 
+  Answer? get _correctOption =>
+      _current.responseList.where((a) => a.isCorrect).firstOrNull;
+
   void _select(int optionIndex) {
     if (_selectedAnswerIndex != null) return;
     final option = _current.responseList[optionIndex];
     final isCorrect = option.isCorrect;
+    final correct = _correctOption;
 
     setState(() {
       _selectedAnswerIndex = optionIndex;
@@ -85,10 +74,21 @@ class _QuestionnaireGameViewState
         questionId: _current.id,
         responseAnswerId: option.id ?? option.wordId,
         isCorrect: isCorrect,
+        questionText: _current.question.isNotEmpty
+            ? _current.question
+            : _wordText(_current.word, _config1),
+        questionImage: _config1.showImage ? _current.word?.imageUrl : null,
+        questionAudio: _config1.playAudio ? _current.word?.audioUrl : null,
+        correctText: correct != null ? _optionText(correct) : null,
+        correctImage: _config2.showImage ? correct?.word?.imageUrl : null,
+        correctAudio: _config2.playAudio ? correct?.word?.audioUrl : null,
+        selectedText: _optionText(option),
+        selectedImage: _config2.showImage ? option.word?.imageUrl : null,
+        selectedAudio: _config2.playAudio ? option.word?.audioUrl : null,
       ));
     });
 
-    showGameFeedback(context, correct: isCorrect);
+    showGameFeedback(context, ref, correct: isCorrect);
   }
 
   void _next() {
@@ -186,21 +186,6 @@ class _QuestionnaireGameViewState
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  if (_isIntruder)
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        '¿Cuál no pertenece al grupo?',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16,
-                          color: AppColors.textMuted,
-                        ),
-                      ),
-                    ),
-
                   // Estímulo de la pregunta (imagen/audio)
                   if (hasPromptMedia)
                     Center(

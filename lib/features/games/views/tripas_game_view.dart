@@ -216,7 +216,7 @@ class _TripasGameViewState extends ConsumerState<TripasGameView> {
           _dragStart = null;
           _draft = null;
         });
-        showGameFeedback(context, correct: true);
+        showGameFeedback(context, ref, correct: true);
         if (_matched.length == _gameWords.length) {
           _timer?.cancel();
           Future.delayed(const Duration(milliseconds: 1000), () {
@@ -236,7 +236,7 @@ class _TripasGameViewState extends ConsumerState<TripasGameView> {
       _dragStart = null;
       _draft = null;
     });
-    if (withError) showGameFeedback(context, correct: false);
+    if (withError) showGameFeedback(context, ref, correct: false);
   }
 
   String _formatTime(int s) =>

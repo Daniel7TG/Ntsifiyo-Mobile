@@ -212,7 +212,7 @@ class _LaberintoGameViewState extends ConsumerState<LaberintoGameView> {
         _carrying = null;
         _carryingSide = null;
       });
-      showGameFeedback(context, correct: true);
+      showGameFeedback(context, ref, correct: true);
       if (_completed.length >= _wordList.length) {
         _timer?.cancel();
         Future.delayed(const Duration(milliseconds: 1200), () {
@@ -224,7 +224,7 @@ class _LaberintoGameViewState extends ConsumerState<LaberintoGameView> {
         _carrying = null;
         _carryingSide = null;
       });
-      showGameFeedback(context, correct: false);
+      showGameFeedback(context, ref, correct: false);
     }
   }
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/api/api_client.dart';
 import '../../core/storage/app_database.dart';
 import '../../core/sync/asset_preloader.dart';
 import '../../data/models/models.dart';
@@ -126,7 +127,11 @@ class GameSessionController extends Notifier<GameSession?> {
   void clear() => state = null;
 
   /// Envía el resultado (o lo encola si no hay red).
+  ///
   /// Devuelve el RewardResult, o null si quedó pendiente de sincronizar.
+  /// Si el servidor responde con un error (no es un problema de red) lanza
+  /// la ApiException: el resumen ofrece reintentar en vez de encolar algo
+  /// que el backend ya rechazó.
   Future<RewardResult?> complete(GameOutcome outcome) async {
     final session = state;
     if (session == null) return null;
@@ -140,9 +145,23 @@ class GameSessionController extends Notifier<GameSession?> {
         responseLogs: outcome.responseLogs,
         gameId: session.gameId,
       );
+    } on ApiException catch (e) {
+      if (e.status != null) rethrow;
+      await _enqueue(session, outcome, startDateIso);
+      return null;
     } catch (_) {
-      // Sin conexión: encolar para el protocolo de sincronización de 2 pasos.
-      await _db.enqueueResult(PendingResultsCompanion(
+      await _enqueue(session, outcome, startDateIso);
+      return null;
+    }
+  }
+
+  /// Sin conexión: encolar para el protocolo de sincronización de 2 pasos.
+  Future<void> _enqueue(
+    GameSession session,
+    GameOutcome outcome,
+    String startDateIso,
+  ) =>
+      _db.enqueueResult(PendingResultsCompanion(
         gameId: Value(session.gameId),
         title: Value(session.data.title ?? ''),
         gameType: Value(session.data.gameType ?? ''),
@@ -153,9 +172,6 @@ class GameSessionController extends Notifier<GameSession?> {
             jsonEncode(outcome.responseLogs.map((l) => l.toJson()).toList())),
         completedAt: Value(DateTime.now()),
       ));
-      return null;
-    }
-  }
 }
 
 final gameSessionProvider =

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -11,8 +12,16 @@ import '../logic/word_search_generator.dart';
 import '../widgets/game_widgets.dart';
 import '../widgets/game_summary_view.dart';
 
+/// Segundos de partida por dificultad (mirror de TIME_BY_DIFFICULTY).
+const _timeByDifficulty = {
+  Difficulty.easy: 180,
+  Difficulty.medium: 150,
+  Difficulty.hard: 120,
+};
+
 /// Sopa de Letras (mirror de SopaLetrasGameView.jsx): arrastra sobre la
 /// cuadrícula para marcar cada palabra escondida (vale en ambos sentidos).
+/// La partida es contrarreloj: al agotarse el tiempo cuenta lo encontrado.
 class SopaLetrasGameView extends ConsumerStatefulWidget {
   final GameSession session;
   final VoidCallback onExit;
@@ -33,12 +42,22 @@ class _SopaLetrasGameViewState extends ConsumerState<SopaLetrasGameView> {
   List<GridPos> _selection = [];
   bool _finished = false;
 
+  late int _totalTime;
+  late int _timeLeft;
+  Timer? _timer;
+
   GameConfig get _cfg => widget.session.data.promptConfig;
 
   @override
   void initState() {
     super.initState();
     _setup();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   void _setup() {
@@ -52,6 +71,32 @@ class _SopaLetrasGameViewState extends ConsumerState<SopaLetrasGameView> {
     _foundCells.clear();
     _selection = [];
     _finished = false;
+    _totalTime = _timeByDifficulty[data.difficult] ??
+        _timeByDifficulty[Difficulty.medium]!;
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timeLeft = _totalTime;
+    if (_board.placements.isEmpty) return;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) return;
+      if (_timeLeft <= 1) {
+        timer.cancel();
+        setState(() {
+          _timeLeft = 0;
+          _finished = true;
+        });
+        return;
+      }
+      setState(() => _timeLeft--);
+    });
+  }
+
+  void _finish() {
+    _timer?.cancel();
+    setState(() => _finished = true);
   }
 
   /// Convierte la posición del gesto a celda de la cuadrícula.
@@ -92,7 +137,7 @@ class _SopaLetrasGameViewState extends ConsumerState<SopaLetrasGameView> {
           _foundCells.addAll(cells);
           _selection = [];
         });
-        showGameFeedback(context, correct: true);
+        showGameFeedback(context, ref, correct: true);
         final word = _targetWords
             .where((w) => w.id == placement.id)
             .firstOrNull;
@@ -100,6 +145,7 @@ class _SopaLetrasGameViewState extends ConsumerState<SopaLetrasGameView> {
           playWordAudio(word.audioUrl);
         }
         if (_foundIds.length == _board.placements.length) {
+          _timer?.cancel();
           Future.delayed(const Duration(milliseconds: 800), () {
             if (mounted) setState(() => _finished = true);
           });
@@ -173,6 +219,8 @@ class _SopaLetrasGameViewState extends ConsumerState<SopaLetrasGameView> {
       body: SafeArea(
         child: Column(
           children: [
+            GameTimerBar(timeLeft: _timeLeft, total: _totalTime),
+
             // Cuadrícula
             Padding(
               padding: const EdgeInsets.all(12),
@@ -288,7 +336,7 @@ class _SopaLetrasGameViewState extends ConsumerState<SopaLetrasGameView> {
               child: KidBackButton(
                 label: 'Terminar juego',
                 icon: Icons.flag,
-                onPressed: () => setState(() => _finished = true),
+                onPressed: _finish,
               ),
             ),
           ],

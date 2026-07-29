@@ -44,6 +44,13 @@ class AuthService {
     return _toLoginResult(response, Roles.visitor);
   }
 
+  /// GET /api/auth/verify-email?token= — verifica el email del visitante
+  /// (mirror de AuthService.verifyEmail de la web). Lanza ApiException si el
+  /// token es inválido o expiró.
+  Future<void> verifyEmail(String token) async {
+    await _api.get('/api/auth/verify-email?token=${Uri.encodeComponent(token)}');
+  }
+
   /// POST /api/auth/visitor — registro de visitante (requiere verificación email).
   Future<void> registerVisitor({
     required String firstname,

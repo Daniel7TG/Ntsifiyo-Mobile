@@ -10,12 +10,12 @@ import '../../data/services/misc_services.dart';
 import '../../shared/widgets/kid_card.dart';
 import '../../shared/widgets/states.dart';
 
-/// Tipos de contenido (mirror de ContentType en MediaService.js).
+/// Tipos de contenido y orden de pestañas (mirror de TABS en ContentSection.jsx).
 const _contentTabs = [
-  ('SONG', 'Canciones', Icons.music_note, Color(0xFFDB2777)),
-  ('LEGEND', 'Leyendas', Icons.auto_stories, Color(0xFF7C3AED)),
-  ('ANECDOTE', 'Anécdotas', Icons.menu_book, Color(0xFF059669)),
   ('POEM', 'Poemas', Icons.history_edu, Color(0xFFF59E0B)),
+  ('LEGEND', 'Leyendas', Icons.auto_stories, Color(0xFF7C3AED)),
+  ('ANECDOTE', 'Cuentos', Icons.menu_book, Color(0xFF059669)),
+  ('SONG', 'Canciones', Icons.music_note, Color(0xFFDB2777)),
 ];
 
 final mediaByTypeProvider = FutureProvider.autoDispose
@@ -104,8 +104,7 @@ class _MediaList extends ConsumerWidget {
                     padding: const EdgeInsets.all(12),
                     onTap: item.id == null
                         ? null
-                        : () => context.push('/reproductor/${item.id}',
-                            extra: item),
+                        : () => _showDetail(context, item, color, icon),
                     child: Row(
                       children: [
                         ClipRRect(
@@ -180,7 +179,138 @@ class _MediaList extends ConsumerWidget {
         color: color.withValues(alpha: 0.12),
         child: Icon(icon, color: color, size: 28),
       );
+}
 
-  String _formatDuration(int seconds) =>
-      '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}';
+String _formatDuration(int seconds) =>
+    '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}';
+
+/// Modal de detalle con imagen, descripción y botón "Comenzar"
+/// (mirror del media-modal de ContentSection.jsx).
+void _showDetail(
+    BuildContext context, MediaItem item, Color color, IconData icon) {
+  showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: Colors.white,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    builder: (sheetContext) => Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.viewInsetsOf(sheetContext).bottom,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: 10),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+            ),
+            // Portada
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppRadius.card),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 170,
+                  child: (item.overviewImage ?? '').isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: item.overviewImage!,
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) => Container(
+                            color: color.withValues(alpha: 0.12),
+                            child: Icon(icon, color: color, size: 48),
+                          ),
+                        )
+                      : Container(
+                          color: color.withValues(alpha: 0.12),
+                          child: Icon(icon, color: color, size: 48),
+                        ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.title,
+                    style: const TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w900,
+                      fontSize: 20,
+                      color: AppColors.textMain,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      if (item.duration != null) ...[
+                        const Icon(Icons.schedule,
+                            size: 16, color: AppColors.textMuted),
+                        const SizedBox(width: 4),
+                        Text(
+                          _formatDuration(item.duration!),
+                          style: const TextStyle(
+                              fontSize: 13, color: AppColors.textMuted),
+                        ),
+                        const SizedBox(width: 14),
+                      ],
+                      const Icon(Icons.signal_cellular_alt,
+                          size: 16, color: AppColors.textMuted),
+                      const SizedBox(width: 4),
+                      Text(
+                        Difficulty.label(item.difficult),
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: color),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    (item.description ?? '').isNotEmpty
+                        ? item.description!
+                        : 'Sin descripción disponible.',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      height: 1.5,
+                      color: AppColors.textMain,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  KidButton(
+                    label: 'Comenzar',
+                    icon: Icons.play_circle_fill,
+                    color: color,
+                    expanded: true,
+                    onPressed: item.id == null
+                        ? null
+                        : () {
+                            Navigator.pop(sheetContext);
+                            context.push('/reproductor/${item.id}',
+                                extra: item);
+                          },
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
