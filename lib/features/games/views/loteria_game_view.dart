@@ -280,6 +280,7 @@ class _LoteriaGameViewState extends ConsumerState<LoteriaGameView> {
                       text: card.text,
                       imagePath: card.imageUrl,
                       audioPath: card.audioUrl,
+                      wordId: card.wordId,
                       cardState: _matched.contains(card.wordId)
                           ? GameCardState.correct
                           : _wrong.contains(card.wordId)

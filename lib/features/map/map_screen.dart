@@ -1,106 +1,39 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/activity_config.dart';
+import '../../app/map_zones.dart';
+import '../../app/palette.dart';
 import '../../app/theme.dart';
-import '../../core/storage/app_database.dart';
+import '../../core/api/error_messages.dart';
+import '../../core/stars.dart';
 import '../../data/models/models.dart';
-import '../../data/services/activity_service.dart';
 import '../../shared/widgets/kid_card.dart';
+import '../../shared/widgets/progress_ring.dart';
+import '../../shared/widgets/skeleton.dart';
+import '../../shared/immersive_chrome.dart';
 import '../../shared/widgets/states.dart';
-import '../games/game_session.dart';
+import '../games/game_launcher.dart';
+import 'map_geometry.dart';
+import '../progress/progress_providers.dart';
 
 /// El mapa se vive en horizontal: pantalla completa, sin AppBar ni bottom
-/// nav. Estas helpers cambian la orientación/system UI al entrar y salir.
-Future<void> enterMapChrome() async {
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-}
+/// nav. Delega en `lib/shared/immersive_chrome.dart`, que también usa el
+/// reproductor de contenido para su modo pantalla completa con video.
+Future<void> enterMapChrome() => enterImmersiveLandscape();
+Future<void> exitMapChrome() => exitImmersiveLandscape();
 
-Future<void> exitMapChrome() async {
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
-      overlays: SystemUiOverlay.values);
-}
-
-/// Dimensiones naturales de map.webp (mirror de GameMap.jsx).
-const _mapW = 2729.0;
-const _mapH = 1521.0;
-
-class _Zone {
-  final String id;
-  final String label;
-  final String img;
-  final double x, y, w, h;
-
-  const _Zone(this.id, this.label, this.img, this.x, this.y, this.w, this.h);
-
-  bool contains(double mx, double my) =>
-      mx >= x && mx <= x + w && my >= y && my <= y + h;
-}
-
-/// Zonas del mapa con coordenadas sobre la imagen base (de GameMap.jsx).
-const _zones = [
-  _Zone('FOREST', 'Bosque', 'assets/map/forest.webp', 278, 196, 542, 232),
-  _Zone('PARK', 'Parque', 'assets/map/park.webp', 1057, 920, 1363, 589),
-  _Zone('COMMUNITY', 'Comunidad', 'assets/map/community.webp', 1791, 119, 918, 546),
-  _Zone('SCHOOL', 'Escuela', 'assets/map/school.webp', 169, 832, 660, 565),
-  _Zone('CLINIC', 'Clínica', 'assets/map/clinic.webp', 2207, 818, 502, 406),
-  _Zone('MARKET', 'Mercado', 'assets/map/market.webp', 1760, 642, 504, 279),
-  _Zone('KITCHEN', 'Cocina', 'assets/map/kitchen.webp', 1047, 474, 620, 547),
-  _Zone('PLAIN', 'Llanura', 'assets/map/plain.webp', 1102, 287, 656, 281),
-  _Zone('FARM', 'Granja', 'assets/map/farm.webp', 505, 657, 551, 299),
-];
-
-/// Tópicos por zona (mirror de utils/gameCategories.js).
-const _topicsByZone = <String, List<(String, String)>>{
-  'SCHOOL': [('VOWELS', 'Vocales'), ('PRONOUNS', 'Pronombres')],
-  'COMMUNITY': [('CLOTHES', 'Ropa')],
-  'KITCHEN': [('FOOD', 'Comida')],
-  'FARM': [('ANIMALS', 'Animales')],
-  'MARKET': [('FRUITS', 'Frutas')],
-  'CLINIC': [
-    ('BODY_PARTS', 'Partes del cuerpo'),
-    ('FIVE_SENSES', 'Los cinco sentidos')
-  ],
-  'PARK': [('GREETINGS', 'Saludos'), ('COLORS', 'Colores')],
-  'FOREST': [],
-  'PLAIN': [],
-};
-
-/// Juegos por tópico, con fallback al caché offline.
-final gamesByTopicProvider = FutureProvider.autoDispose
-    .family<List<GameSummaryDto>, String>((ref, topic) async {
-  final service = ref.read(activityServiceProvider);
-  final db = ref.read(appDatabaseProvider);
-  try {
-    final paged = await service.getGamesByTopic(topic);
-    return paged.content;
-  } catch (_) {
-    final cached = await db.cachedGamesByTopic(topic);
-    return [
-      for (final g in cached)
-        GameSummaryDto(
-          id: g.gameId,
-          title: g.title,
-          difficult: g.difficult,
-          gameType: g.gameType,
-          topic: g.topic,
-          experience: g.experience,
-          totalQuestions: g.totalQuestions,
-        ),
-    ];
-  }
-});
-
-/// Mapa interactivo por zonas, a pantalla completa y en horizontal.
-/// Al elegir un juego la vista regresa a vertical; al volver del juego se
-/// restaura el horizontal.
+/// Mapa interactivo por zonas, a pantalla completa y en horizontal. El mapa
+/// es *la* progresión de la app (ver CLAUDE.md): cada zona lleva un anillo
+/// con el porcentaje de estrellas ganadas sobre las posibles
+/// (`zoneProgressProvider`), calculado sobre un universo cerrado — solo los
+/// juegos compilados en `assets/games/manifest.json`
+/// (`GameCacheService.bundleGameIds`) — para que publicar contenido nuevo
+/// nunca haga retroceder el progreso de nadie. Al elegir un juego la vista
+/// regresa a vertical; al volver del juego se restaura el horizontal.
 class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
 
@@ -111,50 +44,97 @@ class MapScreen extends ConsumerStatefulWidget {
 class _MapScreenState extends ConsumerState<MapScreen> {
   String? _highlightedZone;
   bool _sheetOpen = false;
+  final _masks = <String, ZoneMask>{};
+  String? _hoveredZone;
+  String? _labelHovered;
 
-  void _onTapMap(Offset local, Size displaySize) {
-    final mx = local.dx / displaySize.width * _mapW;
-    final my = local.dy / displaySize.height * _mapH;
-
-    for (final zone in _zones) {
-      if (zone.contains(mx, my)) {
-        setState(() => _highlightedZone = zone.id);
-        Future.delayed(const Duration(milliseconds: 150), () {
-          if (!mounted) return;
-          setState(() => _highlightedZone = null);
-          _openZone(zone);
-        });
-        return;
-      }
-    }
+  @override
+  void initState() {
+    super.initState();
+    // El mapa se administra a sí mismo: entra en horizontal inmersivo sin
+    // depender de en qué rama del shell viva (hoy cuelga de Explorar).
+    enterMapChrome();
+    _loadMasks();
   }
 
-  Future<void> _openZone(_Zone zone) async {
+  @override
+  void dispose() {
+    exitMapChrome();
+    super.dispose();
+  }
+
+  Future<void> _loadMasks() async {
+    await Future.wait(
+      mapZones.map((zone) async {
+        try {
+          final mask = await ZoneMask.load(zone.img);
+          if (mounted) _masks[zone.id] = mask;
+        } catch (error) {
+          // Las etiquetas siguen disponibles si falla la decodificación.
+          debugPrint('No se pudo cargar la silueta de ${zone.label}: $error');
+        }
+      }),
+    );
+  }
+
+  MapZone? _zoneAt(Offset local, Size displaySize) {
+    final point = Offset(
+      local.dx / displaySize.width * mapImageWidth,
+      local.dy / displaySize.height * mapImageHeight,
+    );
+    for (final zone in mapZones.reversed) {
+      if (_masks[zone.id]?.contains(zone, point) ?? false) return zone;
+    }
+    return null;
+  }
+
+  void _hover(String? id) {
+    if (_hoveredZone != id) setState(() => _hoveredZone = id);
+  }
+
+  Future<void> _selectZone(MapZone zone) async {
+    if (_sheetOpen || _highlightedZone != null) return;
+    setState(() => _highlightedZone = zone.id);
+    await Future<void>.delayed(const Duration(milliseconds: 150));
+    if (!mounted) return;
+    setState(() {
+      _highlightedZone = null;
+      _hoveredZone = null;
+    });
+    await _openZone(zone);
+  }
+
+  void _onTapMap(Offset local, Size displaySize) {
+    final zone = _zoneAt(local, displaySize);
+    if (zone != null) _selectZone(zone);
+  }
+
+  Future<void> _openZone(MapZone zone) async {
     if (_sheetOpen) return;
     _sheetOpen = true;
-    final topics = _topicsByZone[zone.id] ?? [];
-    // El sheet devuelve la ruta del juego elegido (o null si solo se cerró).
-    final route = await showModalBottomSheet<String>(
+    final selectedGame = await showModalBottomSheet<GameSummaryDto>(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: context.palette.surface,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (context) => _ZoneSheet(zone: zone, topics: topics),
+      builder: (context) => _ZoneSheet(zone: zone),
     );
     _sheetOpen = false;
-    if (route == null || !mounted) return;
-
-    // Juego elegido: volver a vertical, jugar y, al salir, regresar al
-    // horizontal del mapa.
-    await exitMapChrome();
     if (!mounted) return;
-    await context.push(route);
+
+    if (selectedGame != null) {
+      await launchGameWithLoading(context, ref, game: selectedGame);
+      // El anillo de esta zona (y el total) pudieron cambiar mientras se
+      // jugaba, tanto si terminó online como si quedó encolada offline.
+      ref.invalidate(progressSnapshotProvider);
+    }
+
     if (mounted) await enterMapChrome();
   }
 
-  void _exitMap() => context.go('/dashboard');
+  void _exitMap() => context.canPop() ? context.pop() : context.go('/explorar');
 
   @override
   Widget build(BuildContext context) {
@@ -167,11 +147,17 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
           // Cubrir el viewport completo; el excedente se recorre con
           // pan/zoom del InteractiveViewer.
-          var displayH = viewportH;
-          var displayW = displayH * (_mapW / _mapH);
+          // Reserva espacio para botones legibles, también con texto grande.
+          // El excedente se puede recorrer con el gesto de arrastre.
+          final textScale = math.max(
+            1.0,
+            MediaQuery.textScalerOf(context).scale(12) / 12,
+          );
+          var displayH = math.max(viewportH, 500.0 * textScale);
+          var displayW = displayH * (mapImageWidth / mapImageHeight);
           if (displayW < viewportW) {
             displayW = viewportW;
-            displayH = displayW * (_mapH / _mapW);
+            displayH = displayW * (mapImageHeight / mapImageWidth);
           }
           final displaySize = Size(displayW, displayH);
 
@@ -186,45 +172,110 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   child: SizedBox(
                     width: displayW,
                     height: displayH,
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTapUp: (details) =>
-                          _onTapMap(details.localPosition, displaySize),
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: Image.asset('assets/map/map.webp',
-                                fit: BoxFit.fill),
-                          ),
-
-                          // Resaltado de la zona tocada
-                          for (final zone in _zones)
-                            if (_highlightedZone == zone.id)
-                              Positioned(
-                                left: zone.x / _mapW * displayW,
-                                top: zone.y / _mapH * displayH,
-                                width: zone.w / _mapW * displayW,
-                                height: zone.h / _mapH * displayH,
-                                child: IgnorePointer(
-                                  child: Image.asset(zone.img,
-                                      fit: BoxFit.fill),
-                                ),
-                              ),
-
-                          // Etiquetas de zona (en horizontal se leen
-                          // derechas igual que el mapa)
-                          for (final zone in _zones)
-                            Positioned(
-                              left:
-                                  (zone.x + zone.w / 2) / _mapW * displayW -
-                                      44,
-                              top: (zone.y + zone.h / 2) / _mapH * displayH -
-                                  16,
-                              child: IgnorePointer(
-                                child: _ZoneLabel(zone: zone),
+                    child: MouseRegion(
+                      cursor: _hoveredZone == null
+                          ? SystemMouseCursors.basic
+                          : SystemMouseCursors.click,
+                      onHover: (event) => _hover(
+                        _labelHovered ??
+                            _zoneAt(event.localPosition, displaySize)?.id,
+                      ),
+                      onExit: (_) => _hover(null),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTapUp: (details) =>
+                            _onTapMap(details.localPosition, displaySize),
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: Image.asset(
+                                'assets/map/map.webp',
+                                fit: BoxFit.fill,
                               ),
                             ),
-                        ],
+
+                            // El brillo respeta el alfa del recorte y no altera su tamaño.
+                            for (final zone in mapZones)
+                              Positioned(
+                                left: zone.x / mapImageWidth * displayW,
+                                top: zone.y / mapImageHeight * displayH,
+                                width: zone.w / mapImageWidth * displayW,
+                                height: zone.h / mapImageHeight * displayH,
+                                child: IgnorePointer(
+                                  child: AnimatedOpacity(
+                                    duration: const Duration(milliseconds: 150),
+                                    opacity:
+                                        _highlightedZone == zone.id ||
+                                            _hoveredZone == zone.id
+                                        ? 1
+                                        : 0,
+                                    child: ColorFiltered(
+                                      colorFilter: const ColorFilter.matrix([
+                                        1.10,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        1.10,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        1.10,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                      ]),
+                                      child: Image.asset(
+                                        zone.img,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            Positioned.fill(
+                              child: CustomMultiChildLayout(
+                                delegate: MapLabelLayout(),
+                                children: [
+                                  for (var i = 0; i < mapZones.length; i++)
+                                    LayoutId(
+                                      id: i,
+                                      child: MouseRegion(
+                                        cursor: SystemMouseCursors.click,
+                                        onEnter: (_) {
+                                          _labelHovered = mapZones[i].id;
+                                          _hover(_labelHovered);
+                                        },
+                                        onHover: (_) => _hover(mapZones[i].id),
+                                        onExit: (_) {
+                                          _labelHovered = null;
+                                          _hover(null);
+                                        },
+                                        child: Semantics(
+                                          button: true,
+                                          child: GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
+                                            onTap: () =>
+                                                _selectZone(mapZones[i]),
+                                            child: _ZoneLabel(
+                                              zone: mapZones[i],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -236,10 +287,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 top: 12,
                 left: 12,
                 child: SafeArea(
-                  child: _RoundMapButton(
-                    icon: Icons.close,
-                    onTap: _exitMap,
-                  ),
+                  child: _RoundMapButton(icon: Icons.close, onTap: _exitMap),
                 ),
               ),
 
@@ -250,19 +298,32 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 child: SafeArea(
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 6),
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(999),
                       border: Border.all(color: AppColors.border, width: 2),
                     ),
-                    child: const Text(
-                      'Toca una zona 👆',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textMuted,
-                      ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Toca una zona',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textMuted,
+                          ),
+                        ),
+                        SizedBox(width: 4),
+                        Icon(
+                          Icons.touch_app,
+                          size: 14,
+                          color: AppColors.textMuted,
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -302,22 +363,26 @@ class _RoundMapButton extends StatelessWidget {
   }
 }
 
-class _ZoneLabel extends StatelessWidget {
-  final _Zone zone;
+/// Etiqueta de zona con su anillo de progreso: estrellas ganadas / posibles
+/// sobre los juegos compilados en el bundle. Una zona sin juegos elegibles
+/// se ve al 100% (`ZoneProgress.percent`) — no debe leerse como "en
+/// construcción", es simplemente una zona que no frena a nadie.
+class _ZoneLabel extends ConsumerWidget {
+  final MapZone zone;
   const _ZoneLabel({required this.zone});
 
   @override
-  Widget build(BuildContext context) {
-    final hasGames = (_topicsByZone[zone.id] ?? []).isNotEmpty;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final progress =
+        ref.watch(zoneProgressProvider)[zone.id] ?? ZoneProgress.empty;
+    final percent = (progress.percent * 100).round();
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.92),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(
-          color: hasGames ? AppColors.primary : AppColors.border,
-          width: 2,
-        ),
+        border: Border.all(color: AppColors.primary, width: 2),
         boxShadow: const [
           BoxShadow(color: Color(0x33000000), offset: Offset(0, 2)),
         ],
@@ -325,19 +390,30 @@ class _ZoneLabel extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            hasGames ? Icons.sports_esports : Icons.construction,
-            size: 14,
-            color: hasGames ? AppColors.primary : AppColors.textLight,
+          ProgressRing(
+            value: progress.percent,
+            max: 1,
+            size: 26,
+            strokeWidth: 4,
+            color: AppColors.success,
+            semanticLabel: '${zone.label}: $percent% completado',
+            centerLabel: Text(
+              '$percent',
+              style: const TextStyle(
+                fontSize: 7,
+                fontWeight: FontWeight.w900,
+                color: AppColors.textMain,
+              ),
+            ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 6),
           Text(
             zone.label,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w800,
               fontSize: 12,
-              color: hasGames ? AppColors.textMain : AppColors.textLight,
+              color: AppColors.textMain,
             ),
           ),
         ],
@@ -346,11 +422,32 @@ class _ZoneLabel extends StatelessWidget {
   }
 }
 
-class _ZoneSheet extends ConsumerStatefulWidget {
-  final _Zone zone;
-  final List<(String, String)> topics;
+/// Cinco estrellas compactas para la mejor puntuación de una actividad
+/// (`lib/core/stars.dart`), reutilizada en la tarjeta de cada juego.
+class _MiniStars extends StatelessWidget {
+  final int stars;
+  const _MiniStars({required this.stars});
 
-  const _ZoneSheet({required this.zone, required this.topics});
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var i = 1; i <= maxStars; i++)
+          Icon(
+            i <= stars ? Icons.star_rounded : Icons.star_outline_rounded,
+            color: i <= stars ? AppColors.warning : Colors.grey.shade400,
+            size: 13,
+          ),
+      ],
+    );
+  }
+}
+
+class _ZoneSheet extends ConsumerStatefulWidget {
+  final MapZone zone;
+
+  const _ZoneSheet({required this.zone});
 
   @override
   ConsumerState<_ZoneSheet> createState() => _ZoneSheetState();
@@ -358,34 +455,18 @@ class _ZoneSheet extends ConsumerStatefulWidget {
 
 class _ZoneSheetState extends ConsumerState<_ZoneSheet> {
   String? _activeTopic;
-  bool _starting = false;
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget.topics.isNotEmpty) _activeTopic = widget.topics.first.$1;
-  }
+  bool get _isMediaZone => widget.zone.gameTypes.isNotEmpty;
 
-  Future<void> _play(GameSummaryDto game) async {
-    setState(() => _starting = true);
-    try {
-      await ref.read(gameSessionProvider.notifier).startFromGame(game);
-      if (!mounted) return;
-      final info = gameInfoFor(game.gameType);
-      // Devolver la ruta al MapScreen, que maneja el cambio de orientación.
-      Navigator.of(context).pop('/games/${info.id}/jugar');
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No se pudo iniciar el juego: $e')),
-      );
-    } finally {
-      if (mounted) setState(() => _starting = false);
-    }
+  void _play(GameSummaryDto game) {
+    Navigator.of(context).pop(game);
   }
 
   @override
   Widget build(BuildContext context) {
+    final progress =
+        ref.watch(zoneProgressProvider)[widget.zone.id] ?? ZoneProgress.empty;
+
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.75,
@@ -398,20 +479,54 @@ class _ZoneSheetState extends ConsumerState<_ZoneSheet> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(widget.zone.img,
-                      width: 64, height: 48, fit: BoxFit.cover),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  widget.zone.label,
-                  style: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w900,
-                    fontSize: 22,
-                    color: AppColors.primary,
+                  child: Image.asset(
+                    widget.zone.img,
+                    width: 64,
+                    height: 48,
+                    fit: BoxFit.cover,
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.zone.label,
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 22,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      Text(
+                        '${progress.earnedStars} de ${progress.possibleStars} '
+                        'estrellas · ${progress.completedGames} de '
+                        '${progress.totalGames} actividades',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                ProgressRing(
+                  value: progress.percent,
+                  max: 1,
+                  size: 42,
+                  strokeWidth: 6,
+                  color: AppColors.success,
+                  centerLabel: Text(
+                    '${(progress.percent * 100).round()}%',
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.close, color: AppColors.textMuted),
@@ -419,69 +534,95 @@ class _ZoneSheetState extends ConsumerState<_ZoneSheet> {
               ],
             ),
           ),
-          if (widget.topics.isEmpty)
-            const Expanded(
-              child: EmptyState(
-                title: 'Zona en construcción',
-                subtitle: 'Muy pronto habrá juegos en esta zona.',
-                emoji: '🚧',
-              ),
-            )
-          else ...[
-            // Selector de tópicos
-            SizedBox(
-              height: 44,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  for (final (id, label) in widget.topics)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: ChoiceChip(
-                        label: Text(label),
-                        selected: _activeTopic == id,
-                        selectedColor:
-                            AppColors.primary.withValues(alpha: 0.15),
-                        labelStyle: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w700,
-                          color: _activeTopic == id
-                              ? AppColors.primary
-                              : AppColors.textMuted,
-                        ),
-                        onSelected: (_) =>
-                            setState(() => _activeTopic = id),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
+          if (_isMediaZone)
+            Expanded(child: _buildGamesList(scrollController, null))
+          else
             Expanded(
-              child: _activeTopic == null
-                  ? const SizedBox.shrink()
-                  : _buildGamesList(scrollController),
+              child: ref
+                  .watch(zoneAvailableTopicsProvider(widget.zone.id))
+                  .when(
+                    loading: () => ListView(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: const [SkeletonListTile(), SkeletonListTile()],
+                    ),
+                    error: (e, _) =>
+                        ErrorState(message: friendlyErrorMessage(e)),
+                    data: (topics) {
+                      if (topics.isEmpty) {
+                        return const EmptyState(
+                          title: 'Aún no hay actividades aquí',
+                          subtitle: 'Vuelve a explorar más tarde.',
+                        );
+                      }
+                      _activeTopic ??= topics.first.$1;
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: 44,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              children: [
+                                for (final (id, label) in topics)
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: ChoiceChip(
+                                      label: Text(label),
+                                      selected: _activeTopic == id,
+                                      selectedColor: AppColors.primary
+                                          .withValues(alpha: 0.15),
+                                      labelStyle: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w700,
+                                        color: _activeTopic == id
+                                            ? AppColors.primary
+                                            : AppColors.textMuted,
+                                      ),
+                                      onSelected: (_) =>
+                                          setState(() => _activeTopic = id),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: _buildGamesList(
+                              scrollController,
+                              _activeTopic,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
             ),
-          ],
         ],
       ),
     );
   }
 
-  Widget _buildGamesList(ScrollController scrollController) {
-    final games = ref.watch(gamesByTopicProvider(_activeTopic!));
+  Widget _buildGamesList(ScrollController scrollController, String? topic) {
+    final games = ref.watch(gamesForZoneProvider((widget.zone.id, topic)));
+    final gameStars = ref.watch(gameStarsProvider);
     return games.when(
-      loading: () => const LoadingState(message: 'Buscando juegos...'),
+      loading: () => ListView(
+        padding: const EdgeInsets.all(16),
+        physics: const NeverScrollableScrollPhysics(),
+        children: const [SkeletonListTile(), SkeletonListTile()],
+      ),
       error: (e, _) => ErrorState(
-        message: e.toString(),
-        onRetry: () => ref.invalidate(gamesByTopicProvider(_activeTopic!)),
+        message: friendlyErrorMessage(e),
+        onRetry: () =>
+            ref.invalidate(gamesForZoneProvider((widget.zone.id, topic))),
       ),
       data: (list) => list.isEmpty
           ? const EmptyState(
-              title: 'Sin juegos por ahora',
-              subtitle: 'Este tema aún no tiene actividades.',
-              emoji: '🎒',
+              title: 'Aún no hay actividades aquí',
+              subtitle: 'Vuelve a explorar más tarde.',
             )
           : ListView.builder(
               controller: scrollController,
@@ -490,13 +631,14 @@ class _ZoneSheetState extends ConsumerState<_ZoneSheet> {
               itemBuilder: (context, index) {
                 final game = list[index];
                 final info = gameInfoFor(game.gameType);
+                final stars = gameStars[game.id] ?? 0;
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: KidCard(
                     accentColor: info.color,
                     shadowOffset: 4,
                     padding: const EdgeInsets.all(12),
-                    onTap: _starting ? null : () => _play(game),
+                    onTap: () => _play(game),
                     child: Row(
                       children: [
                         Container(
@@ -506,8 +648,7 @@ class _ZoneSheetState extends ConsumerState<_ZoneSheet> {
                             color: info.color,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(info.icon,
-                              color: Colors.white, size: 24),
+                          child: Icon(info.icon, color: Colors.white, size: 24),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -519,20 +660,27 @@ class _ZoneSheetState extends ConsumerState<_ZoneSheet> {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w800),
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w800,
+                                ),
                               ),
                               Text(
-                                '${info.title} · +${game.experience ?? 0} XP',
+                                '${info.title} · +${game.displayXp} XP',
                                 style: const TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.textMuted),
+                                  fontSize: 12,
+                                  color: AppColors.textMuted,
+                                ),
                               ),
+                              const SizedBox(height: 2),
+                              _MiniStars(stars: stars),
                             ],
                           ),
                         ),
-                        Icon(Icons.play_circle_fill,
-                            color: info.color, size: 34),
+                        Icon(
+                          Icons.play_circle_fill,
+                          color: info.color,
+                          size: 34,
+                        ),
                       ],
                     ),
                   ),

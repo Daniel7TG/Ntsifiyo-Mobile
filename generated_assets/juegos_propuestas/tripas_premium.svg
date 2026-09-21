@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <linearGradient id="tripas2BgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E1B4B" />
+      <stop offset="100%" stop-color="#312E81" />
+    </linearGradient>
+    <filter id="tripas2Shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="5" stdDeviation="3.5" flood-color="#000000" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Background Tile -->
+  <rect x="6" y="6" width="108" height="108" rx="24" fill="url(#tripas2BgGrad)" />
+
+  <!-- Winding Neon Yarn Lines -->
+  <g fill="none" stroke-width="5" stroke-linecap="round" filter="url(#tripas2Shadow)">
+    <!-- Line 1: Neon Magenta Yarn (A to A) -->
+    <path d="M 28,30 C 10,50 40,85 75,90 C 100,92 95,60 70,55 C 50,50 35,25 78,30" stroke="#EC4899" />
+    <!-- Line 2: Cyan Neon Yarn (B to B) -->
+    <path d="M 30,85 C 15,65 55,45 60,35 C 65,25 90,35 88,75" stroke="#06B6D4" />
+  </g>
+
+  <!-- Yarn Ball Nodes (A1, A2, B1, B2) -->
+  <!-- Node A1 -->
+  <g transform="translate(28, 30)" filter="url(#tripas2Shadow)">
+    <circle cx="0" cy="0" r="10" fill="#EC4899" stroke="#FFFFFF" stroke-width="2" />
+    <!-- Yarn Texture lines -->
+    <path d="M -6,-4 Q 0,-8 6,-4 M -8,2 Q 0,-2 8,2" fill="none" stroke="#FCE7F3" stroke-width="1.2" />
+  </g>
+
+  <!-- Node A2 -->
+  <g transform="translate(78, 30)" filter="url(#tripas2Shadow)">
+    <circle cx="0" cy="0" r="10" fill="#EC4899" stroke="#FFFFFF" stroke-width="2" />
+    <path d="M -6,-4 Q 0,-8 6,-4 M -8,2 Q 0,-2 8,2" fill="none" stroke="#FCE7F3" stroke-width="1.2" />
+  </g>
+
+  <!-- Node B1 -->
+  <g transform="translate(30, 85)" filter="url(#tripas2Shadow)">
+    <circle cx="0" cy="0" r="10" fill="#06B6D4" stroke="#FFFFFF" stroke-width="2" />
+    <path d="M -6,-4 Q 0,-8 6,-4 M -8,2 Q 0,-2 8,2" fill="none" stroke="#CFFAFE" stroke-width="1.2" />
+  </g>
+
+  <!-- Node B2 -->
+  <g transform="translate(88, 75)" filter="url(#tripas2Shadow)">
+    <circle cx="0" cy="0" r="10" fill="#06B6D4" stroke="#FFFFFF" stroke-width="2" />
+    <path d="M -6,-4 Q 0,-8 6,-4 M -8,2 Q 0,-2 8,2" fill="none" stroke="#CFFAFE" stroke-width="1.2" />
+  </g>
+
+  <!-- Cute Cat Paw Icon drawing line on top right -->
+  <g transform="translate(82, 36) rotate(-20)" filter="url(#tripas2Shadow)">
+    <!-- Main Pad -->
+    <path d="M 0,0 C -5,0 -7,-5 -4,-9 C -2,-12 2,-12 4,-9 C 7,-5 5,0 0,0 Z" fill="#F43F5E" />
+    <!-- Toe Beans -->
+    <circle cx="-6" cy="-14" r="2.2" fill="#F43F5E" />
+    <circle cx="-1" cy="-16" r="2.2" fill="#F43F5E" />
+    <circle cx="4" cy="-14" r="2.2" fill="#F43F5E" />
+  </g>
+</svg>

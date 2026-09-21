@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-08T08:13:25.335368",
+ "generatedAt": "2026-08-19T23:07:02.925882",
  "categories": [
   "ANIMALS",
   "PRONOUNS",
@@ -72,16 +72,6 @@
    "audio": "audio/10.mp3"
   },
   {
-   "id": 11,
-   "spanishWord": "borrega",
-   "mazahuaWord": "ndechjï",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "ANIMALS",
-   "image": "img/11.webp",
-   "audio": "audio/11.mp3"
-  },
-  {
    "id": 12,
    "spanishWord": "borrego",
    "mazahuaWord": "ngalo",
@@ -100,16 +90,6 @@
    "category": "ANIMALS",
    "image": "img/13.webp",
    "audio": "audio/13.mp3"
-  },
-  {
-   "id": 14,
-   "spanishWord": "burro",
-   "mazahuaWord": "rrekjua",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "ANIMALS",
-   "image": "img/14.webp",
-   "audio": "audio/14.mp3"
   },
   {
    "id": 15,
@@ -160,26 +140,6 @@
    "category": "ANIMALS",
    "image": "img/19.webp",
    "audio": "audio/19.mp3"
-  },
-  {
-   "id": 20,
-   "spanishWord": "gallo",
-   "mazahuaWord": "chaa",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "ANIMALS",
-   "image": "img/20.webp",
-   "audio": "audio/20.mp3"
-  },
-  {
-   "id": 21,
-   "spanishWord": "gato",
-   "mazahuaWord": "mixi",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "ANIMALS",
-   "image": "img/21.webp",
-   "audio": "audio/21.mp3"
   },
   {
    "id": 22,
@@ -332,16 +292,6 @@
    "audio": "audio/36.mp3"
   },
   {
-   "id": 37,
-   "spanishWord": "perro",
-   "mazahuaWord": "dyoo",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "ANIMALS",
-   "image": "img/37.webp",
-   "audio": "audio/37.mp3"
-  },
-  {
    "id": 38,
    "spanishWord": "pez",
    "mazahuaWord": "jmoo",
@@ -360,16 +310,6 @@
    "category": "ANIMALS",
    "image": "img/39.webp",
    "audio": "audio/39.mp3"
-  },
-  {
-   "id": 40,
-   "spanishWord": "pollo",
-   "mazahuaWord": "ngoñi",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "ANIMALS",
-   "image": "img/40.webp",
-   "audio": "audio/40.mp3"
   },
   {
    "id": 41,
@@ -452,16 +392,6 @@
    "audio": "audio/48.mp3"
   },
   {
-   "id": 49,
-   "spanishWord": "vaca",
-   "mazahuaWord": "b´aga",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "ANIMALS",
-   "image": "img/49.webp",
-   "audio": "audio/49.mp3"
-  },
-  {
    "id": 50,
    "spanishWord": "venado",
    "mazahuaWord": "pjanteje",
@@ -510,6 +440,86 @@
    "category": "ANIMALS",
    "image": "img/54.webp",
    "audio": "audio/54.mp3"
+  },
+  {
+   "id": 14,
+   "spanishWord": "burro",
+   "mazahuaWord": "rrekjua",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "ANIMALS",
+   "image": "img/14.webp",
+   "audio": "audio/14.mp3"
+  },
+  {
+   "id": 20,
+   "spanishWord": "gallo",
+   "mazahuaWord": "chaa",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "ANIMALS",
+   "image": "img/20.webp",
+   "audio": "audio/20.mp3"
+  },
+  {
+   "id": 37,
+   "spanishWord": "perro",
+   "mazahuaWord": "dyoo",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "ANIMALS",
+   "image": "img/37.webp",
+   "audio": "audio/37.mp3"
+  },
+  {
+   "id": 40,
+   "spanishWord": "pollo",
+   "mazahuaWord": "ngoñi",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "ANIMALS",
+   "image": "img/40.webp",
+   "audio": "audio/40.mp3"
+  },
+  {
+   "id": 49,
+   "spanishWord": "vaca",
+   "mazahuaWord": "b´aga",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "ANIMALS",
+   "image": "img/49.webp",
+   "audio": "audio/49.mp3"
+  },
+  {
+   "id": 11,
+   "spanishWord": "borrega",
+   "mazahuaWord": "ndechjï",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "ANIMALS",
+   "image": "img/11.webp",
+   "audio": "audio/11.mp3"
+  },
+  {
+   "id": 21,
+   "spanishWord": "gato",
+   "mazahuaWord": "mixi",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "ANIMALS",
+   "image": "img/21.webp",
+   "audio": "audio/21.mp3"
+  },
+  {
+   "id": 357,
+   "spanishWord": "pollito",
+   "mazahuaWord": "tsingoñi",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "ANIMALS",
+   "image": "img/357.webp",
+   "audio": "audio/357.mp3"
   },
   {
    "id": 109,
@@ -592,16 +602,6 @@
    "audio": "audio/116.mp3"
   },
   {
-   "id": 118,
-   "spanishWord": "sombrero",
-   "mazahuaWord": "tjuns´i",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "CLOTHES",
-   "image": "img/118.webp",
-   "audio": "audio/118.mp3"
-  },
-  {
    "id": 119,
    "spanishWord": "pantalon",
    "mazahuaWord": "zetse",
@@ -612,6 +612,16 @@
    "audio": "audio/119.mp3"
   },
   {
+   "id": 118,
+   "spanishWord": "sombrero",
+   "mazahuaWord": "tjuns´i",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "CLOTHES",
+   "image": "img/118.webp",
+   "audio": "audio/118.mp3"
+  },
+  {
    "id": 120,
    "spanishWord": "morral",
    "mazahuaWord": "mape",
@@ -620,16 +630,6 @@
    "category": "CLOTHES",
    "image": "img/120.webp",
    "audio": "audio/120.mp3"
-  },
-  {
-   "id": 121,
-   "spanishWord": "gabán",
-   "mazahuaWord": "ndaxiyo",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "CLOTHES",
-   "image": "img/121.webp",
-   "audio": "audio/121.mp3"
   },
   {
    "id": 122,
@@ -740,6 +740,26 @@
    "category": "CLOTHES",
    "image": "img/133.webp",
    "audio": "audio/133.mp3"
+  },
+  {
+   "id": 121,
+   "spanishWord": "gabán",
+   "mazahuaWord": "ndaxiyo",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "CLOTHES",
+   "image": "img/121.webp",
+   "audio": "audio/121.mp3"
+  },
+  {
+   "id": 360,
+   "spanishWord": "zapato",
+   "mazahuaWord": "mbokua",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "CLOTHES",
+   "image": "img/360.webp",
+   "audio": "audio/360.mp3"
   },
   {
    "id": 67,
@@ -892,16 +912,6 @@
    "audio": "audio/81.mp3"
   },
   {
-   "id": 82,
-   "spanishWord": "pan",
-   "mazahuaWord": "tjomechi/trrjomechi",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "FOOD",
-   "image": "img/82.webp",
-   "audio": "audio/82.mp3"
-  },
-  {
    "id": 83,
    "spanishWord": "papa",
    "mazahuaWord": "d'okʼa",
@@ -972,16 +982,6 @@
    "audio": "audio/89.mp3"
   },
   {
-   "id": 90,
-   "spanishWord": "tortillas",
-   "mazahuaWord": "xedyi",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "FOOD",
-   "image": "img/90.webp",
-   "audio": "audio/90.mp3"
-  },
-  {
    "id": 91,
    "spanishWord": "tostadas",
    "mazahuaWord": "moxtï",
@@ -990,6 +990,16 @@
    "category": "FOOD",
    "image": "img/91.webp",
    "audio": "audio/91.mp3"
+  },
+  {
+   "id": 82,
+   "spanishWord": "pan",
+   "mazahuaWord": "tjomechi/trrjomechi",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "FOOD",
+   "image": "img/82.webp",
+   "audio": "audio/82.mp3"
   },
   {
    "id": 145,
@@ -1022,6 +1032,76 @@
    "audio": "audio/147.mp3"
   },
   {
+   "id": 90,
+   "spanishWord": "tortillas",
+   "mazahuaWord": "xedyi",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "FOOD",
+   "image": "img/90.webp",
+   "audio": "audio/90.mp3"
+  },
+  {
+   "id": 352,
+   "spanishWord": "agua",
+   "mazahuaWord": "ntrreje",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "FOOD",
+   "image": "img/352.webp",
+   "audio": "audio/352.mp3"
+  },
+  {
+   "id": 353,
+   "spanishWord": "arroz",
+   "mazahuaWord": "arro",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "FOOD",
+   "image": "img/353.webp",
+   "audio": "audio/353.mp3"
+  },
+  {
+   "id": 354,
+   "spanishWord": "huevo",
+   "mazahuaWord": "muru",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "FOOD",
+   "image": "img/354.webp",
+   "audio": "audio/354.mp3"
+  },
+  {
+   "id": 356,
+   "spanishWord": "mole",
+   "mazahuaWord": "mbaii",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "FOOD",
+   "image": "img/356.webp",
+   "audio": "audio/356.mp3"
+  },
+  {
+   "id": 358,
+   "spanishWord": "queso",
+   "mazahuaWord": "kexo",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "FOOD",
+   "image": "img/358.webp",
+   "audio": "audio/358.mp3"
+  },
+  {
+   "id": 359,
+   "spanishWord": "salsa",
+   "mazahuaWord": "ii",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "FOOD",
+   "image": "img/359.webp",
+   "audio": "audio/359.mp3"
+  },
+  {
    "id": 92,
    "spanishWord": "camote",
    "mazahuaWord": "mbengoma",
@@ -1030,6 +1110,26 @@
    "category": "FRUITS",
    "image": "img/92.webp",
    "audio": "audio/92.mp3"
+  },
+  {
+   "id": 95,
+   "spanishWord": "chayote",
+   "mazahuaWord": "muu",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "FRUITS",
+   "image": "img/95.webp",
+   "audio": "audio/95.mp3"
+  },
+  {
+   "id": 99,
+   "spanishWord": "naranjita",
+   "mazahuaWord": "luxi",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "FRUITS",
+   "image": "img/99.webp",
+   "audio": "audio/99.mp3"
   },
   {
    "id": 93,
@@ -1050,16 +1150,6 @@
    "category": "FRUITS",
    "image": "img/94.webp",
    "audio": "audio/94.mp3"
-  },
-  {
-   "id": 95,
-   "spanishWord": "chayote",
-   "mazahuaWord": "muu",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "FRUITS",
-   "image": "img/95.webp",
-   "audio": "audio/95.mp3"
   },
   {
    "id": 96,
@@ -1092,16 +1182,6 @@
    "audio": "audio/98.mp3"
   },
   {
-   "id": 99,
-   "spanishWord": "naranjita",
-   "mazahuaWord": "luxi",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "FRUITS",
-   "image": "img/99.webp",
-   "audio": "audio/99.mp3"
-  },
-  {
    "id": 100,
    "spanishWord": "pera",
    "mazahuaWord": "peraxï",
@@ -1110,16 +1190,6 @@
    "category": "FRUITS",
    "image": "img/100.webp",
    "audio": "audio/100.mp3"
-  },
-  {
-   "id": 101,
-   "spanishWord": "platano",
-   "mazahuaWord": "ndanxa",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "FRUITS",
-   "image": "img/101.webp",
-   "audio": "audio/101.mp3"
   },
   {
    "id": 102,
@@ -1182,6 +1252,16 @@
    "audio": "audio/107.mp3"
   },
   {
+   "id": 101,
+   "spanishWord": "platano",
+   "mazahuaWord": "ndanxa",
+   "spanishPronunciation": null,
+   "mazahuaPronunciation": null,
+   "category": "FRUITS",
+   "image": "img/101.webp",
+   "audio": "audio/101.mp3"
+  },
+  {
    "id": 108,
    "spanishWord": "zarza",
    "mazahuaWord": "xaxtï",
@@ -1190,16 +1270,6 @@
    "category": "FRUITS",
    "image": "img/108.webp",
    "audio": "audio/108.mp3"
-  },
-  {
-   "id": 134,
-   "spanishWord": "nariz",
-   "mazahuaWord": "nu xiño",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "BODY_PARTS",
-   "image": "img/134.webp",
-   "audio": "audio/134.mp3"
   },
   {
    "id": 135,
@@ -1282,24 +1352,14 @@
    "audio": "audio/142.mp3"
   },
   {
-   "id": 143,
-   "spanishWord": "cabeza",
-   "mazahuaWord": "nu nrroñi",
+   "id": 355,
+   "spanishWord": "la mano",
+   "mazahuaWord": "nu dye'e",
    "spanishPronunciation": null,
    "mazahuaPronunciation": null,
    "category": "BODY_PARTS",
-   "image": "img/143.webp",
-   "audio": "audio/143.mp3"
-  },
-  {
-   "id": 144,
-   "spanishWord": "boca",
-   "mazahuaWord": "nu nee",
-   "spanishPronunciation": null,
-   "mazahuaPronunciation": null,
-   "category": "BODY_PARTS",
-   "image": "img/144.webp",
-   "audio": "audio/144.mp3"
+   "image": "img/355.webp",
+   "audio": "audio/355.mp3"
   },
   {
    "id": 1,

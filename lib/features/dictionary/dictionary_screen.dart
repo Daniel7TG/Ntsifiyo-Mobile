@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../app/theme.dart';
+import '../../core/api/error_messages.dart';
 import '../../data/models/models.dart';
 import '../../shared/widgets/kid_card.dart';
+import '../../shared/widgets/skeleton.dart';
 import '../../shared/widgets/states.dart';
 import '../games/widgets/game_widgets.dart';
 import 'dictionary_repository.dart';
@@ -44,6 +46,8 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
   String? _selectedCategory;
   String _search = '';
 
+  bool get _searching => _search.trim().isNotEmpty;
+
   @override
   Widget build(BuildContext context) {
     final dictionary = ref.watch(dictionaryProvider);
@@ -51,10 +55,10 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: Text(_selectedCategory == null
+        title: Text(_selectedCategory == null || _searching
             ? 'Diccionario'
             : _categoryLabel(_selectedCategory!).$1),
-        leading: _selectedCategory != null
+        leading: _selectedCategory != null && !_searching
             ? BackButton(
                 onPressed: () => setState(() => _selectedCategory = null))
             : null,
@@ -68,26 +72,79 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
         ],
       ),
       body: dictionary.when(
-        loading: () =>
-            const LoadingState(message: 'Cargando diccionario...'),
+        loading: () => const SkeletonGrid(itemCount: 8, aspectRatio: 1.05),
         error: (e, _) => ErrorState(
-          message: e.toString(),
+          message: friendlyErrorMessage(e),
           onRetry: () => ref.read(dictionaryProvider.notifier).refresh(),
         ),
-        data: (data) => _selectedCategory == null
-            ? _buildCategoryGrid(data)
-            : _buildWordsGrid(data),
+        data: (data) => Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+              child: TextField(
+                onChanged: (v) => setState(() => _search = v),
+                decoration: InputDecoration(
+                  hintText: 'Buscar en todo el diccionario...',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: _searching
+                      ? IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => setState(() => _search = ''),
+                        )
+                      : null,
+                ),
+              ),
+            ),
+            Expanded(
+              child: _searching
+                  ? _buildSearchResults(data)
+                  : (_selectedCategory == null
+                      ? _buildCategoryGrid(data)
+                      : _buildWordsGrid(data)),
+            ),
+          ],
+        ),
       ),
     );
   }
 
+  Widget _buildSearchResults(DictionaryData data) {
+    final query = _search.trim().toLowerCase();
+    final results = data.allWords
+        .where((w) =>
+            w.spanishWord.toLowerCase().contains(query) ||
+            w.mazahuaWord.toLowerCase().contains(query))
+        .toList();
+    if (results.isEmpty) {
+      return const EmptyState(
+        title: 'Sin resultados',
+        subtitle: 'Prueba con otra palabra.',
+      );
+    }
+    return GridView.builder(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 14,
+        crossAxisSpacing: 14,
+        childAspectRatio: 0.72,
+      ),
+      itemCount: results.length,
+      itemBuilder: (context, index) => _WordCard(word: results[index]),
+    );
+  }
+
   Widget _buildCategoryGrid(DictionaryData data) {
-    if (data.categories.isEmpty) {
+    // La categoría vacía ('') es el cajón de palabras sin categoría real
+    // (D2 del diagnóstico): sus palabras siguen en allWords/el buscador,
+    // pero no tiene sentido pintarla como una tarjeta más en la rejilla.
+    final categories = data.categories.where((c) => c.isNotEmpty).toList();
+    if (categories.isEmpty) {
       return const EmptyState(
         title: 'Diccionario vacío',
         subtitle:
             'Conéctate a internet una vez para descargar las palabras.',
-        emoji: '📚',
+        svgAsset: 'assets/svgs/warning.svg',
       );
     }
     return GridView.builder(
@@ -98,9 +155,9 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
         crossAxisSpacing: 14,
         childAspectRatio: 1.05,
       ),
-      itemCount: data.categories.length,
+      itemCount: categories.length,
       itemBuilder: (context, index) {
-        final category = data.categories[index];
+        final category = categories[index];
         final (label, svg) = _categoryLabel(category);
         final count = data.wordsByCategory[category]?.length ?? 0;
         return KidCard(
@@ -147,49 +204,22 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
 
   Widget _buildWordsGrid(DictionaryData data) {
     final words = data.wordsByCategory[_selectedCategory] ?? [];
-    final query = _search.trim().toLowerCase();
-    final filtered = query.isEmpty
-        ? words
-        : words
-            .where((w) =>
-                w.spanishWord.toLowerCase().contains(query) ||
-                w.mazahuaWord.toLowerCase().contains(query))
-            .toList();
-
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-          child: TextField(
-            onChanged: (v) => setState(() => _search = v),
-            decoration: const InputDecoration(
-              hintText: 'Buscar palabra...',
-              prefixIcon: Icon(Icons.search),
-            ),
-          ),
-        ),
-        Expanded(
-          child: filtered.isEmpty
-              ? const EmptyState(
-                  title: 'Sin resultados',
-                  subtitle: 'Prueba con otra palabra.',
-                  emoji: '🔍',
-                )
-              : GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 14,
-                    crossAxisSpacing: 14,
-                    childAspectRatio: 0.72,
-                  ),
-                  itemCount: filtered.length,
-                  itemBuilder: (context, index) =>
-                      _WordCard(word: filtered[index]),
-                ),
-        ),
-      ],
+    if (words.isEmpty) {
+      return const EmptyState(
+        title: 'Sin palabras',
+        subtitle: 'Esta categoría todavía no tiene palabras.',
+      );
+    }
+    return GridView.builder(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 14,
+        crossAxisSpacing: 14,
+        childAspectRatio: 0.72,
+      ),
+      itemCount: words.length,
+      itemBuilder: (context, index) => _WordCard(word: words[index]),
     );
   }
 }

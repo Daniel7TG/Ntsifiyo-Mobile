@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show SystemUiOverlayStyle;
+
+import 'palette.dart';
 
 /// Paleta de la guía de estilo web (client/public/tailwind.config.js).
 abstract class AppColors {
@@ -44,99 +47,109 @@ Color darken(Color color, [double amount = 0.2]) {
   );
 }
 
-ThemeData buildAppTheme() {
+ThemeData buildAppTheme(Brightness brightness) {
   const displayFont = 'Poppins';
   const bodyFont = 'PublicSans';
+  final isDark = brightness == Brightness.dark;
+  final palette = isDark ? AppPalette.dark : AppPalette.light;
 
   final base = ThemeData(
     useMaterial3: true,
+    brightness: brightness,
     fontFamily: bodyFont,
     colorScheme: ColorScheme.fromSeed(
       seedColor: AppColors.primary,
+      brightness: brightness,
       primary: AppColors.primary,
       secondary: AppColors.primaryBlue,
-      surface: AppColors.surface,
+      surface: palette.surface,
       error: AppColors.error,
     ),
+    canvasColor: Colors.transparent,
     scaffoldBackgroundColor: Colors.transparent,
+    dialogTheme: const DialogThemeData(backgroundColor: Colors.transparent),
+    extensions: [palette],
   );
 
   return base.copyWith(
     textTheme: base.textTheme
         .apply(
-          bodyColor: AppColors.textMain,
-          displayColor: AppColors.textMain,
+          bodyColor: palette.textMain,
+          displayColor: palette.textMain,
         )
         .copyWith(
-          displayLarge: const TextStyle(
+          displayLarge: TextStyle(
               fontFamily: displayFont,
               fontWeight: FontWeight.w900,
-              color: AppColors.textMain),
-          displayMedium: const TextStyle(
+              color: palette.textMain),
+          displayMedium: TextStyle(
               fontFamily: displayFont,
               fontWeight: FontWeight.w900,
-              color: AppColors.textMain),
-          displaySmall: const TextStyle(
+              color: palette.textMain),
+          displaySmall: TextStyle(
               fontFamily: displayFont,
               fontWeight: FontWeight.w800,
-              color: AppColors.textMain),
-          headlineLarge: const TextStyle(
+              color: palette.textMain),
+          headlineLarge: TextStyle(
               fontFamily: displayFont,
               fontWeight: FontWeight.w900,
-              color: AppColors.textMain),
-          headlineMedium: const TextStyle(
+              color: palette.textMain),
+          headlineMedium: TextStyle(
               fontFamily: displayFont,
               fontWeight: FontWeight.w800,
-              color: AppColors.textMain),
-          headlineSmall: const TextStyle(
+              color: palette.textMain),
+          headlineSmall: TextStyle(
               fontFamily: displayFont,
               fontWeight: FontWeight.w800,
-              color: AppColors.textMain),
-          titleLarge: const TextStyle(
+              color: palette.textMain),
+          titleLarge: TextStyle(
               fontFamily: displayFont,
               fontWeight: FontWeight.w700,
-              color: AppColors.textMain),
-          titleMedium: const TextStyle(
+              color: palette.textMain),
+          titleMedium: TextStyle(
               fontFamily: displayFont,
               fontWeight: FontWeight.w600,
-              color: AppColors.textMain),
+              color: palette.textMain),
         ),
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
       centerTitle: false,
-      foregroundColor: AppColors.textMain,
+      foregroundColor: palette.textMain,
+      systemOverlayStyle: isDark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
       titleTextStyle: TextStyle(
         fontFamily: displayFont,
         fontWeight: FontWeight.w800,
         fontSize: 20,
-        color: AppColors.textMain,
+        color: palette.textMain,
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Colors.white,
+      fillColor: palette.surface,
       contentPadding:
           const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppRadius.input),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: BorderSide(color: palette.border),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppRadius.input),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: BorderSide(color: palette.border),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppRadius.input),
         borderSide: const BorderSide(color: AppColors.primary, width: 2),
       ),
-      hintStyle: const TextStyle(color: AppColors.textLight),
+      hintStyle: TextStyle(color: palette.textLight),
     ),
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
-      backgroundColor: AppColors.textMain,
-      contentTextStyle: const TextStyle(
-          fontFamily: bodyFont, color: Colors.white, fontSize: 14),
+      backgroundColor: palette.textMain,
+      contentTextStyle: TextStyle(
+          fontFamily: bodyFont, color: palette.surface, fontSize: 14),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.input)),
     ),
@@ -144,14 +157,16 @@ ThemeData buildAppTheme() {
 }
 
 /// Fondo degradado global — envuelve el contenido de cada pantalla.
+/// Sigue el brillo del tema activo (claro/oscuro/según el sistema).
 class GradientBackground extends StatelessWidget {
   final Widget child;
   const GradientBackground({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
+    final gradient = context.palette.backgroundGradient;
     return DecoratedBox(
-      decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+      decoration: BoxDecoration(gradient: gradient),
       child: child,
     );
   }

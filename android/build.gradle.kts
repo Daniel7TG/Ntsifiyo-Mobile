@@ -16,6 +16,15 @@ subprojects {
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
 subprojects {
+    afterEvaluate {
+        if (project.plugins.hasPlugin("com.android.library") || project.plugins.hasPlugin("com.android.application")) {
+            val android = project.extensions.findByName("android") as? com.android.build.gradle.BaseExtension
+            android?.compileSdkVersion(36)
+        }
+    }
+}
+
+subprojects {
     project.evaluationDependsOn(":app")
 }
 

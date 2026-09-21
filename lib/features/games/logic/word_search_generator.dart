@@ -17,7 +17,7 @@ class GridPos {
 }
 
 class WordPlacement {
-  final int id;
+  final dynamic id;
   final String text;
   final List<String> letters;
   final List<GridPos> cells;
@@ -105,7 +105,7 @@ List<GridPos>? _placeWord(
 }
 
 WordSearchBoard generateWordSearch(
-  List<({int id, String text})> entries, {
+  List<({dynamic id, String text})> entries, {
   Random? random,
 }) {
   final rng = random ?? Random();

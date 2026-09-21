@@ -9,30 +9,20 @@ class ActivityService {
   final ApiClient _api;
   ActivityService(this._api);
 
-  /// GET /api/games — lista completa de juegos (para el caché offline).
-  Future<List<GameSummaryDto>> getAllGames() async {
-    final response = await _api.get('/api/games');
-    return (response as List)
-        .whereType<Map<String, dynamic>>()
-        .map(GameSummaryDto.fromJson)
-        .toList();
-  }
-
-  /// GET /api/games/{type}?page=# — actividades por tipo de juego.
-  Future<Paged<GameSummaryDto>> getActivitiesByType(String type,
-      {int page = 0}) async {
-    final response = await _api.get('/api/games/$type?page=$page');
-    return Paged.fromJson(
-        response as Map<String, dynamic>, GameSummaryDto.fromJson);
-  }
-
-  /// GET /api/games/topic/{topic} — juegos por tópico (mapa).
-  Future<Paged<GameSummaryDto>> getGamesByTopic(String topic,
-      {int page = 0, int size = 0}) async {
-    final response =
-        await _api.get('/api/games/topic/$topic?page=$page&size=$size');
-    return Paged.fromJson(
-        response as Map<String, dynamic>, GameSummaryDto.fromJson);
+  /// GET /api/games/{id} — metadatos de catálogo de un juego (título, tema,
+  /// dificultad, experiencia, total de preguntas). Reutiliza
+  /// `GameSummaryDto.fromJson`, que ya tolera tanto los alias de
+  /// `GetGamesGameDTO` (listado, hoy sin llamador: solo TEACHER/ADMIN) como
+  /// los de `GameDetailsDTO` (este endpoint): ambos usan `gameTopic` y
+  /// `gameConfigs`, y los campos que no aparecen aquí (`wordIds`,
+  /// `questions`) simplemente se ignoran.
+  ///
+  /// Es la única fuente de metadata para [GameCacheService.applyGameDelta]:
+  /// `GET /api/games/{id}/preview` trae el contenido jugable pero no el
+  /// título/tema/dificultad.
+  Future<GameSummaryDto> getGameDetails(int gameId) async {
+    final response = await _api.get('/api/games/$gameId');
+    return GameSummaryDto.fromJson(response as Map<String, dynamic>);
   }
 
   /// POST /api/activities/start/game/{gameId} — inicia y devuelve contenido.
@@ -50,6 +40,12 @@ class ActivityService {
   /// GET /api/activities/student?page=# — asignaciones del estudiante.
   Future<Map<String, dynamic>> getStudentActivities({int page = 0}) async {
     final response = await _api.get('/api/activities/student?page=$page');
+    // El backend actual devuelve List<GetGamesGameDTO>; su id es el de
+    // la asignación. Conserva el contrato paginado de los consumidores.
+    if (response is List) {
+      return {'content': response, 'number': 0, 'totalPages': 1,
+        'totalElements': response.length, 'first': true, 'last': true};
+    }
     return response as Map<String, dynamic>;
   }
 
@@ -82,6 +78,18 @@ class ActivityService {
   Future<Map<String, dynamic>> getVisitorDashboard() async {
     final response = await _api.get('/api/dashboard/visitor');
     return response as Map<String, dynamic>;
+  }
+
+  /// GET /api/games/{gameId}/preview — mismo contenido jugable que
+  /// [startGame] pero **sin crear ni iniciar una actividad**: no escribe en
+  /// la base del servidor, no registra partida y no da experiencia.
+  ///
+  /// Es la vía correcta para llenar el caché offline (`GameCacheService`),
+  /// donde solo queremos el contenido; [startGame] se reserva para cuando el
+  /// usuario va a jugar de verdad y hace falta el `activityId`.
+  Future<GameData> getGamePreview(int gameId) async {
+    final response = await _api.get('/api/games/$gameId/preview');
+    return GameData.fromJson(response as Map<String, dynamic>);
   }
 }
 

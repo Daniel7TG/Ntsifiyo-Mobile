@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/api/api_client.dart';
 import '../../core/storage/session_store.dart';
 import '../../data/models/models.dart';
 import '../../data/services/auth_service.dart';
@@ -69,6 +70,38 @@ class AuthController extends Notifier<AppUser?> {
     await ref.read(userSessionServiceProvider).endSession();
     await _session.clear();
     state = null;
+  }
+
+  /// Renueva la sesión al arrancar y al recuperar conexión
+  /// (`POST /api/auth/refresh`). Solo un rechazo explícito del servidor la
+  /// cierra — la app es offline-first, y expulsar a quien está jugando sin
+  /// internet sería peor que dejarle el token vencido hasta que vuelva a
+  /// haber red:
+  ///   200      → guardar el token nuevo, la sesión sigue igual.
+  ///   401/403  → logout. El backend devuelve 403 sin body para un JWT
+  ///              expirado (`SecurityConfig` no declara
+  ///              `AuthenticationEntryPoint`), así que 403 cuenta igual que
+  ///              401 aquí.
+  ///   404/405  → el endpoint aún no está desplegado: conservar la sesión.
+  ///   sin red / otro fallo → conservar y reintentar en el próximo arranque
+  ///              o al recuperar conexión (`AppShell`, listener de
+  ///              `connectivityStreamProvider`).
+  Future<void> renewSession() async {
+    final user = state;
+    if (user == null) return;
+    try {
+      final newToken = await _auth.refreshToken();
+      await _session.save(user, newToken);
+    } on ApiException catch (e) {
+      if (e.status == 401 || e.status == 403) {
+        await logout();
+      }
+      // 404/405 u otro status: el servidor no rechazó la sesión, se
+      // conserva tal cual.
+    } catch (_) {
+      // Sin red u otro fallo de transporte: se conserva y se reintenta más
+      // tarde, nunca se cierra sesión por esto.
+    }
   }
 }
 

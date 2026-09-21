@@ -73,7 +73,7 @@ class _TripasGameViewState extends ConsumerState<TripasGameView> {
     _gameWords = data.words;
 
     _TripasCard build(Word w, GameConfig cfg, String side) => _TripasCard(
-          uid: '$side-${w.id}',
+          uid: '${w.id}-$side',
           wordId: w.id ?? 0,
           side: side,
           text: cfg.showText ? w.textFor(cfg) : null,
@@ -286,14 +286,25 @@ class _TripasGameViewState extends ConsumerState<TripasGameView> {
           Center(
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: Text(
-                '⏱ ${_formatTime(_timeLeft)}   ${_matched.length}/${_gameWords.length}',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  color: _timeLeft <= 15
-                      ? AppColors.error
-                      : AppColors.textMuted,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.timer,
+                      size: 16,
+                      color: _timeLeft <= 15
+                          ? AppColors.error
+                          : AppColors.textMuted),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${_formatTime(_timeLeft)}   ${_matched.length}/${_gameWords.length}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: _timeLeft <= 15
+                          ? AppColors.error
+                          : AppColors.textMuted,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -422,17 +433,20 @@ class _TripasGameViewState extends ConsumerState<TripasGameView> {
       child: (card.imageUrl ?? '').isNotEmpty
           ? WordImage(path: card.imageUrl, fit: BoxFit.contain)
           : Center(
-              child: Text(
-                card.text ?? '🔊',
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 11,
-                ),
-              ),
+              child: card.text != null
+                  ? Text(
+                      card.text!,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 11,
+                      ),
+                    )
+                  : const Icon(Icons.volume_up,
+                      size: 20, color: AppColors.primary),
             ),
     );
   }

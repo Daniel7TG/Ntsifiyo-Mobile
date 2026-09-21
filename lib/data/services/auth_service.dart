@@ -68,6 +68,22 @@ class AuthService {
     });
   }
 
+  /// POST /api/auth/refresh — renueva el JWT vigente (el interceptor de
+  /// `ApiClient` ya manda el token actual en `Authorization`). Aún no está
+  /// desplegado en el backend: un 404/405 significa "todavía no existe",
+  /// nunca "sesión inválida" — lo distingue `AuthController.renewSession`.
+  Future<String> refreshToken() async {
+    final response = await _api.post('/api/auth/refresh');
+    final map =
+        response is Map<String, dynamic> ? response : <String, dynamic>{};
+    final token =
+        (map['jwtToken'] ?? map['token'] ?? map['accessToken']) as String?;
+    if (token == null || token.isEmpty) {
+      throw ApiException('El servidor no devolvió un token renovado.');
+    }
+    return token;
+  }
+
   /// POST /api/auth/oauth2/google — intercambia idToken de Google por JWT.
   /// Lanza ApiException con status 404/409 si el usuario aún no está registrado
   /// (el flujo web abre entonces el modal de registro).

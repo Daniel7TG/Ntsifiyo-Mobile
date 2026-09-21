@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../app/activity_config.dart';
 import '../../app/theme.dart';
+import '../../core/api/error_messages.dart';
 import '../../data/models/models.dart';
 import '../../shared/widgets/kid_card.dart';
+import '../../shared/widgets/skeleton.dart';
 import '../../shared/widgets/states.dart';
 import '../dashboard/dashboard_providers.dart';
-import '../games/game_session.dart';
+import '../games/game_launcher.dart';
 
 /// Asignaciones del estudiante (mirror de StudentAssignments.jsx).
 class AssignmentsScreen extends ConsumerStatefulWidget {
@@ -30,9 +31,12 @@ class _AssignmentsScreenState extends ConsumerState<AssignmentsScreen> {
 
     setState(() => _starting = true);
     try {
-      await ref.read(gameSessionProvider.notifier).startFromAssignment(id);
-      if (!mounted) return;
-      context.push('/games/${info.id}/jugar');
+      await launchGameWithLoading(
+        context,
+        ref,
+        assignmentId: id,
+        gameTypeId: info.id,
+      );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -59,17 +63,26 @@ class _AssignmentsScreenState extends ConsumerState<AssignmentsScreen> {
         ],
       ),
       body: assignments.when(
-        loading: () =>
-            const LoadingState(message: 'Cargando asignaciones...'),
+        loading: () => ListView(
+          padding: const EdgeInsets.all(16),
+          physics: const NeverScrollableScrollPhysics(),
+          children: const [
+            SkeletonListTile(),
+            SkeletonListTile(),
+            SkeletonListTile(),
+            SkeletonListTile(),
+            SkeletonListTile(),
+          ],
+        ),
         error: (e, _) => ErrorState(
-          message: e.toString(),
+          message: friendlyErrorMessage(e),
           onRetry: () => ref.invalidate(studentActivitiesProvider(_page)),
         ),
         data: (paged) => paged.content.isEmpty
             ? const EmptyState(
                 title: '¡Estás al día!',
                 subtitle: 'No tienes actividades asignadas pendientes.',
-                emoji: '🎉',
+                svgAsset: 'assets/svgs/success_assignment.svg',
               )
             : ListView(
                 padding: const EdgeInsets.all(16),

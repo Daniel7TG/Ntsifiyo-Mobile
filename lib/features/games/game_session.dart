@@ -5,9 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/api/api_client.dart';
 import '../../core/storage/app_database.dart';
+import '../../core/storage/media_store.dart';
 import '../../core/sync/asset_preloader.dart';
 import '../../data/models/models.dart';
 import '../../data/services/activity_service.dart';
+import '../progress/progress_providers.dart';
 
 /// Sesión de juego activa (equivalente a GameContext.currentGameData de la web).
 class GameSession {
@@ -49,6 +51,7 @@ class GameSessionController extends Notifier<GameSession?> {
 
   ActivityService get _service => ref.read(activityServiceProvider);
   AppDatabase get _db => ref.read(appDatabaseProvider);
+  MediaStore get _mediaStore => ref.read(mediaStoreProvider);
 
   /// Inicia un juego desde el panel (POST start/game/{id}); si no hay red,
   /// usa el contenido cacheado en drift.
@@ -65,24 +68,33 @@ class GameSessionController extends Notifier<GameSession?> {
         experience: data.experience ?? game.experience,
         totalQuestions: data.totalQuestions ?? game.totalQuestions,
       );
-      data = await preloadGameAssets(data);
-      // Refrescar el caché offline con el contenido más reciente.
+      final (localized, complete) =
+          await preloadGameAssets(data, _mediaStore);
+      data = localized;
+      // Refrescar el caché offline con el contenido más reciente. `topic`
+      // no viene en `GameData` (el `start` nunca lo trae) — solo puede
+      // salir de `game.topic`, y si el llamador no lo trajo se deja
+      // `Value.absent()` para no pisar con null el que ya estaba cacheado
+      // (mismo bug que tuvo `progress_providers.dart`: un `topic: null` aquí
+      // deja la fila invisible para el progreso del mapa).
       await _db.upsertCachedGame(CachedGamesCompanion(
         gameId: Value(game.id),
-        gameType: Value(data.gameType ?? game.gameType ?? ''),
-        title: Value(game.title),
-        topic: Value(game.topic),
-        difficult: Value(game.difficult),
-        experience: Value(game.experience),
-        totalQuestions: Value(game.totalQuestions),
+        gameType: Value(data.gameType ?? ''),
+        title: Value(data.title ?? ''),
+        topic: game.topic != null ? Value(game.topic) : const Value.absent(),
+        difficult: Value(data.difficult),
+        experience: Value(data.experience),
+        totalQuestions: Value(data.totalQuestions),
         contentJson: Value(jsonEncode(data.toJson())),
+        mediaComplete: Value(complete),
         updatedAt: Value(DateTime.now()),
       ));
     } catch (_) {
       final cached = await _db.cachedGame(game.id);
       if (cached == null) rethrow;
-      data = GameData.fromJson(
+      final rawData = GameData.fromJson(
           jsonDecode(cached.contentJson) as Map<String, dynamic>);
+      data = await resolveGameMedia(rawData, _mediaStore);
       offline = true;
     }
 
@@ -99,7 +111,8 @@ class GameSessionController extends Notifier<GameSession?> {
   /// Inicia una actividad asignada (POST start/{activityId}). Solo online.
   Future<GameSession> startFromAssignment(int activityId) async {
     var data = await _service.startAssignedActivity(activityId);
-    data = await preloadGameAssets(data);
+    final (localized, _) = await preloadGameAssets(data, _mediaStore);
+    data = localized;
     final session = GameSession(
       gameId: activityId,
       data: data,
@@ -138,21 +151,43 @@ class GameSessionController extends Notifier<GameSession?> {
 
     final startDateIso = session.startDate.toIso8601String();
     try {
-      return await _service.completeActivity(
+      final reward = await _service.completeActivity(
         activityId: session.effectiveActivityId,
         startDate: startDateIso,
         correctAnswers: outcome.correctAnswers,
         responseLogs: outcome.responseLogs,
         gameId: session.gameId,
       );
+      await _markCompleted(session, outcome);
+      return reward;
     } on ApiException catch (e) {
       if (e.status != null) rethrow;
       await _enqueue(session, outcome, startDateIso);
+      await _markCompleted(session, outcome);
       return null;
     } catch (_) {
       await _enqueue(session, outcome, startDateIso);
+      await _markCompleted(session, outcome);
       return null;
     }
+  }
+
+  /// Registra el juego en el progreso local del mapa. El backend no expone
+  /// progreso por tema (ver CLAUDE.md); esta tabla es una inferencia del
+  /// cliente a partir del `topic` que quedó guardado en `CachedGames` al
+  /// iniciar la partida.
+  Future<void> _markCompleted(GameSession session, GameOutcome outcome) async {
+    final cached = await _db.cachedGame(session.gameId);
+    await _db.recordGameCompletion(
+      gameId: session.gameId,
+      topic: cached?.topic,
+      correctAnswers: outcome.correctAnswers,
+      totalQuestions: outcome.totalQuestions,
+    );
+    // El anillo de la zona (y el resumen global) leen `CompletedGames`
+    // entero: sin esto se quedarían mostrando el porcentaje de antes de
+    // jugar hasta el siguiente arranque.
+    ref.invalidate(progressSnapshotProvider);
   }
 
   /// Sin conexión: encolar para el protocolo de sincronización de 2 pasos.

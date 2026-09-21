@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jñatrjo · Tres formas de comenzar</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="studio-header">
+    <a class="brand" href="#"><span class="brand-symbol">jñ</span><span>Jñatrjo <small>ESTUDIO DE INICIO</small></span></a>
+    <span class="edition">PROPUESTAS DE DISEÑO <span>01 — 03</span></span>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">EL MISMO CAMINO. TRES FORMAS DE EMPEZAR.</p><h1>Un inicio que invite<br>a <em>descubrir.</em></h1></div>
+      <div class="intro-copy"><p>El progreso de tu aventura se queda arriba.<br>Lo que viene después, lo elegimos juntos.</p><p class="hint">Explora cada teléfono: puedes desplazarte y tocar sus tarjetas. Las cifras son de ejemplo.</p></div>
+    </section>
+    <div class="toolbar">
+      <div class="view-switch" role="group" aria-label="Vista de propuestas">
+        <button class="active" data-view="all" aria-pressed="true">Comparar las tres</button>
+        <button data-view="a" aria-pressed="false">A · Descubrir</button>
+        <button data-view="b" aria-pressed="false">B · Jugar</button>
+        <button data-view="c" aria-pressed="false">C · Paso a paso</button>
+      </div>
+      <button id="theme-toggle" class="theme-toggle" aria-pressed="false">◐ <span>Modo oscuro</span></button>
+    </div>
+    <section class="proposals" aria-label="Prototipos de pantalla inicial"></section>
+    <footer class="studio-footer"><span>PROTOTIPOS INTERACTIVOS · SIN CAMBIOS EN LA APP</span><p>Puedes combinar ideas: la bienvenida de A, los juegos de B o la palabra de C.</p></footer>
+  </main>
+  <dialog id="preview-dialog" aria-labelledby="dialog-title"><button class="close-dialog" aria-label="Cerrar">×</button><div id="dialog-content"></div><p class="dialog-note">Vista de ejemplo para revisar el diseño. No guarda progreso.</p></dialog>
+  <div id="announcement" class="sr-only" aria-live="polite"></div>
+  <script src="prototype.js"></script>
+</body>
+</html>

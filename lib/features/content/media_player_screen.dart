@@ -1,437 +1,137 @@
-import 'dart:async';
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:video_player/video_player.dart';
 
-import '../../app/theme.dart';
 import '../../data/models/models.dart';
 import '../../data/services/misc_services.dart';
+import '../../shared/immersive_chrome.dart';
 import '../../shared/widgets/states.dart';
+import 'player/media_playback_source.dart';
+import 'player/media_player_controller.dart';
+import 'player/media_player_view.dart';
 
-/// Reproductor con subtítulos bilingües (mirror de MediaPlayerView.jsx).
-/// Muestra siempre el texto mazahua; el español se puede alternar.
+/// Envoltorio del reproductor: resuelve `mediaId` contra `MediaService` y
+/// delega TODA la lógica de reproducción/subtítulos a
+/// [MediaPlayerController] + [MediaPlayerView] (`lib/features/content/player/`).
+/// Esa separación es deliberada — es la pieza que se podrá incrustar en una
+/// futura actividad `GameType.MEDIA` sin pasar por esta pantalla ni por
+/// `MediaService`, construyendo su propio [MediaPlaybackSource] a partir
+/// del contenido de la actividad.
+///
+/// Este archivo solo añade lo que es específico de "pantalla completa
+/// dentro del árbol de navegación": el `AppBar`, y el modo horizontal
+/// inmersivo para video (mirror de `MapScreen`, ver
+/// `lib/shared/immersive_chrome.dart`).
 class MediaPlayerScreen extends ConsumerStatefulWidget {
-  final int mediaId;
+  final int? mediaId;
   final MediaItem? item;
 
   const MediaPlayerScreen({super.key, required this.mediaId, this.item});
 
   @override
-  ConsumerState<MediaPlayerScreen> createState() =>
-      _MediaPlayerScreenState();
+  ConsumerState<MediaPlayerScreen> createState() => _MediaPlayerScreenState();
 }
 
 class _MediaPlayerScreenState extends ConsumerState<MediaPlayerScreen> {
-  VideoPlayerController? _controller;
-  bool _loading = true;
-  String? _error;
-  bool _showSpanish = false;
-
-  List<SubtitleLine> _mazSubs = [];
-  List<SubtitleLine> _espSubs = [];
-  String _mazText = '...';
-  String _espText = '...';
-  // Duración del cue activo: alimenta la animación palabra-por-palabra.
-  int _mazCueSeconds = 3;
-  int _espCueSeconds = 3;
-  // Cambia cada vez que aparece un cue nuevo para reiniciar la animación.
-  int _cueKey = 0;
-  Timer? _subTimer;
+  MediaPlayerController? _controller;
+  Object? _resolveError;
+  bool _fullscreen = false;
 
   @override
   void initState() {
     super.initState();
-    _load();
+    _resolve();
   }
 
-  Future<void> _load() async {
+  Future<void> _resolve() async {
+    final mediaId = widget.mediaId;
+    if (mediaId == null) {
+      setState(() => _resolveError = StateError('Contenido no encontrado.'));
+      return;
+    }
     try {
       final stream =
-          await ref.read(mediaServiceProvider).getMediaStream(widget.mediaId);
-      if (stream.url.isEmpty) {
-        throw Exception('El contenido no tiene un recurso reproducible.');
+          await ref.read(mediaServiceProvider).getMediaStream(mediaId);
+      final source =
+          MediaPlaybackSource.fromStream(stream, item: widget.item);
+      final controller = MediaPlayerController(source);
+      await controller.load();
+      if (!mounted) {
+        controller.dispose();
+        return;
       }
-
-      // Subtítulos: lista embebida (maz+esp juntos) o archivos VTT por idioma.
-      if (stream.subtitles.isNotEmpty) {
-        _mazSubs = stream.subtitles;
-        _espSubs = stream.subtitles;
-      } else {
-        if ((stream.mazSubtitlesUrl ?? '').isNotEmpty) {
-          _mazSubs = await _fetchVtt(stream.mazSubtitlesUrl!, isMaz: true);
-        }
-        if ((stream.espSubtitlesUrl ?? '').isNotEmpty) {
-          _espSubs = await _fetchVtt(stream.espSubtitlesUrl!, isMaz: false);
-        }
-      }
-
-      final controller =
-          VideoPlayerController.networkUrl(Uri.parse(stream.url));
-      await controller.initialize();
-      controller.play();
-
-      _subTimer = Timer.periodic(
-          const Duration(milliseconds: 250), (_) => _updateSubtitles());
-
-      setState(() {
-        _controller = controller;
-        _loading = false;
-      });
+      setState(() => _controller = controller);
     } catch (e) {
-      setState(() {
-        _error = 'No se pudo cargar el contenido. Intenta más tarde.';
-        _loading = false;
-      });
+      if (!mounted) return;
+      setState(() => _resolveError = e);
     }
   }
 
-  /// Parser mínimo de WebVTT → SubtitleLine.
-  Future<List<SubtitleLine>> _fetchVtt(String url,
-      {required bool isMaz}) async {
-    try {
-      final response = await Dio().get<String>(url,
-          options: Options(responseType: ResponseType.plain));
-      final lines = (response.data ?? '').split(RegExp(r'\r?\n'));
-      final cues = <SubtitleLine>[];
-      for (var i = 0; i < lines.length; i++) {
-        if (!lines[i].contains('-->')) continue;
-        final parts = lines[i].split('-->');
-        final start = _parseVttTime(parts[0].trim());
-        final end = _parseVttTime(parts[1].trim().split(' ').first);
-        final textLines = <String>[];
-        var j = i + 1;
-        while (j < lines.length && lines[j].trim().isNotEmpty) {
-          textLines.add(lines[j]);
-          j++;
-        }
-        final text = textLines.join('\n');
-        cues.add(SubtitleLine(
-          mazahuaText: isMaz ? text : null,
-          spanishText: isMaz ? null : text,
-          timeStart: start,
-          timeEnd: end,
-        ));
-      }
-      return cues;
-    } catch (_) {
-      return [];
+  Future<void> _setFullscreen(bool value) async {
+    if (value) {
+      await enterImmersiveLandscape();
+    } else {
+      await exitImmersiveLandscape();
     }
-  }
-
-  int _parseVttTime(String raw) {
-    final parts = raw.split(':');
-    try {
-      if (parts.length == 3) {
-        return (double.parse(parts[0]) * 3600 +
-                double.parse(parts[1]) * 60 +
-                double.parse(parts[2].replaceAll(',', '.')))
-            .floor();
-      }
-      if (parts.length == 2) {
-        return (double.parse(parts[0]) * 60 +
-                double.parse(parts[1].replaceAll(',', '.')))
-            .floor();
-      }
-    } catch (_) {}
-    return 0;
-  }
-
-  void _updateSubtitles() {
-    final controller = _controller;
-    if (controller == null || !controller.value.isInitialized) return;
-    final seconds = controller.value.position.inSeconds;
-
-    // Devuelve (texto, duración del cue en segundos).
-    (String, int) pick(List<SubtitleLine> subs, bool maz) {
-      for (final s in subs) {
-        if (seconds >= s.timeStart && seconds < s.timeEnd) {
-          final text = maz ? s.mazahuaText : s.spanishText;
-          if (text != null && text.isNotEmpty) {
-            final dur = (s.timeEnd - s.timeStart).clamp(1, 60);
-            return (text, dur);
-          }
-        }
-      }
-      return ('...', 3);
-    }
-
-    final (maz, mazDur) = pick(_mazSubs, true);
-    final (esp, espDur) = pick(_espSubs, false);
-    if (maz != _mazText || esp != _espText) {
-      setState(() {
-        _mazText = maz;
-        _espText = esp;
-        _mazCueSeconds = mazDur;
-        _espCueSeconds = espDur;
-        _cueKey++;
-      });
-    }
+    if (!mounted) return;
+    setState(() => _fullscreen = value);
   }
 
   @override
   void dispose() {
-    _subTimer?.cancel();
+    // Por si se sale de la pantalla estando en horizontal inmersivo: la app
+    // no debe quedar atascada fuera de vertical.
+    if (_fullscreen) exitImmersiveLandscape();
     _controller?.dispose();
     super.dispose();
   }
 
-  bool get _isAudio {
+  @override
+  Widget build(BuildContext context) {
     final controller = _controller;
-    if (controller == null) return true;
-    final size = controller.value.size;
-    return size.width == 0 || size.height == 0;
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text(widget.item?.title ?? 'Reproductor'),
-        actions: [
-          IconButton(
-            tooltip: _showSpanish
-                ? 'Ocultar español'
-                : 'Mostrar traducción al español',
-            icon: Icon(
-              Icons.translate,
-              color: _showSpanish ? AppColors.primary : AppColors.textLight,
+    if (controller == null) {
+      return Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(title: Text(widget.item?.title ?? 'Reproductor')),
+        body: _resolveError != null
+            ? ErrorState(
+                message: 'No se pudo cargar el contenido. Intenta más tarde.',
+                onRetry: () {
+                  setState(() => _resolveError = null);
+                  _resolve();
+                },
+              )
+            : const SizedBox.shrink(),
+      );
+    }
+
+    if (_fullscreen) {
+      return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (didPop) return;
+          _setFullscreen(false);
+        },
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          body: SafeArea(
+            child: MediaPlayerView(
+              controller: controller,
+              fullscreen: true,
+              onToggleFullscreen: () => _setFullscreen(false),
             ),
-            onPressed: () => setState(() => _showSpanish = !_showSpanish),
           ),
-        ],
-      ),
-      body: _loading
-          ? const LoadingState(message: 'Preparando el contenido...')
-          : _error != null
-              ? ErrorState(message: _error!)
-              : _buildPlayer(),
-    );
-  }
-
-  Widget _buildPlayer() {
-    final controller = _controller!;
-
-    return Column(
-      children: [
-        // Área de video / portada de audio
-        Expanded(
-          child: Center(
-            child: _isAudio
-                ? _AudioCover(overviewImage: widget.item?.overviewImage)
-                : AspectRatio(
-                    aspectRatio: controller.value.aspectRatio,
-                    child: VideoPlayer(controller),
-                  ),
-          ),
-        ),
-
-        // Subtítulos bilingües
-        Container(
-          width: double.infinity,
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(AppRadius.card),
-            border: Border.all(color: AppColors.border, width: 2),
-          ),
-          child: Column(
-            children: [
-              _ProgressiveSubtitle(
-                key: ValueKey('maz-$_cueKey'),
-                text: _mazText,
-                seconds: _mazCueSeconds,
-                style: const TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w800,
-                  fontSize: 18,
-                  color: AppColors.primary,
-                ),
-              ),
-              if (_showSpanish) ...[
-                const SizedBox(height: 6),
-                _ProgressiveSubtitle(
-                  key: ValueKey('esp-$_cueKey'),
-                  text: _espText,
-                  seconds: _espCueSeconds,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textMuted,
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
-
-        // Controles
-        ValueListenableBuilder(
-          valueListenable: controller,
-          builder: (context, value, _) => Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: VideoProgressIndicator(
-                  controller,
-                  allowScrubbing: true,
-                  colors: const VideoProgressColors(
-                    playedColor: AppColors.primary,
-                    bufferedColor: AppColors.border,
-                    backgroundColor: AppColors.borderLight,
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    _fmt(value.position),
-                    style: const TextStyle(
-                        fontSize: 12, color: AppColors.textMuted),
-                  ),
-                  IconButton(
-                    iconSize: 52,
-                    color: AppColors.primary,
-                    icon: Icon(value.isPlaying
-                        ? Icons.pause_circle_filled
-                        : Icons.play_circle_filled),
-                    onPressed: () => value.isPlaying
-                        ? controller.pause()
-                        : controller.play(),
-                  ),
-                  Text(
-                    _fmt(value.duration),
-                    style: const TextStyle(
-                        fontSize: 12, color: AppColors.textMuted),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
-      ],
-    );
-  }
-
-  String _fmt(Duration d) =>
-      '${d.inMinutes}:${(d.inSeconds % 60).toString().padLeft(2, '0')}';
-}
-
-/// Portada del audio: usa la imagen del contenido y, si no hay, un disco.
-class _AudioCover extends StatelessWidget {
-  final String? overviewImage;
-  const _AudioCover({this.overviewImage});
-
-  @override
-  Widget build(BuildContext context) {
-    if ((overviewImage ?? '').isNotEmpty) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(AppRadius.kidCard),
-        child: CachedNetworkImage(
-          imageUrl: overviewImage!,
-          width: 220,
-          height: 220,
-          fit: BoxFit.cover,
-          errorWidget: (context, url, error) => const _AudioDisc(),
         ),
       );
     }
-    return const _AudioDisc();
-  }
-}
 
-class _AudioDisc extends StatelessWidget {
-  const _AudioDisc();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 180,
-      height: 180,
-      decoration: BoxDecoration(
-        color: AppColors.accentPink.withValues(alpha: 0.12),
-        shape: BoxShape.circle,
-        border: Border.all(color: AppColors.accentPink, width: 3),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(title: Text(widget.item?.title ?? 'Reproductor')),
+      body: MediaPlayerView(
+        controller: controller,
+        onToggleFullscreen: () => _setFullscreen(true),
       ),
-      child: const Icon(Icons.music_note, size: 80, color: AppColors.accentPink),
-    );
-  }
-}
-
-/// Subtítulo que revela las palabras progresivamente a lo largo del cue
-/// (mirror de ProgressiveSubtitle en MediaPlayerView.jsx).
-class _ProgressiveSubtitle extends StatefulWidget {
-  final String text;
-  final int seconds;
-  final TextStyle style;
-
-  const _ProgressiveSubtitle({
-    super.key,
-    required this.text,
-    required this.seconds,
-    required this.style,
-  });
-
-  @override
-  State<_ProgressiveSubtitle> createState() => _ProgressiveSubtitleState();
-}
-
-class _ProgressiveSubtitleState extends State<_ProgressiveSubtitle>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    // 95% del cue para que termine antes de que aparezca el siguiente.
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(
-          milliseconds: (widget.seconds * 950).clamp(500, 60000).toInt()),
-    )..forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final words = widget.text.split(RegExp(r'\s+'))..removeWhere((w) => w.isEmpty);
-    if (words.isEmpty) {
-      return Text(widget.text,
-          textAlign: TextAlign.center, style: widget.style);
-    }
-
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, _) {
-        final revealed = (_controller.value * words.length).ceil();
-        return RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-            children: [
-              for (var i = 0; i < words.length; i++)
-                TextSpan(
-                  text: i == 0 ? words[i] : ' ${words[i]}',
-                  style: widget.style.copyWith(
-                    color: (widget.style.color ?? AppColors.textMain)
-                        .withValues(alpha: i < revealed ? 1 : 0.25),
-                  ),
-                ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

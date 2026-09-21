@@ -2,27 +2,23 @@ import 'coyote_controller.dart';
 
 /// Mensaje del coyote por sección (mirror de ROUTE_MESSAGES en MainLayout.jsx).
 const coyoteSectionMessages = <String, (String, CoyoteEmotion)>{
-  '/dashboard': (
-    '¡Hola! Aquí puedes ver tus progresos y actividades diarias.',
+  '/inicio': (
+    '¡Hola! Este es tu camino de aprendizaje. Sigue avanzando de tema en tema.',
     CoyoteEmotion.saludo
   ),
-  '/mapa': (
-    '¡Este es tu mapa de aventuras! Elige una estación para jugar.',
+  '/explorar': (
+    '¡Explora el mapa de aventuras o descubre canciones, leyendas y poemas!',
     CoyoteEmotion.esperando
   ),
-  '/juegos': (
-    '¿Qué juego prefieres hoy? ¡Todos te dan puntos de experiencia!',
-    CoyoteEmotion.saludo
-  ),
-  '/diccionario': (
+  '/palabras': (
     '¡El diccionario mágico! Busca palabras en mazahua para expandir tu vocabulario.',
     CoyoteEmotion.pensando
   ),
-  '/contenido': (
-    'Canciones, leyendas y poemas en mazahua. ¡Escucha y aprende!',
+  '/perfil': (
+    'Aquí puedes ver tus progresos, asignaciones y la tabla de líderes.',
     CoyoteEmotion.saludo
   ),
-  '/dashboard/asignaciones': (
+  '/perfil/asignaciones': (
     'Revisa las tareas que te asignaron tus profesores. ¡Vamos a completarlas!',
     CoyoteEmotion.pensando
   ),
@@ -32,7 +28,7 @@ const coyoteSectionMessages = <String, (String, CoyoteEmotion)>{
 /// (mirror del switch de gameType en MainLayout.jsx).
 const _gameInstructions = <String, String>{
   'memoria_rapida':
-      '¡Rápido! Marca ✓ si la carta coincide con la palabra de arriba, o ✕ si es diferente.',
+      '¡Rápido! Toca el visto bueno si la carta coincide con la palabra de arriba, o la cruz si es diferente.',
   'memorama':
       'Voltea las cartas de dos en dos para encontrar los pares ocultos. ¡Pon a prueba tu memoria!',
   'quiz':

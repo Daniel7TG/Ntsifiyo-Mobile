@@ -39,4 +39,55 @@ void main() {
     expect(restored.displayName, 'Ana García');
     expect(restored.isStudent, isTrue);
   });
+
+  test(
+      'Word y Answer dejan imageUrl/audioUrl en null cuando el backend no '
+      'los manda, en vez de fabricar una ruta de asset que puede no '
+      'existir en el bundle (WordImage resuelve ese fallback por wordId '
+      'en tiempo de render, no el modelo)', () {
+    final word = Word.fromJson({'id': 5, 'spanishWord': 'abeja', 'mazahuaWord': 'ngïnï'});
+    expect(word.imageUrl, isNull);
+    expect(word.audioUrl, isNull);
+    expect(word.id, 5);
+
+    final answer = Answer.fromJson({'wordId': 5, 'answerText': 'abeja', 'isCorrect': true});
+    expect(answer.word?.imageUrl, isNull);
+    expect(answer.word?.audioUrl, isNull);
+    expect(answer.word?.id, 5);
+
+    final data = GameData.fromJson({
+      'words': [
+        {'id': 5, 'spanishWord': 'abeja', 'mazahuaWord': 'ngïnï'}
+      ],
+      'questions': [
+        {
+          'id': 10,
+          'question': '¿Qué animal es?',
+          'responseList': [
+            {'wordId': 5, 'isCorrect': true}
+          ]
+        }
+      ]
+    });
+
+    final linkedWord = data.questions.first.responseList.first.word;
+    expect(linkedWord, isNotNull);
+    expect(linkedWord?.imageUrl, isNull);
+    expect(linkedWord?.audioUrl, isNull);
+    expect(linkedWord?.id, 5);
+  });
+
+  test(
+      'Word.fromJson sí conserva imageUrl/audioUrl cuando el backend los '
+      'manda explícitamente', () {
+    final word = Word.fromJson({
+      'id': 5,
+      'spanishWord': 'abeja',
+      'mazahuaWord': 'ngïnï',
+      'imageUrl': 'https://cdn.example.com/abeja.webp',
+      'audioUrl': 'https://cdn.example.com/abeja.mp3',
+    });
+    expect(word.imageUrl, 'https://cdn.example.com/abeja.webp');
+    expect(word.audioUrl, 'https://cdn.example.com/abeja.mp3');
+  });
 }

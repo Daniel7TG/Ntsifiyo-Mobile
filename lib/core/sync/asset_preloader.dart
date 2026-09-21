@@ -1,42 +1,29 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
-
 import '../../data/models/models.dart';
+import '../storage/media_store.dart';
 
-/// Descarga imágenes/audio de un GameData a disco y reescribe las URLs a
-/// rutas locales (equivalente persistente del preloadAssets de la web).
-/// Si un recurso no puede descargarse, conserva la URL remota.
-Future<GameData> preloadGameAssets(GameData data) async {
-  final dir = await getApplicationSupportDirectory();
-  final mediaDir = Directory(p.join(dir.path, 'game_media'));
-  if (!mediaDir.existsSync()) mediaDir.createSync(recursive: true);
-  final dio = Dio();
-  final cache = <String, String>{};
+bool _wasRemote(String? url) => url != null && url.startsWith('http');
 
-  Future<String?> localize(String? url) async {
-    if (url == null || url.isEmpty || !url.startsWith('http')) return url;
-    if (cache.containsKey(url)) return cache[url];
-    final name =
-        url.hashCode.toRadixString(16) + p.extension(Uri.parse(url).path);
-    final file = File(p.join(mediaDir.path, name));
-    if (!file.existsSync()) {
-      try {
-        await dio.download(url, file.path);
-      } catch (_) {
-        return url;
-      }
-    }
-    cache[url] = file.path;
-    return file.path;
+/// Descarga imágenes/audio de un GameData a disco vía [MediaStore] y
+/// reescribe las URLs a rutas locales relativas (equivalente persistente
+/// del preloadAssets de la web). Si un recurso no puede descargarse,
+/// conserva la URL remota y el segundo valor de la tupla vuelve `false`:
+/// GameCacheService usa eso para reintentar el juego en la próxima conexión
+/// en vez de darlo por cacheado con medios rotos para siempre.
+Future<(GameData, bool)> preloadGameAssets(
+  GameData data,
+  MediaStore store,
+) async {
+  var complete = true;
+
+  Future<Word> localizeWord(Word w) async {
+    final image = await store.localize(w.imageUrl, 'image');
+    final audio = await store.localize(w.audioUrl, 'audio');
+    if (_wasRemote(w.imageUrl) && image == null) complete = false;
+    if (_wasRemote(w.audioUrl) && audio == null) complete = false;
+    final resolvedImage = await store.resolve(image ?? w.imageUrl);
+    final resolvedAudio = await store.resolve(audio ?? w.audioUrl);
+    return w.copyWith(imageUrl: resolvedImage, audioUrl: resolvedAudio);
   }
-
-  Future<Word> localizeWord(Word w) async => w.copyWith(
-        imageUrl: await localize(w.imageUrl),
-        audioUrl: await localize(w.audioUrl),
-      );
 
   final words = [for (final w in data.words) await localizeWord(w)];
   final questions = <Question>[];
@@ -56,6 +43,51 @@ Future<GameData> preloadGameAssets(GameData data) async {
       question: q.question,
       responseList: answers,
       word: q.word != null ? await localizeWord(q.word!) : null,
+    ));
+  }
+
+  final localized = GameData(
+    activityId: data.activityId,
+    gameType: data.gameType,
+    title: data.title,
+    difficult: data.difficult,
+    experience: data.experience,
+    totalQuestions: data.totalQuestions,
+    questions: questions,
+    words: words,
+    gameConfigs: data.gameConfigs,
+    mediaId: data.mediaId,
+  );
+  return (localized, complete);
+}
+
+/// Simétrico de [preloadGameAssets]: al LEER un juego del caché, resuelve
+/// cada ruta guardada (relativa, absoluta heredada, asset o URL) a lo que
+/// el widget debe consumir, con verificación de que el archivo exista.
+Future<GameData> resolveGameMedia(GameData data, MediaStore store) async {
+  Future<Word> resolveWord(Word w) async => w.copyWith(
+        imageUrl: await store.resolve(w.imageUrl),
+        audioUrl: await store.resolve(w.audioUrl),
+      );
+
+  final words = [for (final w in data.words) await resolveWord(w)];
+  final questions = <Question>[];
+  for (final q in data.questions) {
+    final answers = <Answer>[];
+    for (final a in q.responseList) {
+      answers.add(Answer(
+        id: a.id,
+        answerText: a.answerText,
+        isCorrect: a.isCorrect,
+        wordId: a.wordId,
+        word: a.word != null ? await resolveWord(a.word!) : null,
+      ));
+    }
+    questions.add(Question(
+      id: q.id,
+      question: q.question,
+      responseList: answers,
+      word: q.word != null ? await resolveWord(q.word!) : null,
     ));
   }
 

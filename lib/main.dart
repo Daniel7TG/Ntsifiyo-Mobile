@@ -8,12 +8,17 @@ import 'app/theme.dart';
 import 'core/storage/session_store.dart';
 import 'data/services/misc_services.dart';
 import 'features/auth/auth_controller.dart';
+import 'features/settings/theme_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // La app vive en vertical; solo el mapa cambia a horizontal.
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  // Edge-to-edge: el sistema pinta detrás de las barras, cada AppBar/tema
+  // decide el color de sus iconos vía SystemUiOverlayStyle.
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   // Cargar la sesión guardada antes de decidir la pantalla inicial.
   final sessionStore = SessionStore(const FlutterSecureStorage());
@@ -74,11 +79,14 @@ class _JnatrjoAppState extends ConsumerState<JnatrjoApp>
   @override
   Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
+    final themeMode = ref.watch(themeModeProvider);
 
     return MaterialApp.router(
-      title: 'Jñatrjo',
+      title: "Nts'i Fiyo",
       debugShowCheckedModeBanner: false,
-      theme: buildAppTheme(),
+      theme: buildAppTheme(Brightness.light),
+      darkTheme: buildAppTheme(Brightness.dark),
+      themeMode: themeMode,
       routerConfig: router,
       builder: (context, child) => GradientBackground(
         child: child ?? const SizedBox.shrink(),

@@ -189,11 +189,18 @@ class _MemoramaGameViewState extends ConsumerState<MemoramaGameView> {
           Center(
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: Text(
-                '⏱ ${_formatTime(_elapsed)}   ${_matched.length}/$_totalPairs',
-                style: const TextStyle(
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textMuted),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.timer, size: 16, color: AppColors.textMuted),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${_formatTime(_elapsed)}   ${_matched.length}/$_totalPairs',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textMuted),
+                  ),
+                ],
               ),
             ),
           ),
@@ -242,6 +249,7 @@ class _MemoramaGameViewState extends ConsumerState<MemoramaGameView> {
               text: card.text,
               imagePath: card.imageUrl,
               audioPath: card.audioUrl,
+              wordId: card.wordId,
               cardState: isMatched
                   ? GameCardState.correct
                   : isWrong

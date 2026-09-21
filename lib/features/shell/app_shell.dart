@@ -1,22 +1,35 @@
+import '../home/home_providers.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../app/theme.dart';
 import '../../core/connectivity/connectivity_service.dart';
+import '../../core/storage/media_store.dart';
 import '../../core/sync/game_cache_service.dart';
+import '../../core/sync/resource_update_service.dart';
 import '../../core/sync/sync_service.dart';
 import '../../shared/widgets/states.dart';
 import '../coyote/coyote_companion.dart';
 import '../coyote/coyote_controller.dart';
 import '../coyote/coyote_messages.dart';
+import '../auth/auth_controller.dart';
 import '../dashboard/dashboard_providers.dart';
-import '../map/map_screen.dart' show enterMapChrome, exitMapChrome;
+import '../dictionary/dictionary_repository.dart';
+import '../progress/progress_providers.dart';
 import '../sync/sync_summary_sheet.dart';
+import 'widgets/sendero_nav_bar.dart';
 
-/// Shell principal con bottom navigation (reemplaza el sidebar de la web).
-/// También orquesta el modo offline: dispara la sincronización de resultados
-/// pendientes y el precacheo de juegos cuando hay conexión.
+/// Shell principal con la barra inferior de 4 destinos (Inicio, Explorar,
+/// Palabras, Perfil). También orquesta el modo offline: dispara la
+/// sincronización de resultados pendientes y el precacheo de juegos cuando
+/// hay conexión.
+///
+/// El mapa ya NO es una rama propia: vive como ruta hija de Explorar y
+/// cuelga del navigator raíz (pantalla completa e inmersiva, se administra
+/// a sí mismo en `MapScreen.initState/dispose`), así que este shell no
+/// necesita saber nada sobre él.
 class AppShell extends ConsumerStatefulWidget {
   final StatefulNavigationShell navigationShell;
 
@@ -27,140 +40,155 @@ class AppShell extends ConsumerStatefulWidget {
 }
 
 class _AppShellState extends ConsumerState<AppShell> {
-  static const _mapBranch = 1;
-
   /// Rutas de cada rama, en el mismo orden que el StatefulShellRoute.
-  static const _branchPaths = [
-    '/dashboard',
-    '/mapa',
-    '/juegos',
-    '/diccionario',
-    '/contenido',
+  static const _branchPaths = ['/inicio', '/explorar', '/palabras', '/perfil'];
+
+  int _lastIndex = -1;
+
+  static const _destinations = [
+    SenderoDestination(
+      svgAsset: 'assets/svgs/nav/nav_inicio.svg',
+      svgAssetSelected: 'assets/svgs/nav/nav_inicio_fill.svg',
+      label: 'Inicio',
+    ),
+    SenderoDestination(
+      svgAsset: 'assets/svgs/nav/nav_explorar.svg',
+      svgAssetSelected: 'assets/svgs/nav/nav_explorar_fill.svg',
+      label: 'Explorar',
+    ),
+    SenderoDestination(
+      svgAsset: 'assets/svgs/nav/nav_palabras.svg',
+      svgAssetSelected: 'assets/svgs/nav/nav_palabras_fill.svg',
+      label: 'Palabras',
+    ),
+    SenderoDestination(
+      svgAsset: 'assets/svgs/nav/nav_perfil.svg',
+      svgAssetSelected: 'assets/svgs/nav/nav_perfil_fill.svg',
+      label: 'Perfil',
+    ),
   ];
-
-  int _lastChromeIndex = -1;
-
-  bool get _isMapTab => widget.navigationShell.currentIndex == _mapBranch;
 
   @override
   void initState() {
     super.initState();
-    // Al entrar (post-login): sincronizar pendientes y cachear juegos.
+    // Al entrar (post-login): sincronizar pendientes, cachear juegos y
+    // renovar el JWT. Los tres en paralelo — `renewSession` no debe
+    // bloquear el arranque hasta el `connectTimeout` de 20s cuando no hay
+    // red (la app es offline-first).
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(syncControllerProvider.notifier).trySync();
-      ref.read(gameCacheServiceProvider).cacheAllGames();
+      unawaited(ref.read(syncControllerProvider.notifier).trySync());
+      unawaited(_bootstrapCaches());
+      unawaited(ref.read(authControllerProvider.notifier).renewSession());
     });
   }
 
-  /// El mapa se muestra a pantalla completa y en horizontal; el resto de
-  /// pestañas siempre en vertical con la barra visible.
-  void _applyChromeForTab() {
-    final index = widget.navigationShell.currentIndex;
-    if (index == _lastChromeIndex) return;
-    _lastChromeIndex = index;
-    if (index == _mapBranch) {
-      enterMapChrome();
-    } else {
-      exitMapChrome();
+  /// Encadenado, en este orden — `GameCacheService` comparte `_running`
+  /// entre sus métodos, así que lanzarlos en paralelo haría que uno se
+  /// descarte en silencio:
+  /// 1. [GameCacheService.seedFromBundleIfNewer]: si el APK trae un
+  ///    manifest más nuevo que el ya sembrado (instalación nueva o
+  ///    actualización), puebla `CachedGames` sin red antes de tocar la API.
+  /// 2. `GET /api/catalog/updates` (`ResourceUpdateService.checkAndRefresh`):
+  ///    baja solo el delta de juegos y palabras desde la última
+  ///    sincronización — nunca el catálogo completo.
+  /// 3. [GameCacheService.completeMissingGameMedia]: reintenta la media que
+  ///    quedó a medias (juego sembrado por el bundle sin match en build-time,
+  ///    o que falló por red la vez anterior) sin volver a tocar el catálogo.
+  ///
+  /// `MediaStore.sweep()` va suelto al final sin bloquear lo anterior: solo
+  /// libera disco de la re-clave de `CachedMedia` (migración de esquema
+  /// 8→9), es mantenimiento, no algo de lo que la UI dependa.
+  Future<void> _bootstrapCaches() async {
+    final gameCache = ref.read(gameCacheServiceProvider);
+    await gameCache.seedFromBundleIfNewer().catchError((_) {});
+    await _syncCatalogDelta();
+    await gameCache.completeMissingGameMedia().catchError((_) {});
+    unawaited(ref.read(mediaStoreProvider).sweep().catchError((_) {}));
+    // El bundle recién sembrado (o el delta recién aplicado) cambia el
+    // universo de `CachedGames`: sin esto, una instalación nueva se queda
+    // con el progreso en "0 / 0" hasta el siguiente arranque, porque
+    // `PathScreen` (ahora `GamesHubScreen`) nunca se desmonta en el
+    // `indexedStack` y el `autoDispose` de antes no llegaba a dispararse.
+    if (mounted) ref.invalidate(progressSnapshotProvider);
+  }
+
+  Future<void> _syncCatalogDelta() async {
+    try {
+      final refreshed =
+          await ref.read(resourceUpdateServiceProvider).checkAndRefresh();
+      if (refreshed.contains(TrackedResource.dictionary) && mounted) {
+        ref.invalidate(dictionaryProvider);
+      }
+    } catch (_) {
+      // Sin red u otro fallo: no bloquea el resto del arranque.
     }
-    _speakForTab(index);
   }
 
   /// El coyote saluda al entrar a cada sección (mirror de ROUTE_MESSAGES).
   void _speakForTab(int index) {
+    if (index == _lastIndex) return;
+    _lastIndex = index;
     final message = coyoteSectionMessages[_branchPaths[index]];
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final coyote = ref.read(coyoteProvider.notifier);
-      if (index == _mapBranch || message == null) {
-        // En el mapa el coyote no se dibuja: no dejes una burbuja colgando.
-        coyote.clear();
-        return;
-      }
-      coyote.speak(message.$1, emotion: message.$2);
+      ref.read(coyoteProvider.notifier).resetForNewScreen(
+            message?.$1,
+            message?.$2 ?? CoyoteEmotion.esperando,
+          );
     });
-  }
-
-  @override
-  void dispose() {
-    // Al salir del shell (logout), restaurar la orientación vertical.
-    exitMapChrome();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final isOnline = ref.watch(isOnlineProvider);
-    _applyChromeForTab();
+    _speakForTab(widget.navigationShell.currentIndex);
 
     // Mostrar el resumen de sincronización cuando esté listo.
     ref.listen(syncControllerProvider, (previous, summary) async {
       if (summary != null && mounted) {
         ref.read(syncControllerProvider.notifier).dismissSummary();
-        // El progreso cambió en el backend: refrescar dashboard.
+        // El progreso cambió en el backend: refrescar dashboard. La cola
+        // offline también pudo registrar `CompletedGames` nuevos
+        // (`SyncService.syncPending`), así que el anillo del mapa igual.
         ref.invalidate(dashboardProvider);
+        ref.invalidate(dailyChallengeProvider);
+        ref.invalidate(progressSnapshotProvider);
         await showSyncSummarySheet(context, summary);
       }
     });
 
-    // Al recuperar conexión, reintentar el caché de juegos.
+    // Al recuperar conexión: mismo delta que en el arranque, sin re-sembrar
+    // el bundle (eso solo tiene sentido una vez por `generatedAt`). También
+    // se reintenta la renovación del JWT: es el único momento en que un
+    // token ya caducado se cierra de verdad (ver `renewSession`), porque un
+    // fallo de red antes de esto se conservó a propósito.
     ref.listen(connectivityStreamProvider, (previous, next) {
       if (next.value == true && previous?.value == false) {
-        ref.read(gameCacheServiceProvider).cacheAllGames();
+        unawaited(_syncCatalogDelta().then((_) => ref
+            .read(gameCacheServiceProvider)
+            .completeMissingGameMedia()
+            .catchError((_) {})));
+        unawaited(ref.read(authControllerProvider.notifier).renewSession());
       }
     });
 
     final content = Column(
       children: [
-        if (!isOnline && !_isMapTab)
-          const SafeArea(bottom: false, child: OfflineBanner()),
+        if (!isOnline) const SafeArea(bottom: false, child: OfflineBanner()),
         Expanded(child: widget.navigationShell),
       ],
     );
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      // El mapa es inmersivo: sin coyote encima.
-      body: _isMapTab ? content : CoyoteOverlay(child: content),
-      // El mapa es pantalla completa: sin barra de navegación.
-      bottomNavigationBar: _isMapTab
-          ? null
-          : NavigationBar(
+      body: CoyoteOverlay(child: content),
+      bottomNavigationBar: SenderoNavBar(
         selectedIndex: widget.navigationShell.currentIndex,
+        destinations: _destinations,
         onDestinationSelected: (index) => widget.navigationShell.goBranch(
           index,
           initialLocation: index == widget.navigationShell.currentIndex,
         ),
-        backgroundColor: Colors.white,
-        indicatorColor: AppColors.primary.withValues(alpha: 0.12),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home, color: AppColors.primary),
-            label: 'Inicio',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.map_outlined),
-            selectedIcon: Icon(Icons.map, color: AppColors.primary),
-            label: 'Mapa',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.sports_esports_outlined),
-            selectedIcon:
-                Icon(Icons.sports_esports, color: AppColors.primary),
-            label: 'Juegos',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.menu_book_outlined),
-            selectedIcon: Icon(Icons.menu_book, color: AppColors.primary),
-            label: 'Diccionario',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.play_circle_outline),
-            selectedIcon: Icon(Icons.play_circle, color: AppColors.primary),
-            label: 'Contenido',
-          ),
-        ],
       ),
     );
   }

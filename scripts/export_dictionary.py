@@ -1,10 +1,18 @@
 """Exporta el diccionario del backend a assets/dictionary/ para uso offline.
 
 Descarga categorías, palabras, imágenes y audios; comprime imágenes a webp
-(max 600px) para mantener el bundle < 50MB.
+(max 600px) para mantener el bundle < 50MB. `generatedAt` en el manifest
+queda con la fecha de esta corrida: úsala como el primer paso de un release
+(antes de export_games.py y de flutter build), para que esa fecha sea fiel
+al build real, no a un ensayo de días antes.
 
-Uso:
+Uso automatizado (recomendado, sin copiar ningún JWT a mano):
+    export JNATRJO_CI_USERNAME=... JNATRJO_CI_PASSWORD=...
+    python scripts/export_dictionary.py
+
+Uso manual con un JWT ya obtenido:
     python scripts/export_dictionary.py --token <JWT>
+    python scripts/export_dictionary.py --token <JWT> --api https://otro-backend
     (obtén el JWT iniciando sesión en la web y copiando localStorage.authToken)
 
 Requiere: pip install requests pillow
@@ -19,12 +27,18 @@ from urllib.parse import urlparse
 
 import requests
 
+sys.path.insert(0, os.path.dirname(__file__))
+from _ci_auth import login as ci_login  # noqa: E402
+
 try:
     from PIL import Image
 except ImportError:
     Image = None
 
-API = "https://ntsifiyo-ltolw.ondigitalocean.app"
+# Mismo default que apiBaseUrl en lib/core/api/api_client.dart. Overridable con
+# --api porque el backend se ha movido más de una vez (DigitalOcean, ngrok…) y
+# el que esté vivo en un momento dado no siempre coincide con este default.
+API = "https://bottom-scenic-outcast.ngrok-free.dev"
 OUT_DIR = os.path.join(os.path.dirname(__file__), "..", "assets", "dictionary")
 IMG_DIR = os.path.join(OUT_DIR, "img")
 AUDIO_DIR = os.path.join(OUT_DIR, "audio")
@@ -71,14 +85,23 @@ def save_audio(content, word_id, url):
 
 
 def main():
+    global API
     parser = argparse.ArgumentParser()
-    parser.add_argument("--token", required=True, help="JWT de un usuario válido")
+    parser.add_argument(
+        "--token",
+        help="JWT ya obtenido (opcional). Sin esto, se hace login con "
+        "JNATRJO_CI_USERNAME/JNATRJO_CI_PASSWORD.",
+    )
+    parser.add_argument("--api", default=API, help=f"Base URL del backend (default: {API})")
     args = parser.parse_args()
+    API = args.api
+
+    token = args.token or ci_login(API, role="visitor")
 
     os.makedirs(IMG_DIR, exist_ok=True)
     os.makedirs(AUDIO_DIR, exist_ok=True)
 
-    categories = api_get("/api/dictionary/words/categories", args.token).get("categories", [])
+    categories = api_get("/api/dictionary/words/categories", token).get("categories", [])
     print(f"Categorías: {categories}")
 
     manifest_words = []
@@ -86,7 +109,7 @@ def main():
         page = 0
         while True:
             try:
-                data = api_get(f"/api/dictionary/words/{category}?page={page}", args.token)
+                data = api_get(f"/api/dictionary/words/{category}?page={page}", token)
             except requests.HTTPError as e:
                 # El backend responde 404 al pasar la última página
                 if e.response is not None and e.response.status_code == 404:

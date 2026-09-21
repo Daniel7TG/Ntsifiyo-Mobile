@@ -168,11 +168,18 @@ class _ParesGameViewState extends ConsumerState<ParesGameView> {
           Center(
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: Text(
-                '⏱ ${_formatTime(_elapsed)}   ${_matched.length}/${_left.length}',
-                style: const TextStyle(
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textMuted),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.timer, size: 16, color: AppColors.textMuted),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${_formatTime(_elapsed)}   ${_matched.length}/${_left.length}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textMuted),
+                  ),
+                ],
               ),
             ),
           ),
@@ -221,6 +228,7 @@ class _ParesGameViewState extends ConsumerState<ParesGameView> {
                 text: card.text,
                 imagePath: card.imageUrl,
                 audioPath: card.audioUrl,
+                wordId: card.wordId,
                 cardState: _matched.contains(card.wordId)
                     ? GameCardState.correct
                     : (!isLeft && _wrongRight == card.wordId)

@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../app/theme.dart';
 import '../../../core/api/api_client.dart';
 import '../../../data/services/auth_service.dart';
+import '../../../shared/widgets/coyote_loading.dart';
 import '../../../shared/widgets/kid_card.dart';
-import '../../../shared/widgets/states.dart';
 
 /// Verificación de email dentro de la app (mirror de VerifyEmailPage.jsx).
 /// Se abre desde el deep link `.../verify-email?token=...`.
@@ -73,8 +73,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: switch (_status) {
-            _Status.loading =>
-              const LoadingState(message: 'Verificando tu correo...'),
+            _Status.loading => const CoyoteLoadingIndicator(
+                message: 'Verificando tu correo...'),
             _Status.success => _buildResult(
                 icon: Icons.mark_email_read,
                 color: AppColors.success,

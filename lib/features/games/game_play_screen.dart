@@ -66,7 +66,7 @@ class _GamePlayScreenState extends ConsumerState<GamePlayScreen> {
       if (context.canPop()) {
         context.pop();
       } else {
-        context.go('/juegos');
+        context.go('/inicio');
       }
     }
 
@@ -78,6 +78,13 @@ class _GamePlayScreenState extends ConsumerState<GamePlayScreen> {
     final type = byRoute.isNotEmpty
         ? byRoute.first
         : (session.data.gameType ?? '');
+
+    if (disabledGameTypes.contains(type)) {
+      return UnderConstructionScreen(
+        title: gameInfoFor(type).title,
+        subtitle: 'No disponible en teléfono',
+      );
+    }
 
     final view = switch (type) {
       ActivityTypes.questionnaire ||
@@ -98,6 +105,34 @@ class _GamePlayScreenState extends ConsumerState<GamePlayScreen> {
       _ => UnderConstructionScreen(title: gameInfoFor(type).title),
     };
 
-    return CoyoteOverlay(child: view);
+    // Solo el gesto/botón atrás del SISTEMA se confirma: es la salida
+    // accidental (swipe, botón físico), a diferencia del botón "Volver"
+    // propio de cada vista, que el usuario ya pulsó a conciencia.
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final leave = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('¿Salir del juego?'),
+            content: const Text(
+                'Tu progreso en esta partida no se guardará si sales ahora.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Seguir jugando'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Salir'),
+              ),
+            ],
+          ),
+        );
+        if (leave == true) exit();
+      },
+      child: CoyoteOverlay(child: view),
+    );
   }
 }

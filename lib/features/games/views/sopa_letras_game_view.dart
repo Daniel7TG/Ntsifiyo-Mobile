@@ -37,7 +37,7 @@ class SopaLetrasGameView extends ConsumerStatefulWidget {
 class _SopaLetrasGameViewState extends ConsumerState<SopaLetrasGameView> {
   late WordSearchBoard _board;
   late List<Word> _targetWords;
-  final Set<int> _foundIds = {};
+  final Set<dynamic> _foundIds = {};
   final Set<GridPos> _foundCells = {};
   List<GridPos> _selection = [];
   bool _finished = false;
@@ -65,7 +65,7 @@ class _SopaLetrasGameViewState extends ConsumerState<SopaLetrasGameView> {
     _targetWords = data.words;
     _board = generateWordSearch([
       for (final w in data.words)
-        (id: w.id ?? 0, text: w.textFor(_cfg)),
+        (id: w.id ?? '', text: w.textFor(_cfg)),
     ]);
     _foundIds.clear();
     _foundCells.clear();

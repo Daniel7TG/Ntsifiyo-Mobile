@@ -29,6 +29,8 @@ dependencies:
   path_provider: ^2.1.6
   path: ^1.9.1
   intl: ^0.20.3
+  flutter_onnxruntime: ^1.8.5
+  record: ^5.1.2
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +41,16 @@ dev_dependencies:
   drift_dev: ^2.34.0
   flutter_launcher_icons: ^0.14.4
 
+dependency_overrides:
+  record_platform_interface: 1.2.0
+
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/app_icon.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/app_icon.png"
+
 flutter:
   uses-material-design: true
 
@@ -46,12 +58,25 @@ flutter:
     - assets/svgs/
     - assets/svgs/juegos/
     - assets/svgs/diccionario/
+    - assets/svgs/nav/
+    - assets/svgs/medallas/
+    - assets/home/
+    - assets/explore/
     - assets/map/
     - assets/coyote/
+    - assets/coyote/animations/
+    - assets/avatars/
+    - assets/modelo/
     # Los directorios de assets no son recursivos: img/ y audio/ deben listarse.
     - assets/dictionary/
     - assets/dictionary/img/
     - assets/dictionary/audio/
+    # Snapshot de juegos generado por scripts/export_games.py: manifest.json
+    # reutiliza la media ya empaquetada de assets/dictionary/, y media/ trae
+    # solo lo que no casó con el diccionario (caso raro). Directorio no
+    # recursivo: hay que listar media/ aparte.
+    - assets/games/
+    - assets/games/media/
 
   fonts:
     - family: Poppins

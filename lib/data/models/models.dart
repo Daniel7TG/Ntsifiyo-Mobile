@@ -95,6 +95,7 @@ class Word {
   final String? imageUrl;
   final String? audioUrl;
   final String? category;
+  final bool pronunciation;
 
   const Word({
     this.id,
@@ -105,18 +106,41 @@ class Word {
     this.imageUrl,
     this.audioUrl,
     this.category,
+    this.pronunciation = false,
   });
 
-  factory Word.fromJson(Map<String, dynamic> json) => Word(
-        id: _asInt(json['id'] ?? json['wordId']),
-        spanishWord: (json['spanishWord'] ?? '') as String,
-        mazahuaWord: (json['mazahuaWord'] ?? '') as String,
-        spanishPronunciation: json['spanishPronunciation'] as String?,
-        mazahuaPronunciation: json['mazahuaPronunciation'] as String?,
-        imageUrl: json['imageUrl'] as String?,
-        audioUrl: json['audioUrl'] as String?,
-        category: json['category'] as String?,
-      );
+  factory Word.fromJson(Map<String, dynamic> json) {
+    final id = _asInt(json['id'] ?? json['wordId'] ?? json['word_id']);
+    final img =
+        (json['imageUrl'] ?? json['urlImage'] ?? json['image']) as String?;
+    final aud = (json['audioUrl'] ??
+        // WordMediaResponseDTO (GET /api/dictionary/words/details/{id},
+        // POST /api/dictionary/media) los llama urlAudio/urlImage.
+        json['urlAudio'] ??
+        json['urlMazahuaAudio'] ??
+        json['urlSpanishAudio'] ??
+        // WordFullDTO (GET /api/dictionary/words/full[/{id}]) usa
+        // mazahuaAudioUrl/spanishAudioUrl en vez del prefijo url*.
+        json['mazahuaAudioUrl'] ??
+        json['spanishAudioUrl'] ??
+        json['audio']) as String?;
+
+    return Word(
+      id: id,
+      spanishWord: (json['spanishWord'] ?? json['spanishText'] ?? '') as String,
+      mazahuaWord: (json['mazahuaWord'] ?? json['mazahuaText'] ?? '') as String,
+      spanishPronunciation: json['spanishPronunciation'] as String?,
+      mazahuaPronunciation: json['mazahuaPronunciation'] as String?,
+      // Sin ruta fabricada: si el backend no manda imageUrl/audioUrl se deja
+      // en null. Inventar 'assets/dictionary/img/$id.webp' aquí persistía
+      // una ruta inexistente en CachedWords cuando el id no está en el
+      // bundle; el fallback por wordId ya lo resuelve WordImage en la UI.
+      imageUrl: img,
+      audioUrl: aud,
+      category: (json['category'] ?? json['topic']) as String?,
+      pronunciation: _asBool(json['pronunciation']),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -127,22 +151,78 @@ class Word {
         'imageUrl': imageUrl,
         'audioUrl': audioUrl,
         'category': category,
+        'pronunciation': pronunciation,
       };
 
-  Word copyWith({String? imageUrl, String? audioUrl}) => Word(
-        id: id,
+  Word copyWith({
+    int? id,
+    String? imageUrl,
+    String? audioUrl,
+    String? category,
+    bool? pronunciation,
+  }) =>
+      Word(
+        id: id ?? this.id,
         spanishWord: spanishWord,
         mazahuaWord: mazahuaWord,
         spanishPronunciation: spanishPronunciation,
         mazahuaPronunciation: mazahuaPronunciation,
         imageUrl: imageUrl ?? this.imageUrl,
         audioUrl: audioUrl ?? this.audioUrl,
-        category: category,
+        category: category ?? this.category,
+        pronunciation: pronunciation ?? this.pronunciation,
       );
 
   /// Texto según configuración de idioma.
   String textFor(GameConfig config) =>
       config.isMazahua ? mazahuaWord : spanishWord;
+}
+
+/// Clasificación del resultado del modelo de pronunciación ONNX.
+enum PronunciationStatus {
+  correct,
+  incorrect,
+  incorrectDifferentWord,
+  silence;
+
+  static PronunciationStatus fromString(String? value) {
+    switch (value?.toUpperCase()) {
+      case 'CORRECT':
+        return PronunciationStatus.correct;
+      case 'INCORRECT_DIFFERENT_WORD':
+        return PronunciationStatus.incorrectDifferentWord;
+      case 'SILENCE':
+        return PronunciationStatus.silence;
+      case 'INCORRECT':
+      default:
+        return PronunciationStatus.incorrect;
+    }
+  }
+}
+
+/// Veredicto devuelto por la validación de pronunciación.
+class VeredictoPronunciacion {
+  final PronunciationStatus status;
+  final double score; // Puntuación 0.0 a 100.0 %
+  final String targetWord;
+  final String? detectedWord;
+  final double targetDistance;
+  final double minDistance;
+  final double threshold;
+  final String mensaje;
+
+  VeredictoPronunciacion({
+    required this.status,
+    required this.score,
+    required this.targetWord,
+    this.detectedWord,
+    required this.targetDistance,
+    required this.minDistance,
+    required this.threshold,
+    required this.mensaje,
+  });
+
+  bool get esCorrecto => status == PronunciationStatus.correct;
 }
 
 /// AnswerDTO — opción de respuesta de una pregunta.
@@ -161,15 +241,41 @@ class Answer {
     this.word,
   });
 
-  factory Answer.fromJson(Map<String, dynamic> json) => Answer(
-        id: _asInt(json['id'] ?? json['answerId']),
-        answerText: (json['answerText'] ?? json['text'] ?? '') as String,
-        isCorrect: _asBool(json['isCorrect'] ?? json['correct']),
-        wordId: _asInt(json['wordId']),
-        word: json['word'] is Map<String, dynamic>
-            ? Word.fromJson(json['word'] as Map<String, dynamic>)
-            : null,
-      );
+  factory Answer.fromJson(Map<String, dynamic> json) {
+    Word? w;
+    if (json['word'] is Map<String, dynamic>) {
+      w = Word.fromJson(json['word'] as Map<String, dynamic>);
+    } else {
+      final wId = _asInt(json['wordId'] ?? json['word_id']);
+      final img =
+          (json['imageUrl'] ?? json['urlImage'] ?? json['image']) as String?;
+      final aud = (json['audioUrl'] ??
+          json['urlMazahuaAudio'] ??
+          json['urlSpanishAudio'] ??
+          json['audio']) as String?;
+      final text = (json['answerText'] ?? json['text'] ?? '') as String;
+      if (wId != null || img != null || aud != null) {
+        // Sin ruta fabricada (ver Word.fromJson): que quede null si el
+        // backend no la manda, para que WordImage resuelva el fallback por
+        // wordId en tiempo de render en vez de congelar en contentJson una
+        // ruta que puede no existir en el bundle.
+        w = Word(
+          id: wId,
+          spanishWord: text,
+          mazahuaWord: text,
+          imageUrl: img,
+          audioUrl: aud,
+        );
+      }
+    }
+    return Answer(
+      id: _asInt(json['id'] ?? json['answerId']),
+      answerText: (json['answerText'] ?? json['text'] ?? '') as String,
+      isCorrect: _asBool(json['isCorrect'] ?? json['correct']),
+      wordId: _asInt(json['wordId'] ?? json['word_id']),
+      word: w,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -194,17 +300,39 @@ class Question {
     this.word,
   });
 
-  factory Question.fromJson(Map<String, dynamic> json) => Question(
-        id: _asInt(json['id'] ?? json['questionId']),
-        question: (json['question'] ?? '') as String,
-        responseList: ((json['responseList'] ?? json['answers'] ?? []) as List)
-            .whereType<Map<String, dynamic>>()
-            .map(Answer.fromJson)
-            .toList(),
-        word: json['word'] is Map<String, dynamic>
-            ? Word.fromJson(json['word'] as Map<String, dynamic>)
-            : null,
-      );
+  factory Question.fromJson(Map<String, dynamic> json) {
+    Word? w;
+    if (json['word'] is Map<String, dynamic>) {
+      w = Word.fromJson(json['word'] as Map<String, dynamic>);
+    } else {
+      final wId = _asInt(json['wordId'] ?? json['word_id']);
+      final img =
+          (json['imageUrl'] ?? json['urlImage'] ?? json['image']) as String?;
+      final aud = (json['audioUrl'] ??
+          json['urlMazahuaAudio'] ??
+          json['urlSpanishAudio'] ??
+          json['audio']) as String?;
+      if (wId != null || img != null || aud != null) {
+        // Sin ruta fabricada, mismo motivo que en Answer.fromJson arriba.
+        w = Word(
+          id: wId,
+          spanishWord: (json['question'] ?? '') as String,
+          mazahuaWord: (json['question'] ?? '') as String,
+          imageUrl: img,
+          audioUrl: aud,
+        );
+      }
+    }
+    return Question(
+      id: _asInt(json['id'] ?? json['questionId']),
+      question: (json['question'] ?? '') as String,
+      responseList: ((json['responseList'] ?? json['answers'] ?? []) as List)
+          .whereType<Map<String, dynamic>>()
+          .map(Answer.fromJson)
+          .toList(),
+      word: w,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -238,6 +366,11 @@ class GameSummaryDto {
     this.gameConfigs = const [],
   });
 
+  int get displayXp {
+    if (experience != null && experience! > 0) return experience!;
+    return (totalQuestions ?? 5) * 10;
+  }
+
   factory GameSummaryDto.fromJson(Map<String, dynamic> json) =>
       GameSummaryDto(
         id: _asInt(json['id'] ?? json['gameId']) ?? 0,
@@ -246,7 +379,7 @@ class GameSummaryDto {
         difficult: json['difficult'] as String?,
         gameType: (json['gameType'] ?? json['type']) as String?,
         topic: (json['topic'] ?? json['gameTopic']) as String?,
-        experience: _asInt(json['experience']),
+        experience: _asInt(json['experience'] ?? json['xp'] ?? json['totalExperience'] ?? json['experienceEarned']),
         totalQuestions: _asInt(json['totalQuestions']),
         gameConfigs:
             ((json['gameConfigDTO'] ?? json['gameConfigs'] ?? []) as List)
@@ -322,29 +455,57 @@ class GameData {
         mediaId: mediaId,
       );
 
-  factory GameData.fromJson(Map<String, dynamic> json) => GameData(
-        activityId: _asInt(json['activityId']),
-        gameType: (json['gameType'] ?? json['type']) as String?,
-        title: json['title'] as String?,
-        difficult: json['difficult'] as String?,
-        experience: _asInt(json['experience']),
-        totalQuestions: _asInt(json['totalQuestions']),
-        questions: ((json['questions'] ?? []) as List)
-            .whereType<Map<String, dynamic>>()
-            .map(Question.fromJson)
-            .toList(),
-        words: ((json['words'] ?? []) as List)
-            .whereType<Map<String, dynamic>>()
-            .map(Word.fromJson)
-            .toList(),
-        gameConfigs:
-            ((json['gameConfigs'] ?? json['gameconfigs'] ?? json['gameConfigDTO'] ?? [])
-                    as List)
-                .whereType<Map<String, dynamic>>()
-                .map(GameConfig.fromJson)
-                .toList(),
-        mediaId: _asInt(json['mediaId']),
+  factory GameData.fromJson(Map<String, dynamic> json) {
+    final words = ((json['words'] ?? []) as List)
+        .whereType<Map<String, dynamic>>()
+        .map(Word.fromJson)
+        .toList();
+    final wordMap = {for (final w in words) if (w.id != null) w.id!: w};
+
+    final rawQuestions = ((json['questions'] ?? []) as List)
+        .whereType<Map<String, dynamic>>()
+        .map(Question.fromJson)
+        .toList();
+
+    final questions = rawQuestions.map((q) {
+      final qWord = q.word ?? (q.id != null ? wordMap[q.id] : null);
+      final answers = q.responseList.map((a) {
+        final linkedWord = a.word ?? (a.wordId != null ? wordMap[a.wordId] : null);
+        return Answer(
+          id: a.id,
+          answerText: a.answerText,
+          isCorrect: a.isCorrect,
+          wordId: a.wordId,
+          word: linkedWord,
+        );
+      }).toList();
+
+      return Question(
+        id: q.id,
+        question: q.question,
+        responseList: answers,
+        word: qWord,
       );
+    }).toList();
+
+    return GameData(
+      activityId: _asInt(json['activityId']),
+      gameType: (json['gameType'] ?? json['type']) as String?,
+      title: json['title'] as String?,
+      difficult: json['difficult'] as String?,
+      experience: _asInt(json['experience']),
+      totalQuestions: _asInt(json['totalQuestions']),
+      questions: questions,
+      words: words,
+      gameConfigs:
+          ((json['gameConfigs'] ?? json['gameconfigs'] ?? json['gameConfigDTO'] ?? [])
+                  as List)
+              .whereType<Map<String, dynamic>>()
+              .map(GameConfig.fromJson)
+              .toList(),
+      mediaId: _asInt(json['mediaId']),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'activityId': activityId,
@@ -367,7 +528,7 @@ class GameData {
 /// nunca viajan al backend (ver [toApiJson]).
 class ResponseLog {
   final int? questionId;
-  final int? responseAnswerId;
+  final dynamic responseAnswerId;
   final bool isCorrect;
 
   /// Solo para el resumen local en juegos de pares.
@@ -403,8 +564,7 @@ class ResponseLog {
 
   factory ResponseLog.fromJson(Map<String, dynamic> json) => ResponseLog(
         questionId: _asInt(json['questionId']),
-        responseAnswerId:
-            _asInt(json['responseAnswerId'] ?? json['answerId']),
+        responseAnswerId: json['responseAnswerId'] ?? json['answerId'],
         isCorrect: _asBool(json['isCorrect']),
         wordText: json['wordText'] as String?,
         questionText: json['questionText'] as String?,
@@ -581,4 +741,83 @@ class StreamResources {
         espSubtitlesUrl: json['espSubtitlesUrl'] as String?,
         mazSubtitlesUrl: json['mazSubtitlesUrl'] as String?,
       );
+}
+
+abstract class ResourceChangeType {
+  static const created = 'CREATED';
+  static const updated = 'UPDATED';
+  static const deleted = 'DELETED';
+}
+
+/// Un elemento del delta de GET /api/catalog/updates: qué id cambió y cómo.
+/// El backend colapsa el historial a un solo cambio por objeto (el más
+/// reciente), así que un juego creado y editado tres veces desde `since`
+/// llega una sola vez como `UPDATED`.
+class CatalogChange {
+  final int id;
+  final String changeType;
+  final DateTime? updatedAt;
+
+  const CatalogChange({
+    required this.id,
+    required this.changeType,
+    this.updatedAt,
+  });
+
+  bool get isDeleted => changeType == ResourceChangeType.deleted;
+
+  /// [idKey] es `gameId` o `wordId` según la lista; se aceptan también `id`
+  /// y snake_case por la misma tolerancia que el resto de parsers.
+  static CatalogChange? fromJson(Map<String, dynamic> json, String idKey) {
+    final id = _asInt(json[idKey] ?? json['id'] ?? json['resourceId']);
+    if (id == null) return null;
+    final raw = json['updatedAt'] as String?;
+    return CatalogChange(
+      id: id,
+      changeType: (json['changeType'] as String?) ?? ResourceChangeType.updated,
+      updatedAt: raw != null ? DateTime.tryParse(raw) : null,
+    );
+  }
+}
+
+/// Mirror de GET /api/catalog/updates. Sustituye a los antiguos
+/// `/api/games/updatedGames` y `/api/dictionary/updatedWords`, que solo
+/// daban la fecha del último cambio y obligaban a redescargar el catálogo
+/// entero; este trae los **ids** de lo que cambió, para bajar solo eso.
+///
+/// [serverTime] se guarda **como string, sin parsear**, y se reenvía tal
+/// cual como `since` en la siguiente sincronización. El backend lo emite
+/// como `LocalDateTime` (sin zona), así que redondearlo por `DateTime` lo
+/// interpretaría en la zona del dispositivo y podría desplazarlo horas
+/// respecto al reloj del servidor, que es contra el que se compara `since`.
+class CatalogUpdates {
+  final String? since;
+  final String? serverTime;
+  final List<CatalogChange> games;
+  final List<CatalogChange> words;
+
+  const CatalogUpdates({
+    this.since,
+    this.serverTime,
+    this.games = const [],
+    this.words = const [],
+  });
+
+  bool get isEmpty => games.isEmpty && words.isEmpty;
+
+  factory CatalogUpdates.fromJson(Map<String, dynamic> json) {
+    List<CatalogChange> parse(dynamic raw, String idKey) => (raw is List
+            ? raw.whereType<Map<String, dynamic>>()
+            : const <Map<String, dynamic>>[])
+        .map((e) => CatalogChange.fromJson(e, idKey))
+        .whereType<CatalogChange>()
+        .toList();
+
+    return CatalogUpdates(
+      since: json['since'] as String?,
+      serverTime: json['serverTime'] as String?,
+      games: parse(json['games'], 'gameId'),
+      words: parse(json['words'], 'wordId'),
+    );
+  }
 }

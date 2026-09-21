@@ -6,7 +6,7 @@ import '../storage/session_store.dart';
 /// Backend Spring en DigitalOcean (mismo que usa la web vía client/.env).
 const apiBaseUrl = String.fromEnvironment(
   'API_URL',
-  defaultValue: 'https://ntsifiyo-ltolw.ondigitalocean.app',
+  defaultValue: 'https://bottom-scenic-outcast.ngrok-free.dev',
 );
 
 /// Error de API con mensaje legible en español (mirror de handleResponse de la web).

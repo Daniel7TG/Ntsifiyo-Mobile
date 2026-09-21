@@ -1,0 +1,39 @@
+Procedencia de Ilustraciones de Inicio v2 (Jñatrjo)
+=====================================================
+Generador: Nano Banana (herramienta generate_image de Antigravity / Gemini)
+Fecha: 2026-09-21
+Formato: PNG 1200x896 (~1024 px, relación 4:3), estilo animación 3D suave infantil, composición central, sin texto ni elementos de UI.
+
+Referencias visuales de personaje base:
+- assets/coyote/saludo.webp
+- assets/explore/pronunciacion.png
+
+Personaje: Coyote gris tierno infantil, pelaje gris suave, hocico y cejas claras/blancas, pecho blanco, ojos marrones grandes y expresivos, nariz negra y pañuelo/bandana pastel verde y amarillo.
+
+Archivos y Prompts Reales:
+---------------------------
+
+1. Archivo: mapa-juego.png
+Escena: Coyote jugando memorama con cartas de animales, fondo verde menta.
+Prompt: "High quality polished soft 3D animation style illustration for children. The exact same cute little grey coyote character from the reference images (small fluffy grey coyote puppy, big expressive warm brown eyes, white muzzle, white eyebrows, white chest fur, cute black nose, happy friendly smile, wearing a small pastel green and yellow neckerchief bandana). The coyote is sitting happily playing a memory card matching game (memorama) with cute illustrated animal cards on a smooth table. Centered composition, soft mint green pastel background with subtle gentle depth, minimalist clean environment, soft studio lighting, cute charming look. Absolutely no text, no letters, no words, no user interface elements."
+Referencias de entrada: assets/coyote/saludo.webp, assets/explore/pronunciacion.png
+
+2. Archivo: tarea.png
+Escena: Coyote estudiando en un escritorio con cuaderno y lápiz, fondo melocotón.
+Prompt: "High quality polished soft 3D animation style illustration for children. The exact same cute little grey coyote character from the reference images (small fluffy grey coyote puppy, big expressive warm brown eyes, white muzzle, white eyebrows, white chest fur, cute black nose, wearing a small pastel green and yellow neckerchief bandana). The coyote is happily sitting at a small neat wooden study desk, doing homework with an open notebook and holding a colorful pencil. Centered composition, warm soft pastel peach background with subtle gentle depth, minimalist clean setting, soft studio lighting. Absolutely no text, no letters, no words, no user interface elements."
+Referencias de entrada: assets/coyote/saludo.webp, coyote_memorama_game (ancla de estilo 3D)
+
+3. Archivo: historias.png
+Escena: Coyote escuchando un cuento musical con libro ilustrado y notas decorativas, fondo azul cielo.
+Prompt: "High quality polished soft 3D animation style illustration for children. The exact same cute little grey coyote character from the reference images (small fluffy grey coyote puppy, big expressive warm brown eyes, white muzzle, white eyebrows, white chest fur, cute black nose, wearing a small pastel green and yellow neckerchief bandana). The coyote is sitting comfortably listening to a magical musical story, next to an open colorful illustrated storybook, with whimsical soft 3D musical notes floating gently around in the air. Centered composition, soft pastel sky blue background with subtle gentle depth, minimalist clean environment, soft warm studio lighting. Absolutely no text, no letters, no words, no user interface elements."
+Referencias de entrada: assets/coyote/saludo.webp, coyote_memorama_game (ancla de estilo 3D)
+
+4. Archivo: pronunciacion.png
+Escena: Coyote cantando/practicando su voz ante micrófono, fondo lavanda.
+Prompt: "High quality polished soft 3D animation style illustration for children. The exact same cute little grey coyote character from the reference images (small fluffy grey coyote puppy, big expressive warm brown eyes, white muzzle, white eyebrows, white chest fur, cute black nose, wearing a small pastel green and yellow neckerchief bandana). The coyote is enthusiastically singing and practicing pronunciation into a cute retro-modern microphone on a small stand, happy open mouth, joyful spirited pose. Centered composition, soft pastel lavender purple background with subtle gentle depth, minimalist clean environment, soft studio lighting. Absolutely no text, no letters, no words, no user interface elements."
+Referencias de entrada: assets/explore/pronunciacion.png, coyote_memorama_game (ancla de estilo 3D)
+
+5. Archivo: diccionario.png
+Escena: Coyote explorando un gran diccionario ilustrado con animales/frutas, fondo amarillo crema.
+Prompt: "High quality polished soft 3D animation style illustration for children. The exact same cute little grey coyote character from the reference images (small fluffy grey coyote puppy, big expressive warm brown eyes, white muzzle, white eyebrows, white chest fur, cute black nose, wearing a small pastel green and yellow neckerchief bandana). The coyote is curiously exploring a large open illustrated children's picture dictionary book full of cute colorful drawings of little animals and fruits (like apples and birds), looking excited with wonder and curiosity. Centered composition, soft pastel creamy yellow background with subtle gentle depth, minimalist clean environment, soft studio lighting. Absolutely no text, no letters, no words, no user interface elements."
+Referencias de entrada: assets/coyote/saludo.webp, coyote_memorama_game (ancla de estilo 3D)

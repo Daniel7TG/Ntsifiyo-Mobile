@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../app/activity_config.dart';
 import '../../app/theme.dart';
+import '../../core/api/error_messages.dart';
 import '../../data/models/models.dart';
 import '../../shared/widgets/kid_card.dart';
+import '../../shared/widgets/skeleton.dart';
 import '../../shared/widgets/states.dart';
-import 'game_session.dart';
+import 'game_launcher.dart';
 import 'games_providers.dart';
 
 /// Panel de actividades de un tipo de juego (mirror de GameAccessPanel.jsx).
@@ -33,9 +34,12 @@ class _GameAccessScreenState extends ConsumerState<GameAccessScreen> {
   Future<void> _play(GameSummaryDto game) async {
     setState(() => _starting = true);
     try {
-      await ref.read(gameSessionProvider.notifier).startFromGame(game);
-      if (!mounted) return;
-      context.push('/games/${_info.id}/jugar');
+      await launchGameWithLoading(
+        context,
+        ref,
+        game: game,
+        gameTypeId: _info.id,
+      );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -65,9 +69,18 @@ class _GameAccessScreenState extends ConsumerState<GameAccessScreen> {
         ],
       ),
       body: activities.when(
-        loading: () => const LoadingState(message: 'Cargando actividades...'),
+        loading: () => ListView(
+          padding: const EdgeInsets.all(16),
+          physics: const NeverScrollableScrollPhysics(),
+          children: const [
+            SkeletonListTile(),
+            SkeletonListTile(),
+            SkeletonListTile(),
+            SkeletonListTile(),
+          ],
+        ),
         error: (e, _) => ErrorState(
-          message: e.toString(),
+          message: friendlyErrorMessage(e),
           onRetry: () =>
               ref.invalidate(activitiesByTypeProvider((info.type, _page))),
         ),
@@ -76,25 +89,32 @@ class _GameAccessScreenState extends ConsumerState<GameAccessScreen> {
                 title: 'No hay actividades disponibles',
                 subtitle: 'Pide a tu maestro que cree una actividad para ti.',
               )
-            : ListView(
+            : RefreshIndicator(
+              color: AppColors.primary,
+              onRefresh: () async => ref
+                  .invalidate(activitiesByTypeProvider((info.type, _page))),
+              child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
                   // Encabezado con ícono y descripción
                   Row(
                     children: [
-                      Container(
-                        width: 76,
-                        height: 76,
-                        decoration: BoxDecoration(
-                          color: info.color.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                              color: info.color.withValues(alpha: 0.3),
-                              width: 2),
+                      Hero(
+                        tag: 'game-icon-${info.id}',
+                        child: Container(
+                          width: 76,
+                          height: 76,
+                          decoration: BoxDecoration(
+                            color: info.color.withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                color: info.color.withValues(alpha: 0.3),
+                                width: 2),
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          child: SvgPicture.asset(info.svgAsset,
+                              fit: BoxFit.contain),
                         ),
-                        padding: const EdgeInsets.all(8),
-                        child: SvgPicture.asset(info.svgAsset,
-                            fit: BoxFit.contain),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -163,6 +183,7 @@ class _GameAccessScreenState extends ConsumerState<GameAccessScreen> {
                     ),
                 ],
               ),
+            ),
       ),
     );
   }
@@ -253,7 +274,11 @@ class _ActivityCard extends StatelessWidget {
                     color: AppColors.textMuted),
               ),
               const SizedBox(width: 16),
-              const Icon(Icons.bolt, size: 16, color: AppColors.warning),
+              SvgPicture.asset('assets/svgs/xp.svg',
+                  width: 16,
+                  height: 16,
+                  colorFilter: const ColorFilter.mode(
+                      AppColors.warning, BlendMode.srcIn)),
               const SizedBox(width: 2),
               Text(
                 '+${game.experience ?? 0} XP',

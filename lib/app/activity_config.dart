@@ -44,6 +44,15 @@ const mediaTypes = [
   ActivityTypes.mediaPoem,
 ];
 
+/// Tipos no disponibles en teléfono. El laberinto necesita arrastrar sobre
+/// una superficie que una pantalla de móvil no da. Se deja la entrada en
+/// `activityConfig` y la vista en `views/laberinto_game_view.dart` intacta:
+/// volver a habilitarlo es sacarlo de este set.
+const disabledGameTypes = {ActivityTypes.maze};
+
+bool isGameTypeEnabled(String? type) =>
+    type != null && !disabledGameTypes.contains(type);
+
 class GameInfo {
   final String type;
   final String id;
@@ -223,13 +232,13 @@ const Map<String, GameInfo> activityConfig = {
 };
 
 /// Juegos jugables mostrados en la navegación/panel (orden de la web).
+/// MAZE no aparece: ver [disabledGameTypes].
 const playableGameTypes = [
   ActivityTypes.memoryGame,
   ActivityTypes.questionnaire,
   ActivityTypes.intruder,
   ActivityTypes.lottery,
   ActivityTypes.fastMemory,
-  ActivityTypes.maze,
   ActivityTypes.pairs,
   ActivityTypes.catLines,
   ActivityTypes.fillBlank,

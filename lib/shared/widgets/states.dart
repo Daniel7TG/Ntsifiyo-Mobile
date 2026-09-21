@@ -1,34 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../app/palette.dart';
 import '../../app/theme.dart';
 import 'kid_card.dart';
-
-/// Estado de carga (mirror de LoadingState.jsx).
-class LoadingState extends StatelessWidget {
-  final String message;
-  const LoadingState({super.key, this.message = 'Cargando...'});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const CircularProgressIndicator(color: AppColors.primary),
-          const SizedBox(height: 16),
-          Text(
-            message,
-            style: const TextStyle(
-              color: AppColors.textMuted,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 /// Estado de error con reintento (mirror de ErrorState.jsx).
 class ErrorState extends StatelessWidget {
@@ -48,6 +23,7 @@ class ErrorState extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: KidCard(
           padding: const EdgeInsets.all(24),
+          semanticLabel: message,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -57,9 +33,9 @@ class ErrorState extends StatelessWidget {
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textMain,
+                  color: context.palette.textMain,
                 ),
               ),
               if (onRetry != null) ...[
@@ -79,20 +55,23 @@ class ErrorState extends StatelessWidget {
 }
 
 /// Estado vacío amigable (mirror de los empty states kid-card de la web).
+/// Usa un SVG propio en vez de un emoji del sistema, que varía de un
+/// teléfono a otro y no se puede teñir para modo oscuro.
 class EmptyState extends StatelessWidget {
   final String title;
   final String subtitle;
-  final String emoji;
+  final String svgAsset;
 
   const EmptyState({
     super.key,
     required this.title,
     this.subtitle = '',
-    this.emoji = '🎒',
+    this.svgAsset = 'assets/svgs/empty_box.svg',
   });
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.palette;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -101,16 +80,16 @@ class EmptyState extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(emoji, style: const TextStyle(fontSize: 56)),
+              SvgPicture.asset(svgAsset, width: 72, height: 72),
               const SizedBox(height: 12),
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w900,
                   fontSize: 18,
-                  color: AppColors.textMain,
+                  color: palette.textMain,
                 ),
               ),
               if (subtitle.isNotEmpty) ...[
@@ -118,8 +97,8 @@ class EmptyState extends StatelessWidget {
                 Text(
                   subtitle,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
+                  style: TextStyle(
+                    color: palette.textMuted,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -138,24 +117,33 @@ class OfflineBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: AppColors.warning.withValues(alpha: 0.9),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.wifi_off, color: Colors.white, size: 16),
-          SizedBox(width: 8),
-          Text(
-            'Sin conexión — tu progreso se guardará y sincronizará después',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
+    return Semantics(
+      liveRegion: true,
+      label: 'Sin conexión, tu progreso se guardará y sincronizará después',
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        // Texto oscuro sobre ámbar: blanco sobre este color reprueba
+        // contraste AA (~2.1:1); AppColors.textMain sobre el mismo fondo
+        // sube a >7:1.
+        color: AppColors.warning,
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.wifi_off, color: AppColors.textMain, size: 16),
+            SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                'Sin conexión — tu progreso se guardará y sincronizará después',
+                style: TextStyle(
+                  color: AppColors.textMain,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

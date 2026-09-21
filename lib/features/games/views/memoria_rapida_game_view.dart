@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/theme.dart';
 import '../../../data/models/models.dart';
@@ -252,14 +253,25 @@ class _MemoriaRapidaGameViewState
           Center(
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: Text(
-                '⏱ $_timeLeft s',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  color: _timeLeft <= 10
-                      ? AppColors.error
-                      : AppColors.textMuted,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.timer,
+                      size: 16,
+                      color: _timeLeft <= 10
+                          ? AppColors.error
+                          : AppColors.textMuted),
+                  const SizedBox(width: 4),
+                  Text(
+                    '$_timeLeft s',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: _timeLeft <= 10
+                          ? AppColors.error
+                          : AppColors.textMuted,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -287,11 +299,22 @@ class _MemoriaRapidaGameViewState
                         color: AppColors.primary.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(999),
                       ),
-                      child: Text(
-                        '🔥 Combo x$_combo',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.primary),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset('assets/svgs/racha.svg',
+                              width: 16,
+                              height: 16,
+                              colorFilter: const ColorFilter.mode(
+                                  AppColors.primary, BlendMode.srcIn)),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Combo x$_combo',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.primary),
+                          ),
+                        ],
                       ),
                     ),
                 ],
@@ -307,6 +330,7 @@ class _MemoriaRapidaGameViewState
                       text: _cfg0.showText ? top.textFor(_cfg0) : null,
                       imagePath: _cfg0.showImage ? top.imageUrl : null,
                       audioPath: _cfg0.playAudio ? top.audioUrl : null,
+                      wordId: top.id,
                       disabled: true,
                     ),
                   ),
@@ -339,6 +363,7 @@ class _MemoriaRapidaGameViewState
                                   _cfg1.showImage ? bottom.imageUrl : null,
                               audioPath:
                                   _cfg1.playAudio ? bottom.audioUrl : null,
+                              wordId: bottom.id,
                               disabled: true,
                             ),
                           ),

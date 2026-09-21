@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <linearGradient id="loteria2BgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <filter id="loteria2Shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="5" stdDeviation="3.5" flood-color="#000000" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Background Tile -->
+  <rect x="6" y="6" width="108" height="108" rx="24" fill="url(#loteria2BgGrad)" />
+
+  <!-- Deck of 3 Staggered Cards -->
+  <!-- Card 1 (Back Left: "LA LUNA") -->
+  <g transform="translate(18, 22) rotate(-18 25 35)" filter="url(#loteria2Shadow)">
+    <rect x="0" y="0" width="46" height="64" rx="7" fill="#FFFBEB" stroke="#B45309" stroke-width="1.8" />
+    <path d="M 28,24 C 28,34 20,38 14,38 C 22,38 24,28 20,20 C 24,20 28,22 28,24 Z" fill="#0284C7" />
+  </g>
+
+  <!-- Card 2 (Back Right: "LA BANDERITA") -->
+  <g transform="translate(54, 20) rotate(16 25 35)" filter="url(#loteria2Shadow)">
+    <rect x="0" y="0" width="46" height="64" rx="7" fill="#FFFBEB" stroke="#B45309" stroke-width="1.8" />
+    <rect x="14" y="22" width="6" height="16" fill="#10B981" />
+    <rect x="20" y="22" width="6" height="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="0.5" />
+    <rect x="26" y="22" width="6" height="16" fill="#EF4444" />
+  </g>
+
+  <!-- Card 3 (Center Front: "EL CORAZÓN") -->
+  <g transform="translate(36, 30)" filter="url(#loteria2Shadow)">
+    <rect x="0" y="0" width="50" height="70" rx="8" fill="#FFFFFF" stroke="#EA580C" stroke-width="2" />
+    <rect x="4" y="4" width="42" height="62" rx="5" fill="none" stroke="#F97316" stroke-width="1" />
+    
+    <text x="10" y="14" font-family="sans-serif" font-size="8" font-weight="900" fill="#EA580C">27</text>
+
+    <!-- Ruby Red Heart Icon -->
+    <path d="M 25,24 C 25,18 17,16 13,22 C 9,16 1,18 1,24 C 1,32 13,42 25,48 C 37,42 49,32 49,24 C 49,18 41,16 37,22 C 33,16 25,18 25,24 Z" fill="#DC2626" transform="translate(0, 0) scale(0.65)" />
+
+    <!-- Card Label -->
+    <rect x="6" y="50" width="38" height="10" rx="2.5" fill="#DC2626" />
+    <text x="25" y="57.5" font-family="sans-serif" font-size="5.5" font-weight="900" fill="#FFFFFF" text-anchor="middle">EL CORAZÓN</text>
+  </g>
+</svg>

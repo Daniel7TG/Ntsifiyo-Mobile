@@ -1,14 +1,21 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/activity_config.dart';
+import '../../../app/palette.dart';
 import '../../../app/theme.dart';
 import '../../../shared/widgets/kid_card.dart';
 import '../../about/about_view.dart';
 
-/// Landing pública (mirror de Home.jsx): hero con coyote, muestrario de
-/// juegos, frases comunes, teaser de "Nosotros" y CTAs de acceso.
+/// Landing pública (mirror libre de Home.jsx, condensado): onboarding de tres
+/// pantallas —el coyote saluda, el catálogo de juegos y la comunidad— con el
+/// CTA anclado abajo, en vez del scroll largo de secciones apiladas.
+///
+/// El muestrario de juegos se lee de [playableGameTypes] / [activityConfig],
+/// así que añadir un juego nuevo lo actualiza solo: no hay lista paralela.
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
 
@@ -18,6 +25,11 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen>
     with SingleTickerProviderStateMixin {
+  static const _slideCount = 3;
+
+  final _pages = PageController();
+  int _index = 0;
+
   late final AnimationController _float = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 3),
@@ -25,8 +37,22 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   @override
   void dispose() {
+    _pages.dispose();
     _float.dispose();
     super.dispose();
+  }
+
+  bool get _isLast => _index == _slideCount - 1;
+
+  void _next() {
+    if (_isLast) {
+      context.go('/auth?mode=register');
+      return;
+    }
+    _pages.nextPage(
+      duration: const Duration(milliseconds: 320),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   void _openAbout() {
@@ -37,20 +63,34 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          const Positioned.fill(child: CustomPaint(painter: _BubblesPainter())),
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _BubblesPainter(alpha: isDark ? 0.16 : 0.10),
+            ),
+          ),
           SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(child: _buildHero()),
-                SliverToBoxAdapter(child: _buildGamesShowcase()),
-                SliverToBoxAdapter(child: _buildPhrases()),
-                SliverToBoxAdapter(child: _buildAboutTeaser()),
-                SliverToBoxAdapter(child: _buildFinalCta()),
-                const SliverToBoxAdapter(child: SizedBox(height: 28)),
+            child: Column(
+              children: [
+                _buildSkip(),
+                Expanded(
+                  child: PageView(
+                    controller: _pages,
+                    onPageChanged: (i) => setState(() => _index = i),
+                    children: [
+                      _buildGreetingSlide(),
+                      _buildGamesSlide(),
+                      _buildCommunitySlide(),
+                    ],
+                  ),
+                ),
+                _buildDots(),
+                _buildActions(),
               ],
             ),
           ),
@@ -59,263 +99,302 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     );
   }
 
-  Widget _buildHero() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(28, 12, 28, 8),
-      child: Column(
-        children: [
-          AnimatedBuilder(
-            animation: _float,
-            builder: (context, child) => Transform.translate(
-              offset: Offset(0, 6 * math.sin(_float.value * math.pi)),
-              child: child,
-            ),
-            child: TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: 1),
-              duration: const Duration(milliseconds: 700),
-              curve: Curves.elasticOut,
-              builder: (context, value, child) =>
-                  Transform.scale(scale: value, child: child),
-              child: Image.asset('assets/coyote/saludo.webp', height: 190),
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            '¡Jñatrjo!',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w900,
-              fontSize: 46,
-              color: AppColors.primary,
-              height: 1.05,
-              shadows: [
-                Shadow(
-                    color: Color(0x33E65100),
-                    offset: Offset(0, 4),
-                    blurRadius: 0),
-              ],
-            ),
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            'Revitaliza tus raíces: aprende mazahua jugando',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w700,
-              fontSize: 16,
-              color: AppColors.primaryBlue,
-            ),
-          ),
-          const SizedBox(height: 20),
-          KidButton(
-            label: '¡Entrar a jugar!',
-            icon: Icons.sports_esports,
-            expanded: true,
-            onPressed: () => context.go('/auth?mode=login'),
-          ),
-          const SizedBox(height: 12),
-          KidButton(
-            label: 'Crear cuenta',
-            icon: Icons.person_add,
-            color: AppColors.primaryBlue,
-            expanded: true,
-            onPressed: () => context.go('/auth?mode=register'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGamesShowcase() {
-    const games = [
-      (Icons.style, 'Memoria Rápida', Color(0xFFE65100)),
-      (Icons.quiz, 'Quiz', Color(0xFF7C3AED)),
-      (Icons.psychology, 'El Intruso', Color(0xFFD97706)),
-      (Icons.casino, 'Lotería', Color(0xFFB45309)),
-      (Icons.route, 'Laberinto', Color(0xFF10B981)),
-      (Icons.link, 'Pares', Color(0xFF0EA5E9)),
-      (Icons.search, 'Sopa de Letras', Color(0xFF0284C7)),
-      (Icons.gesture, 'Tripas del Gato', Color(0xFF10B981)),
-    ];
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const _SectionTitle(
-            label: 'JUEGOS',
-            title: 'Aprende jugando',
-            color: AppColors.primary,
-          ),
-          const SizedBox(height: 12),
-          GridView.count(
-            crossAxisCount: 4,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            childAspectRatio: 0.82,
-            children: [
-              for (final (icon, title, color) in games)
-                _GameChip(icon: icon, title: title, color: color),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPhrases() {
-    const phrases = [
-      ('Nde joo ra nde ko', 'Buenos días', Icons.wb_sunny),
-      ('Ha ri xi?', '¿Cómo estás?', Icons.sentiment_satisfied),
-      ('Pa mbe jña ra kjua', 'Gracias', Icons.favorite),
-      ('Nde ndixu', 'Buenas noches', Icons.dark_mode),
-    ];
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const _SectionTitle(
-            label: 'FRASES COMUNES',
-            title: 'Frases que conectan',
-            color: Color(0xFF10B981),
-          ),
-          const SizedBox(height: 12),
-          for (final (mz, es, icon) in phrases)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: KidCard(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: AppColors.success.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(icon, color: AppColors.success, size: 22),
+  /// "Saltar" desaparece en la última lámina: ahí el CTA ya es el destino.
+  Widget _buildSkip() {
+    final muted = context.palette.textMuted;
+    return SizedBox(
+      height: 48,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: AnimatedOpacity(
+          opacity: _isLast ? 0 : 1,
+          duration: const Duration(milliseconds: 200),
+          child: IgnorePointer(
+            ignoring: _isLast,
+            child: TextButton(
+              onPressed: () => context.go('/auth?mode=login'),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Saltar',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: muted,
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            mz,
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w800,
-                              fontSize: 15,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          Text(
-                            es,
-                            style: const TextStyle(
-                                fontSize: 13, color: AppColors.textMuted),
-                          ),
-                        ],
-                      ),
+                  ),
+                  Icon(Icons.chevron_right, size: 18, color: muted),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGreetingSlide() {
+    return _Slide(
+      visual: AnimatedBuilder(
+        animation: _float,
+        builder: (context, child) => Transform.translate(
+          offset: Offset(0, 6 * math.sin(_float.value * math.pi)),
+          child: child,
+        ),
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: 1),
+          duration: const Duration(milliseconds: 700),
+          curve: Curves.elasticOut,
+          builder: (context, value, child) =>
+              Transform.scale(scale: value, child: child),
+          child: Image.asset('assets/coyote/saludo.webp', height: 200),
+        ),
+      ),
+      title: '¡Jñatrjo!',
+      titleColor: AppColors.primary,
+      titleSize: 46,
+      subtitle: 'Revitaliza tus raíces: aprende mazahua jugando',
+      subtitleColor: AppColors.primaryBlue,
+      // El conteo exacto vive en assets/dictionary/manifest.json y crece con
+      // cada exportación — por eso "más de 150" y no una cifra que envejezca.
+      body: 'Juegos, audio y más de 150 palabras con pronunciación. '
+          'Todo sigue funcionando aunque te quedes sin internet.',
+    );
+  }
+
+  Widget _buildGamesSlide() {
+    final games = [for (final t in playableGameTypes) activityConfig[t]!];
+
+    return _Slide(
+      visual: GridView.count(
+        crossAxisCount: 4,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 8,
+        childAspectRatio: 0.72,
+        children: [for (final info in games) _GameTile(info: info)],
+      ),
+      title: '${games.length} juegos, un idioma',
+      titleColor: AppColors.primary,
+      subtitle: 'Aprende jugando',
+      subtitleColor: AppColors.success,
+      body: 'Memorama, lotería, laberinto, sopa de letras… cada partida suma '
+          'XP y avanza tu camino de aprendizaje.',
+    );
+  }
+
+  Widget _buildCommunitySlide() {
+    const accent = Color(0xFF6C63FF);
+    return _Slide(
+      visual: Image.asset('assets/coyote/celebracion.webp', height: 190),
+      title: 'Hecho con el corazón',
+      titleColor: accent,
+      subtitle: 'La comunidad detrás',
+      subtitleColor: accent,
+      body: 'Detrás de cada palabra, juego y sonido hay personas reales de la '
+          'comunidad mazahua.',
+      footer: TextButton(
+        onPressed: _openAbout,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Conócenos',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w800,
+                fontSize: 14,
+                color: adaptBrand(context, accent),
+              ),
+            ),
+            Icon(Icons.chevron_right, color: adaptBrand(context, accent)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDots() {
+    final active = adaptBrand(context, AppColors.primary);
+    final idle = context.palette.border;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for (var i = 0; i < _slideCount; i++)
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOut,
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            width: i == _index ? 26 : 9,
+            height: 9,
+            decoration: BoxDecoration(
+              color: i == _index ? active : idle,
+              borderRadius: BorderRadius.circular(999),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildActions() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(28, 18, 28, 8),
+      child: Column(
+        children: [
+          KidButton(
+            label: _isLast ? 'Crear cuenta gratis' : 'Siguiente',
+            icon: _isLast ? Icons.rocket_launch : Icons.arrow_forward,
+            expanded: true,
+            onPressed: _next,
+          ),
+          TextButton(
+            onPressed: () => context.go('/auth?mode=login'),
+            child: Text(
+              'Ya tengo cuenta',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+                color: context.palette.textMuted,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Lámina del onboarding. Centra el contenido, pero deja que haga scroll si la
+/// pantalla es baja — así el grid de 10 juegos nunca desborda.
+class _Slide extends StatelessWidget {
+  final Widget visual;
+  final String title;
+  final Color titleColor;
+  final double titleSize;
+  final String subtitle;
+  final Color subtitleColor;
+  final String body;
+  final Widget? footer;
+
+  const _Slide({
+    required this.visual,
+    required this.title,
+    required this.titleColor,
+    this.titleSize = 30,
+    required this.subtitle,
+    required this.subtitleColor,
+    required this.body,
+    this.footer,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final accent = adaptBrand(context, titleColor);
+
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight - 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              visual,
+              const SizedBox(height: 20),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w900,
+                  fontSize: titleSize,
+                  height: 1.1,
+                  color: accent,
+                  shadows: [
+                    Shadow(
+                      color: darken(accent, 0.3).withValues(alpha: 0.20),
+                      offset: const Offset(0, 4),
+                      blurRadius: 0,
                     ),
                   ],
                 ),
               ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAboutTeaser() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
-      child: KidCard(
-        accentColor: const Color(0xFF6C63FF),
-        padding: const EdgeInsets.all(20),
-        onTap: _openAbout,
-        child: Column(
-          children: [
-            const Icon(Icons.diversity_3,
-                size: 40, color: Color(0xFF6C63FF)),
-            const SizedBox(height: 10),
-            const Text(
-              'Un proyecto hecho con el corazón',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w900,
-                fontSize: 18,
-                color: AppColors.textMain,
-              ),
-            ),
-            const SizedBox(height: 6),
-            const Text(
-              'Detrás de cada palabra, juego y sonido hay personas reales de la '
-              'comunidad mazahua.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                height: 1.4,
-                color: AppColors.textMuted,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Conócenos',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w800,
-                    fontSize: 14,
-                    color: darken(const Color(0xFF6C63FF), 0.1),
-                  ),
+              const SizedBox(height: 6),
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  color: adaptBrand(context, subtitleColor),
                 ),
-                const Icon(Icons.chevron_right, color: Color(0xFF6C63FF)),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                body,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  height: 1.45,
+                  color: palette.textMuted,
+                ),
+              ),
+              ?footer,
+            ],
+          ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildFinalCta() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-      child: KidCard(
-        accentColor: AppColors.primary,
-        backgroundColor: AppColors.primary.withValues(alpha: 0.06),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            const Text(
-              '¿List@ para empezar?',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w900,
-                fontSize: 20,
-                color: AppColors.primary,
-              ),
+/// Casilla del muestrario: la ilustración premium del juego sobre un fondo
+/// suave de su color (mismo tratamiento que GamesHubScreen).
+class _GameTile extends StatelessWidget {
+  final GameInfo info;
+
+  const _GameTile({required this.info});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = adaptBrand(context, info.color);
+    return Column(
+      children: [
+        Expanded(
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: color.withValues(alpha: 0.30), width: 2),
             ),
-            const SizedBox(height: 12),
-            KidButton(
-              label: 'Crear cuenta gratis',
-              icon: Icons.rocket_launch,
-              expanded: true,
-              onPressed: () => context.go('/auth?mode=register'),
-            ),
-          ],
+            padding: const EdgeInsets.all(7),
+            child: SvgPicture.asset(info.svgAsset, fit: BoxFit.contain),
+          ),
         ),
-      ),
+        const SizedBox(height: 4),
+        SizedBox(
+          height: 24,
+          child: Text(
+            info.title,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 9.5,
+              height: 1.15,
+              fontWeight: FontWeight.w700,
+              color: context.palette.textMuted,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -326,8 +405,7 @@ class _AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+    return GradientBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(title: const Text('Nosotros')),
@@ -340,89 +418,12 @@ class _AboutPage extends StatelessWidget {
   }
 }
 
-class _SectionTitle extends StatelessWidget {
-  final String label;
-  final String title;
-  final Color color;
-
-  const _SectionTitle(
-      {required this.label, required this.title, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 1,
-            color: color,
-          ),
-        ),
-        Text(
-          title,
-          style: const TextStyle(
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w900,
-            fontSize: 22,
-            color: AppColors.textMain,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _GameChip extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final Color color;
-
-  const _GameChip(
-      {required this.icon, required this.title, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 52,
-          height: 52,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: color.withValues(alpha: 0.4), width: 2),
-            boxShadow: [
-              BoxShadow(color: darken(color, 0.1), offset: const Offset(0, 3)),
-            ],
-          ),
-          child: Icon(icon, color: color, size: 26),
-        ),
-        const SizedBox(height: 4),
-        Expanded(
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textMuted,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// Burbujas suaves de colores de la paleta, estáticas (bajo costo).
+/// Burbujas suaves de colores de la paleta, estáticas (bajo costo). El alfa
+/// sube en oscuro: al 10% del claro casi desaparecen sobre el fondo verdoso.
 class _BubblesPainter extends CustomPainter {
-  const _BubblesPainter();
+  final double alpha;
+
+  const _BubblesPainter({required this.alpha});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -432,16 +433,18 @@ class _BubblesPainter extends CustomPainter {
       (0.08, 0.30, 26.0, AppColors.primaryBlue),
       (0.92, 0.26, 40.0, AppColors.warning),
       (0.50, 0.03, 22.0, AppColors.success),
+      (0.16, 0.88, 38.0, AppColors.success),
+      (0.86, 0.82, 28.0, AppColors.primary),
     ];
     for (final (fx, fy, radius, color) in bubbles) {
       canvas.drawCircle(
         Offset(fx * size.width, fy * size.height),
         radius,
-        Paint()..color = color.withValues(alpha: 0.10),
+        Paint()..color = color.withValues(alpha: alpha),
       );
     }
   }
 
   @override
-  bool shouldRepaint(_BubblesPainter oldDelegate) => false;
+  bool shouldRepaint(_BubblesPainter oldDelegate) => oldDelegate.alpha != alpha;
 }

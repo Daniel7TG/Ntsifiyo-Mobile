@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/activity_config.dart';
 import '../../../app/theme.dart';
@@ -249,6 +250,7 @@ class _IntrusoGameViewState extends ConsumerState<IntrusoGameView> {
                               _config1.showImage ? question.word?.imageUrl : null,
                           audioPath:
                               _config1.playAudio ? question.word?.audioUrl : null,
+                          wordId: question.word?.id,
                         ),
                       ),
                     ),
@@ -300,12 +302,14 @@ class _IntrusoGameViewState extends ConsumerState<IntrusoGameView> {
             : GameCardState.none;
 
     final text = _optionText(option);
+    final wordId = option.wordId ?? option.word?.id;
     final image = _config2.showImage ? option.word?.imageUrl : null;
     final audio = _config2.playAudio ? option.word?.audioUrl : null;
 
     if ((text ?? '').isEmpty &&
         (image ?? '').isEmpty &&
-        (audio ?? '').isEmpty) {
+        (audio ?? '').isEmpty &&
+        (wordId == null || wordId <= 0)) {
       return const SizedBox.shrink();
     }
 
@@ -313,6 +317,7 @@ class _IntrusoGameViewState extends ConsumerState<IntrusoGameView> {
       text: text,
       imagePath: image,
       audioPath: audio,
+      wordId: wordId,
       cardState: state,
       disabled: answered,
       onTap: () => _select(index),
@@ -344,8 +349,11 @@ class _ComboBadge extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.local_fire_department,
-                size: 15, color: AppColors.warning),
+            SvgPicture.asset('assets/svgs/racha.svg',
+                width: 15,
+                height: 15,
+                colorFilter: const ColorFilter.mode(
+                    AppColors.warning, BlendMode.srcIn)),
             const SizedBox(width: 3),
             Text(
               'x$combo',

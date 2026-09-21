@@ -53,3 +53,7 @@ graphify-out/memory/
 graphify-out/reflections/
 # Backups fechados que crea `graphify update` antes de reconstruir.
 graphify-out/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+
+# Respaldo de assets optimizados y huérfanos
+assets_backup/
+

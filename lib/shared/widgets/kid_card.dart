@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../../app/palette.dart';
 import '../../app/theme.dart';
 
-/// Tarjeta 3D infantil (mirror de .kid-card de la web):
-/// blanca, radius 24, borde 4px y sombra dura sólida que se "hunde" al presionar.
+/// Tarjeta 3D infantil (mirror de .kid-card de la web).
+/// Presupuesto de profundidad: la sombra dura y el borde de 4px se reservan
+/// para lo pulsable (`onTap != null`). Lo estático se pinta con borde fino
+/// y sombra difusa mínima, para que solo lo que se toca grite.
 class KidCard extends StatefulWidget {
   final Widget child;
   final Color? accentColor;
@@ -11,6 +15,10 @@ class KidCard extends StatefulWidget {
   final EdgeInsetsGeometry padding;
   final double shadowOffset;
   final Color? backgroundColor;
+
+  /// Etiqueta para lectores de pantalla. Si es null y hay `onTap`, TalkBack
+  /// solo anuncia "botón" sin contexto — mejor pasarla siempre que se pueda.
+  final String? semanticLabel;
 
   const KidCard({
     super.key,
@@ -20,6 +28,7 @@ class KidCard extends StatefulWidget {
     this.padding = const EdgeInsets.all(16),
     this.shadowOffset = 6,
     this.backgroundColor,
+    this.semanticLabel,
   });
 
   @override
@@ -31,11 +40,13 @@ class _KidCardState extends State<KidCard> {
 
   @override
   Widget build(BuildContext context) {
-    final accent = widget.accentColor;
-    final borderColor = accent != null
-        ? accent.withValues(alpha: 0.35)
-        : AppColors.border;
-    final shadowColor = accent ?? const Color(0xFFCBD5E1);
+    final palette = context.palette;
+    final pulsable = widget.onTap != null;
+    final accent =
+        widget.accentColor == null ? null : adaptBrand(context, widget.accentColor!);
+    final borderColor =
+        accent != null ? accent.withValues(alpha: 0.35) : palette.border;
+    final shadowColor = accent ?? palette.shadowNeutral;
     final offset = _pressed ? 2.0 : widget.shadowOffset;
 
     final card = AnimatedContainer(
@@ -45,28 +56,45 @@ class _KidCardState extends State<KidCard> {
           0, _pressed ? widget.shadowOffset - 2 : 0, 0),
       padding: widget.padding,
       decoration: BoxDecoration(
-        color: widget.backgroundColor ?? Colors.white,
+        color: widget.backgroundColor ?? palette.surface,
         borderRadius: BorderRadius.circular(AppRadius.kidCard),
-        border: Border.all(color: borderColor, width: 4),
+        border: Border.all(
+          color: borderColor,
+          width: pulsable ? 4 : 1.5,
+        ),
         boxShadow: [
-          BoxShadow(
-            color: shadowColor,
-            offset: Offset(0, offset),
-            blurRadius: 0,
-          ),
+          if (pulsable)
+            BoxShadow(
+              color: shadowColor,
+              offset: Offset(0, offset),
+              blurRadius: 0,
+            )
+          else
+            BoxShadow(
+              color: shadowColor.withValues(alpha: 0.28),
+              offset: const Offset(0, 2),
+              blurRadius: 6,
+            ),
         ],
       ),
       child: widget.child,
     );
 
-    if (widget.onTap == null) return card;
+    if (!pulsable) return card;
 
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapUp: (_) => setState(() => _pressed = false),
-      onTapCancel: () => setState(() => _pressed = false),
-      onTap: widget.onTap,
-      child: card,
+    return Semantics(
+      button: true,
+      label: widget.semanticLabel,
+      child: GestureDetector(
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        onTap: () {
+          HapticFeedback.selectionClick();
+          widget.onTap!();
+        },
+        child: card,
+      ),
     );
   }
 }
@@ -100,7 +128,9 @@ class _KidButtonState extends State<KidButton> {
   @override
   Widget build(BuildContext context) {
     final enabled = widget.onPressed != null && !widget.loading;
-    final color = enabled ? widget.color : AppColors.textLight;
+    final color = enabled
+        ? adaptBrand(context, widget.color)
+        : context.palette.textLight;
     final shadow = darken(color, 0.32);
 
     final content = Row(
@@ -132,28 +162,39 @@ class _KidButtonState extends State<KidButton> {
       ],
     );
 
-    return GestureDetector(
-      onTapDown: enabled ? (_) => setState(() => _pressed = true) : null,
-      onTapUp: enabled ? (_) => setState(() => _pressed = false) : null,
-      onTapCancel: enabled ? () => setState(() => _pressed = false) : null,
-      onTap: enabled ? widget.onPressed : null,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 100),
-        transform: Matrix4.translationValues(0, _pressed ? 3 : 0, 0),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(AppRadius.card),
-          border: Border.all(color: darken(color, 0.15), width: 2),
-          boxShadow: [
-            BoxShadow(
-              color: shadow,
-              offset: Offset(0, _pressed ? 1 : 4),
-              blurRadius: 0,
-            ),
-          ],
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      label: widget.label,
+      child: GestureDetector(
+        onTapDown: enabled ? (_) => setState(() => _pressed = true) : null,
+        onTapUp: enabled ? (_) => setState(() => _pressed = false) : null,
+        onTapCancel: enabled ? () => setState(() => _pressed = false) : null,
+        onTap: enabled
+            ? () {
+                HapticFeedback.selectionClick();
+                widget.onPressed!();
+              }
+            : null,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 100),
+          transform: Matrix4.translationValues(0, _pressed ? 3 : 0, 0),
+          constraints: const BoxConstraints(minHeight: 48),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(AppRadius.card),
+            border: Border.all(color: darken(color, 0.15), width: 2),
+            boxShadow: [
+              BoxShadow(
+                color: shadow,
+                offset: Offset(0, _pressed ? 1 : 4),
+                blurRadius: 0,
+              ),
+            ],
+          ),
+          child: content,
         ),
-        child: content,
       ),
     );
   }
@@ -174,20 +215,27 @@ class KidBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.palette;
     return OutlinedButton.icon(
-      onPressed: onPressed,
-      icon: Icon(icon, size: 18, color: AppColors.textMuted),
+      onPressed: onPressed == null
+          ? null
+          : () {
+              HapticFeedback.selectionClick();
+              onPressed!();
+            },
+      icon: Icon(icon, size: 18, color: palette.textMuted),
       label: Text(
         label,
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'Poppins',
           fontWeight: FontWeight.w600,
-          color: AppColors.textMuted,
+          color: palette.textMuted,
         ),
       ),
       style: OutlinedButton.styleFrom(
-        backgroundColor: Colors.white,
-        side: const BorderSide(color: AppColors.border),
+        backgroundColor: palette.surface,
+        side: BorderSide(color: palette.border),
+        minimumSize: const Size(0, 48),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.input),

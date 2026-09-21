@@ -249,15 +249,24 @@ class _QuestionnaireGameViewState
                                   BorderRadius.circular(AppRadius.card)),
                         ),
                         onPressed: _next,
-                        child: Text(
-                          _index < _questions.length - 1
-                              ? 'Siguiente →'
-                              : 'Ver Resultados',
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w800,
-                            fontSize: 16,
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              _index < _questions.length - 1
+                                  ? 'Siguiente'
+                                  : 'Ver Resultados',
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w800,
+                                fontSize: 16,
+                              ),
+                            ),
+                            if (_index < _questions.length - 1) ...[
+                              const SizedBox(width: 6),
+                              const Icon(Icons.arrow_forward, size: 18),
+                            ],
+                          ],
                         ),
                       ),
                     ),

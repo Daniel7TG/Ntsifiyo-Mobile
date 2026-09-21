@@ -20,6 +20,14 @@ class SessionStore {
 
   String? get token => _token;
   AppUser? get user => _user;
+
+  /// Solo particiona el caché local; el servidor autentica y verifica el JWT.
+  String? get accountId {
+    try {
+      final payload = jsonDecode(utf8.decode(base64Url.decode(base64Url.normalize(_token!.split('.')[1]))));
+      return payload['sub'] as String?;
+    } catch (_) { return null; }
+  }
   bool get isAuthenticated => _token != null && _user != null;
 
   /// Carga la sesión guardada antes de arrancar la UI.

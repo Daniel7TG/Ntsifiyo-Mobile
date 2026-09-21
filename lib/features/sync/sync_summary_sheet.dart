@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/activity_config.dart';
+import '../../app/palette.dart';
 import '../../app/theme.dart';
 import '../../core/sync/sync_service.dart';
 import '../../shared/widgets/kid_card.dart';
@@ -11,7 +12,7 @@ Future<void> showSyncSummarySheet(
     BuildContext context, SyncSummary summary) {
   return showModalBottomSheet(
     context: context,
-    backgroundColor: Colors.white,
+    backgroundColor: context.palette.surface,
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -69,7 +70,7 @@ Future<void> showSyncSummarySheet(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child:
-                            Icon(info.icon, color: Colors.white, size: 22),
+                            Icon(activity.gameType == 'daily_pronunciation' ? Icons.mic_rounded : info.icon, color: Colors.white, size: 22),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -173,7 +174,8 @@ Future<void> showSyncSummarySheet(
                         if (summary.levelAfter > summary.levelBefore)
                           const Padding(
                             padding: EdgeInsets.only(left: 4),
-                            child: Text('🎊'),
+                            child: Icon(Icons.celebration,
+                                size: 18, color: AppColors.success),
                           ),
                       ],
                     ),

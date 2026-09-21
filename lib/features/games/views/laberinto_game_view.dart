@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/palette.dart';
 import '../../../app/theme.dart';
 import '../../../data/models/models.dart';
 import '../game_session.dart';
@@ -12,7 +14,7 @@ import '../widgets/game_widgets.dart';
 import '../widgets/game_summary_view.dart';
 
 class _MazeItem {
-  final int pairId;
+  final dynamic pairId;
   final String? text;
   final String? imageUrl;
   final String? audioUrl;
@@ -52,7 +54,7 @@ class _LaberintoGameViewState extends ConsumerState<LaberintoGameView> {
   int _avatarY = 0;
   _MazeItem? _carrying;
   String? _carryingSide; // 'entrance' | 'exit'
-  final Set<int> _completed = {};
+  final Set<dynamic> _completed = {};
   bool _finished = false;
   int _timeLeft = 120;
   Timer? _timer;
@@ -92,7 +94,7 @@ class _LaberintoGameViewState extends ConsumerState<LaberintoGameView> {
     final shuffledB = [...words]..shuffle(random);
 
     _MazeItem build(Word w, GameConfig cfg, int row) => _MazeItem(
-          pairId: w.id ?? 0,
+          pairId: w.id ?? '',
           text: cfg.showText ? w.textFor(cfg) : null,
           imageUrl: cfg.showImage ? w.imageUrl : null,
           audioUrl: cfg.playAudio ? w.audioUrl : null,
@@ -275,14 +277,25 @@ class _LaberintoGameViewState extends ConsumerState<LaberintoGameView> {
           Center(
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: Text(
-                '⏱ ${_formatTime(_timeLeft)}   ${_completed.length}/${_wordList.length}',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  color: _timeLeft <= 15
-                      ? AppColors.error
-                      : AppColors.textMuted,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.timer,
+                      size: 16,
+                      color: _timeLeft <= 15
+                          ? AppColors.error
+                          : AppColors.textMuted),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${_formatTime(_timeLeft)}   ${_completed.length}/${_wordList.length}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: _timeLeft <= 15
+                          ? AppColors.error
+                          : AppColors.textMuted,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -295,12 +308,20 @@ class _LaberintoGameViewState extends ConsumerState<LaberintoGameView> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               child: _carrying == null
-                  ? const Text(
-                      'Ve a un borde y toca ✋ para tomar una carta',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textMuted),
+                  ? const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.pan_tool_outlined,
+                            size: 14, color: AppColors.textMuted),
+                        SizedBox(width: 6),
+                        Text(
+                          'Ve a un borde y toca para tomar una carta',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textMuted),
+                        ),
+                      ],
                     )
                   : Row(
                       mainAxisSize: MainAxisSize.min,
@@ -318,13 +339,16 @@ class _LaberintoGameViewState extends ConsumerState<LaberintoGameView> {
                             borderRadius: BorderRadius.circular(999),
                             border: Border.all(color: AppColors.primary),
                           ),
-                          child: Text(
-                            _carrying!.text ?? '🖼',
-                            style: const TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.primary),
-                          ),
+                          child: _carrying!.text != null
+                              ? Text(
+                                  _carrying!.text!,
+                                  style: const TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.primary),
+                                )
+                              : const Icon(Icons.image,
+                                  size: 16, color: AppColors.primary),
                         ),
                       ],
                     ),
@@ -364,22 +388,31 @@ class _LaberintoGameViewState extends ConsumerState<LaberintoGameView> {
                 children: [
                   Column(
                     children: [
-                      _dpadButton(Icons.keyboard_arrow_up, () => _move(0, -1)),
+                      _dpadButton(Icons.keyboard_arrow_up, 'Arriba',
+                          () => _move(0, -1)),
                       Row(
                         children: [
-                          _dpadButton(
-                              Icons.keyboard_arrow_left, () => _move(-1, 0)),
-                          const SizedBox(width: 44),
-                          _dpadButton(
-                              Icons.keyboard_arrow_right, () => _move(1, 0)),
+                          _dpadButton(Icons.keyboard_arrow_left, 'Izquierda',
+                              () => _move(-1, 0)),
+                          const SizedBox(width: 48),
+                          _dpadButton(Icons.keyboard_arrow_right, 'Derecha',
+                              () => _move(1, 0)),
                         ],
                       ),
-                      _dpadButton(
-                          Icons.keyboard_arrow_down, () => _move(0, 1)),
+                      _dpadButton(Icons.keyboard_arrow_down, 'Abajo',
+                          () => _move(0, 1)),
                     ],
                   ),
-                  GestureDetector(
-                    onTap: _select,
+                  Semantics(
+                    button: true,
+                    label: _carrying == null
+                        ? 'Tomar carta'
+                        : 'Entregar carta',
+                    child: GestureDetector(
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      _select();
+                    },
                     child: Container(
                       width: 74,
                       height: 74,
@@ -396,8 +429,10 @@ class _LaberintoGameViewState extends ConsumerState<LaberintoGameView> {
                         ],
                       ),
                       child: const Center(
-                        child: Text('✋', style: TextStyle(fontSize: 30)),
+                        child: Icon(Icons.pan_tool_outlined,
+                            size: 30, color: Colors.white),
                       ),
+                    ),
                     ),
                   ),
                 ],
@@ -462,23 +497,33 @@ class _LaberintoGameViewState extends ConsumerState<LaberintoGameView> {
     );
   }
 
-  Widget _dpadButton(IconData icon, VoidCallback onTap) {
+  Widget _dpadButton(IconData icon, String label, VoidCallback onTap) {
     return Padding(
       padding: const EdgeInsets.all(2),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.border, width: 2),
-            boxShadow: const [
-              BoxShadow(color: Color(0xFFCBD5E1), offset: Offset(0, 3)),
-            ],
-          ),
-          child: Icon(icon, color: AppColors.primaryBlue, size: 28),
+      child: Semantics(
+        button: true,
+        label: label,
+        child: GestureDetector(
+          onTap: () {
+            HapticFeedback.selectionClick();
+            onTap();
+          },
+          child: Builder(builder: (context) {
+            final palette = context.palette;
+            return Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: palette.surface,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: palette.border, width: 2),
+                boxShadow: [
+                  BoxShadow(color: palette.shadowNeutral, offset: const Offset(0, 3)),
+                ],
+              ),
+              child: Icon(icon, color: AppColors.primaryBlue, size: 28),
+            );
+          }),
         ),
       ),
     );

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <linearGradient id="pares2BgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D9488" />
+      <stop offset="100%" stop-color="#115E59" />
+    </linearGradient>
+    <filter id="pares2Shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="5" stdDeviation="3.5" flood-color="#000000" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Background Tile -->
+  <rect x="6" y="6" width="108" height="108" rx="24" fill="url(#pares2BgGrad)" />
+
+  <!-- Left Column Badges -->
+  <g transform="translate(24, 24)" filter="url(#pares2Shadow)">
+    <rect x="0" y="0" width="28" height="22" rx="6" fill="#2563EB" stroke="#FFFFFF" stroke-width="1.5" />
+    <circle cx="14" cy="11" r="5" fill="#FFFFFF" />
+  </g>
+  <g transform="translate(24, 52)" filter="url(#pares2Shadow)">
+    <!-- Active Selected Pair Left -->
+    <rect x="0" y="0" width="28" height="22" rx="6" fill="#F59E0B" stroke="#FDE047" stroke-width="2.5" />
+    <path d="M 14,5 L 16.5,10 L 22,10.5 L 18,14.5 L 19,20 L 14,17 L 9,20 L 10,14.5 L 6,10.5 L 11.5,10 Z" fill="#FFFFFF" />
+  </g>
+  <g transform="translate(24, 80)" filter="url(#pares2Shadow)">
+    <rect x="0" y="0" width="28" height="22" rx="6" fill="#2563EB" stroke="#FFFFFF" stroke-width="1.5" />
+    <rect x="9" y="6" width="10" height="10" rx="2" fill="#FFFFFF" />
+  </g>
+
+  <!-- Right Column Badges -->
+  <g transform="translate(68, 24)" filter="url(#pares2Shadow)">
+    <!-- Active Selected Pair Right -->
+    <rect x="0" y="0" width="28" height="22" rx="6" fill="#F59E0B" stroke="#FDE047" stroke-width="2.5" />
+    <path d="M 14,5 L 16.5,10 L 22,10.5 L 18,14.5 L 19,20 L 14,17 L 9,20 L 10,14.5 L 6,10.5 L 11.5,10 Z" fill="#FFFFFF" />
+  </g>
+  <g transform="translate(68, 52)" filter="url(#pares2Shadow)">
+    <rect x="0" y="0" width="28" height="22" rx="6" fill="#3B82F6" stroke="#FFFFFF" stroke-width="1.5" />
+    <rect x="9" y="6" width="10" height="10" rx="2" fill="#FFFFFF" />
+  </g>
+  <g transform="translate(68, 80)" filter="url(#pares2Shadow)">
+    <rect x="0" y="0" width="28" height="22" rx="6" fill="#3B82F6" stroke="#FFFFFF" stroke-width="1.5" />
+    <circle cx="14" cy="11" r="5" fill="#FFFFFF" />
+  </g>
+
+  <!-- Glowing Connecting Match Line from Left-Middle to Right-Top -->
+  <path d="M 52,63 C 60,63 56,35 68,35" fill="none" stroke="#FDE047" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="3 3" />
+</svg>

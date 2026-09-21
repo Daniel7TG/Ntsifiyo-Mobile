@@ -60,7 +60,7 @@ void main() {
   test('caché de juegos: upsert y consulta por tipo y tópico', () async {
     final content = const GameData(
       gameType: 'MEMORY_GAME',
-      words: [Word(id: 1, spanishWord: 'perro', mazahuaWord: "dyo'o")],
+      words: [Word(id: 5, spanishWord: 'perro', mazahuaWord: "dyo'o")],
     );
 
     await db.upsertCachedGame(CachedGamesCompanion(

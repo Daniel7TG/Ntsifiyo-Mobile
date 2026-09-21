@@ -1,15 +1,18 @@
+import '../../../data/services/daily_pronunciation_service.dart' show pendingXpMessage;
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/activity_config.dart';
 import '../../../app/theme.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/stars.dart';
 import '../../../data/models/models.dart';
+import '../../../shared/widgets/coyote_loading.dart';
 import '../../../shared/widgets/kid_card.dart';
 import '../../../shared/widgets/progress_ring.dart';
-import '../../../shared/widgets/states.dart';
 import '../game_session.dart';
 import 'game_widgets.dart';
 
@@ -112,7 +115,7 @@ class _GameSummaryViewState extends ConsumerState<GameSummaryView> {
       return ('assets/coyote/saludo.webp', '¡Bien hecho!', '¡Sigue así!');
     }
     return (
-      'assets/coyote/esperando.webp',
+      'assets/coyote/animations/waiting.webp',
       '¡Sigue practicando!',
       '¡Tú puedes!'
     );
@@ -130,7 +133,11 @@ class _GameSummaryViewState extends ConsumerState<GameSummaryView> {
   @override
   Widget build(BuildContext context) {
     final (coyoteAsset, title, subtitle) = _headerContent();
-    final stars = (_percentage / 100 * 5).round();
+    // Sobre los conteos crudos, no sobre `_percentage` ya redondeado, para
+    // no encadenar dos redondeos (`lib/core/stars.dart`: única fuente de
+    // estrellas de toda la app).
+    final stars =
+        starsFor(widget.outcome.correctAnswers, widget.outcome.totalQuestions);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -246,7 +253,8 @@ class _GameSummaryViewState extends ConsumerState<GameSummaryView> {
 
                       // XP / estado de sincronización / error del servidor
                       if (_loading)
-                        const LoadingState(message: 'Guardando tu progreso...')
+                        const CoyoteLoadingIndicator(
+                            message: 'Guardando tu progreso...', size: 100)
                       else if (_error != null)
                         _buildError(_error!)
                       else if (_queuedOffline)
@@ -311,7 +319,11 @@ class _GameSummaryViewState extends ConsumerState<GameSummaryView> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.bolt, color: AppColors.warning),
+              SvgPicture.asset('assets/svgs/xp.svg',
+                  width: 20,
+                  height: 20,
+                  colorFilter: const ColorFilter.mode(
+                      AppColors.warning, BlendMode.srcIn)),
               const SizedBox(width: 6),
               Text(
                 '+${result.xpGained} XP',
@@ -327,14 +339,22 @@ class _GameSummaryViewState extends ConsumerState<GameSummaryView> {
         ),
         if (result.isLevelUp) ...[
           const SizedBox(height: 10),
-          Text(
-            '🎊 ¡Subiste al nivel ${result.currentLevel}!',
-            style: const TextStyle(
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w800,
-              fontSize: 16,
-              color: AppColors.success,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.celebration,
+                  size: 20, color: AppColors.success),
+              const SizedBox(width: 6),
+              Text(
+                '¡Subiste al nivel ${result.currentLevel}!',
+                style: const TextStyle(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w800,
+                  fontSize: 16,
+                  color: AppColors.success,
+                ),
+              ),
+            ],
           ),
         ],
       ],
@@ -355,7 +375,7 @@ class _GameSummaryViewState extends ConsumerState<GameSummaryView> {
           SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Sin conexión: tu resultado quedó guardado y recibirás tu XP al reconectarte.',
+              pendingXpMessage,
               style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
