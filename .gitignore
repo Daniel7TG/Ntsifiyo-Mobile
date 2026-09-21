@@ -1,59 +1,108 @@
-# Miscellaneous
+# ------------------------------------------------------------------------------
+# Miscellaneous & OS
+# ------------------------------------------------------------------------------
 *.class
 *.log
 *.pyc
 *.swp
 .DS_Store
 .atom/
-.build/
 .buildlog/
 .history
 .svn/
 .swiftpm/
 migrate_working_dir/
+Thumbs.db
 
-# IntelliJ related
+# ------------------------------------------------------------------------------
+# IDEs & Editors
+# ------------------------------------------------------------------------------
 *.iml
 *.ipr
 *.iws
 .idea/
+.vscode/
+.codex/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
+# ------------------------------------------------------------------------------
+# Flutter / Dart / Pub
+# ------------------------------------------------------------------------------
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
+.flutter-plugins
 .flutter-plugins-dependencies
+.packages
 .pub-cache/
 .pub/
-/build/
-/coverage/
+build/
+**/build/
+coverage/
 
-# Symbolication related
+# Symbolication & Obfuscation
 app.*.symbols
-
-# Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# ------------------------------------------------------------------------------
+# Android
+# ------------------------------------------------------------------------------
+**/android/.gradle/
+**/android/build/
+**/android/captures/
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
+*.apk
+*.aab
+local.properties
 
-# graphify — se versionan graph.json y GRAPH_REPORT.md; el resto es regenerable
-# o contiene rutas absolutas de la máquina local (no portable).
+# ------------------------------------------------------------------------------
+# Documentos y presentaciones
+# ------------------------------------------------------------------------------
+docs/
+*.docx
+*.pptx
+*.xlsx
+*.pdf
+API_Documentation.md
+PRESENTACION_MODELO*.md
+Speech*.docx
+Presentacion*.pptx
+
+# ------------------------------------------------------------------------------
+# Scripts y herramientas de backend/exportación
+# ------------------------------------------------------------------------------
+scripts/
+__pycache__/
+*.py[cod]
+
+# ------------------------------------------------------------------------------
+# Prototipos, assets generados y respaldos locales
+# ------------------------------------------------------------------------------
+assets_backup/
+backup_assets/
+generated_numbers/
+generated_assets/
+brain_scratch/
+prototypes/
+app_expo/
+
+# Archivos git accidentales en la raíz
+/HEAD
+/config
+/description
+/hooks/
+/info/
+
+# ------------------------------------------------------------------------------
+# graphify
+# Se versionan graph.json y GRAPH_REPORT.md; el resto es regenerable o local
+# ------------------------------------------------------------------------------
 graphify-out/graph.html
 graphify-out/cache/
 graphify-out/.graphify_*
 graphify-out/memory/
 graphify-out/reflections/
-# Backups fechados que crea `graphify update` antes de reconstruir.
+graphify-out/cost.json
+graphify-out/manifest.json
 graphify-out/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
-
-# Respaldo de assets optimizados y huérfanos
-assets_backup/
-
