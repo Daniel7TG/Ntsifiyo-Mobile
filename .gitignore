@@ -23,6 +23,8 @@ Thumbs.db
 .idea/
 .vscode/
 .codex/
+.claude/
+**/.claude/
 
 # ------------------------------------------------------------------------------
 # Flutter / Dart / Pub
