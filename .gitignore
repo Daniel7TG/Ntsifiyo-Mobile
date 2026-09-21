@@ -46,19 +46,17 @@ app.*.map.json
 # ------------------------------------------------------------------------------
 # Android
 # ------------------------------------------------------------------------------
-**/android/.gradle/
-**/android/build/
-**/android/captures/
-**/android/app/debug
-**/android/app/profile
-**/android/app/release
+android/
+**/android/
 *.apk
 *.aab
 local.properties
 
 # ------------------------------------------------------------------------------
-# Documentos y presentaciones
+# Documentos, agentes y presentaciones
 # ------------------------------------------------------------------------------
+AGENTS.md
+CLAUDE.md
 docs/
 *.docx
 *.pptx
