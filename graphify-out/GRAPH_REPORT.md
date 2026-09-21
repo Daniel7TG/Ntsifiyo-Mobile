@@ -1,16 +1,16 @@
 # Graph Report - jnatrjo_mobile  (2026-09-21)
 
 ## Corpus Check
-- 162 files · ~2,247,558 words
+- 161 files · ~1,137,616 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3070 nodes · 4330 edges · 165 communities (150 shown, 15 thin omitted)
+- 3068 nodes · 4325 edges · 170 communities (155 shown, 15 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 23 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c3fc07b2`
+- Built from commit: `ef161016`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -41,7 +41,7 @@
 - welcome_screen.dart
 - game_session.dart
 - game_access_screen.dart
-- VoidCallback?
+- ../../app/palette.dart
 - api_client.dart
 - router.dart
 - profile_screen.dart
@@ -51,59 +51,59 @@
 - dictionary_screen.dart
 - kid_card.dart
 - session_store.dart
-- ../../app/activity_config.dart
+- dashboard_providers.dart
 - main.dart
 - game_play_screen.dart
 - content_screen.dart
 - auth_service.dart
-- app_shell.dart
+- _AppShellState
 - maze_generator.dart
 - preproceso_audio.dart
-- activity_service.dart
+- ../../../core/api/api_client.dart
 - misc_services.dart
 - google_sign_in_helper.dart
 - media_player_controller.dart
 - categories
-- package:flutter_test/flutter_test.dart
+- package:jnatrjo_mobile/data/models/models.dart
 - progress_ring.dart
 - inicio-v2/prototype.js
 - prototype.js
-- stat_card.dart
+- about_view.dart
 - palette.dart
 - Visitor Dashboard Controller
-- package:flutter/material.dart
+- ../../app/theme.dart
 - Game Controller
 - Activity Controller
 - DataClass
 - game_cache_service.dart
 - SingleTickerProviderStateMixin
-- ../../app/theme.dart
+- package:flutter/material.dart
 - export_games.py
 - skeleton.dart
 - validador_service.dart
-- package:flutter_riverpod/flutter_riverpod.dart
+- connectivity_service.dart
 - dart:math
 - home_carousel.dart
 - ConsumerState
 - Table
 - sendero_nav_bar.dart
-- build
+- ConsumerWidget
 - MainActivity.kt
 - authControllerProvider
-- dictionary_and_pronunciation_test.dart
+- dictionary_word_delta_test.dart
 - @ejemplo
-- assignments_screen.dart
+- asset_preloader.dart
 - error_messages.dart
-- map_screen_test.dart
+- app_shell.dart
 - pronunciation_hub_screen.dart
 - resource_update_service.dart
 - leaderboard_screen.dart
 - Arquitectura
 - Dictionary Controller
-- xp_utils.dart
+- _HomeScreenState
 - dart:async
 - daily_pronunciation_test.dart
-- asset_preloader.dart
+- Tres cachés distintas en drift
 - game_launcher.dart
 - Diapositiva 3 — Resultados: pronunciación
 - CustomPainter
@@ -141,20 +141,20 @@
 - game_cache_service_test.dart
 - List
 - Admin Dashboard Controller
-- vtt_parser_test.dart
+- package:flutter_test/flutter_test.dart
 - User Controller
-- _HomeScreenState
-- theme_controller.dart
+- totalProgressProvider
+- package:flutter_riverpod/flutter_riverpod.dart
 - API_Documentation.md
 - Teacher Dashboard Controller
-- word_image_test.dart
-- ../../data/models/models.dart
-- routerProvider
-- POST /api/pronunciation/validate/{wordId}
-- daily_pronunciation_service.dart
-- dictionary_word_delta_test.dart
-- Guía de estilo — imágenes de números (assets/numbers/)
+- activity_service.dart
+- String?
 - AuthController
+- _PronunciationHubScreenState
+- daily_pronunciation_service.dart
+- dictionary_and_pronunciation_test.dart
+- _
+- verify_email_screen.dart
 - media_cache_key.dart
 - home_providers.dart
 - games/manifest.json
@@ -167,21 +167,26 @@
 - GamePlayScreen
 - coyote_messages.dart
 - AppPalette
-- ../../../core/api/api_client.dart
+- ../../data/models/models.dart
 - Inicio y pronunciación diaria
 - AppPaletteX
+- Arreglo: Top de Estudiantes
+- _PronunciationPracticeScreenState
+- GET /api/dashboard/visitor/{username}/recent-activities
+- MaterialPageRoute
+- _dailyCard
 
 ## God Nodes (most connected - your core abstractions)
 1. `gameSessionProvider` - 23 edges
 2. `authControllerProvider` - 15 edges
 3. `_` - 15 edges
-4. `AppDatabase` - 14 edges
-5. `Visitor Dashboard Controller` - 14 edges
+4. `Visitor Dashboard Controller` - 14 edges
+5. `AppDatabase` - 14 edges
 6. `GameSession` - 12 edges
 7. `_HomeScreenState` - 12 edges
-8. `_AppShellState` - 11 edges
-9. `Activity Controller` - 11 edges
-10. `Dictionary Controller` - 11 edges
+8. `Activity Controller` - 11 edges
+9. `Dictionary Controller` - 11 edges
+10. `Game Controller` - 11 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `activityId vs gameId (effectiveActivityId)` --rationale_for--> `GameSession`  [EXTRACTED]
@@ -203,7 +208,7 @@
 - **Triada offline-first: caché de juegos, cola de resultados y fallback de dashboard** — claude_cached_games, claude_pending_results, claude_kv_entries, claude_network_then_cache_pattern, claude_asset_url_rewrite [EXTRACTED 1.00]
 - **Deuda pendiente antes de publicar en Play Store** — claude_google_signin_audience, claude_debug_keystore_debt, readme_email_deeplink_debt, readme_backend_koyeb [INFERRED 0.85]
 
-## Communities (165 total, 15 thin omitted)
+## Communities (170 total, 15 thin omitted)
 
 ### Community 0 - "app_database.dart"
 Cohesion: 0.01
@@ -220,8 +225,8 @@ Cohesion: 0.04
 Nodes (47): game_widgets.dart, ResponseLog, audio, build, _buildError, _buildLogsSection, _buildOfflineNote, _buildXpResult (+39 more)
 
 ### Community 3 - "word_search_generator.dart"
-Cohesion: 0.07
-Nodes (28): allDirections, alphabet, c, cells, fillAlphabet, generateWordSearch, grid, GridPos (+20 more)
+Cohesion: 0.05
+Nodes (41): double get, int get, costToNextLevel, cumulativeXpFor, fromTotalXp, level, levelBase, levelFromXp (+33 more)
 
 ### Community 4 - "tripas_game_view.dart"
 Cohesion: 0.05
@@ -233,7 +238,7 @@ Nodes (16): _Bubble, child, _CoyoteImage, CoyoteOverlay, createState, dispose, e
 
 ### Community 6 - "memoria_rapida_game_view.dart"
 Cohesion: 0.05
-Nodes (38): _answer, _baseSpeedMs, _bottomWord, _cardTimer, _cfg0, _cfg1, _combo, _correct (+30 more)
+Nodes (36): _answer, _baseSpeedMs, _bottomWord, _cardTimer, _cfg0, _cfg1, _combo, _correct (+28 more)
 
 ### Community 7 - "laberinto_game_view.dart"
 Cohesion: 0.06
@@ -241,11 +246,11 @@ Nodes (35): audioUrl, _avatarX, _avatarY, _buildSideColumn, _carrying, _carrying
 
 ### Community 8 - "map_screen.dart"
 Cohesion: 0.07
-Nodes (29): _activeTopic, createState, dispose, enterMapChrome, _exitMap, exitMapChrome, _highlightedZone, _hover (+21 more)
+Nodes (27): _activeTopic, createState, dispose, enterMapChrome, _exitMap, exitMapChrome, _highlightedZone, _hover (+19 more)
 
 ### Community 9 - "auth_screen.dart"
 Cohesion: 0.06
-Nodes (34): ../auth_controller.dart, ../google_sign_in_helper.dart, build, _buildError, _buildGoogleButton, _buildGuestLogin, _buildModeSwitch, _buildRegisterForm (+26 more)
+Nodes (36): ../auth_controller.dart, ../google_sign_in_helper.dart, AuthScreen, _AuthScreenState, build, _buildError, _buildGoogleButton, _buildGuestLogin (+28 more)
 
 ### Community 10 - "theme.dart"
 Cohesion: 0.06
@@ -261,23 +266,23 @@ Nodes (30): ActivityTypes, catLines, color, description, disabledGameTypes, fast
 
 ### Community 13 - "sopa_letras_game_view.dart"
 Cohesion: 0.07
-Nodes (28): _board, _cellAt, cellSize, _cfg, _checkSelection, createState, dispose, _finish (+20 more)
+Nodes (30): _board, _cellAt, cellSize, _cfg, _checkSelection, createState, dispose, _finish (+22 more)
 
 ### Community 14 - "game_widgets.dart"
 Cohesion: 0.06
-Nodes (34): BoxFit, audioPath, _audioPlayer, _broken, build, cardState, color, disabled (+26 more)
+Nodes (35): BoxFit, audioPath, _audioPlayer, _broken, build, cardState, color, disabled (+27 more)
 
 ### Community 15 - "intruso_game_view.dart"
 Cohesion: 0.07
-Nodes (29): GameConfig get, build, _buildOption, _combo, _ComboBadge, _config1, _config2, _correctOption (+21 more)
+Nodes (29): Answer? get, build, _buildOption, _combo, _ComboBadge, _config1, _config2, _correctOption (+21 more)
 
 ### Community 16 - "loteria_game_view.dart"
 Cohesion: 0.07
-Nodes (27): audioUrl, _board, _cardIntervalMs, _correctPts, createState, dispose, _finished, imageUrl (+19 more)
+Nodes (26): audioUrl, _board, _cardIntervalMs, _correctPts, createState, dispose, _finished, imageUrl (+18 more)
 
 ### Community 17 - "questionnaire_game_view.dart"
 Cohesion: 0.07
-Nodes (28): Answer? get, build, _buildFillBlankPrompt, _buildOption, _config1, _config2, _correctOption, createState (+20 more)
+Nodes (28): GameConfig get, build, _buildFillBlankPrompt, _buildOption, _config1, _config2, _correctOption, createState (+20 more)
 
 ### Community 18 - "memorama_game_view.dart"
 Cohesion: 0.07
@@ -285,11 +290,11 @@ Nodes (27): audioUrl, back, _cards, createState, dispose, _elapsed, _finished, _
 
 ### Community 19 - "media_store.dart"
 Cohesion: 0.11
-Nodes (18): app_database.dart, Dio, Future, _db, _dio, _dir, _fnv1a64, hash (+10 more)
+Nodes (17): app_database.dart, Future, _db, _dio, _dir, _fnv1a64, hash, localize (+9 more)
 
 ### Community 20 - "dictionary_repository.dart"
-Cohesion: 0.07
-Nodes (32): allWords, _applyBundleMedia, applyWordDelta, _applyWordDeltaByCategory, _assetPath, build, _bundleData, _bundleGeneratedAt (+24 more)
+Cohesion: 0.06
+Nodes (35): AsyncNotifier, allWords, _applyBundleMedia, applyWordDelta, _applyWordDeltaByCategory, _assetPath, build, _bundleData (+27 more)
 
 ### Community 21 - "sync_service.dart"
 Cohesion: 0.08
@@ -297,27 +302,27 @@ Nodes (26): ../api/api_client.dart, ../connectivity/connectivity_service.dart, a
 
 ### Community 22 - "pares_game_view.dart"
 Cohesion: 0.08
-Nodes (24): audioUrl, _buildColumn, createState, dispose, _elapsed, _finished, _formatTime, imageUrl (+16 more)
+Nodes (25): audioUrl, _buildColumn, createState, dispose, _elapsed, _finished, _formatTime, imageUrl (+17 more)
 
 ### Community 23 - "welcome_screen.dart"
 Cohesion: 0.06
-Nodes (33): ../../about/about_view.dart, _AboutPage, alpha, body, build, _buildActions, _buildCommunitySlide, _buildDots (+25 more)
+Nodes (31): ../../about/about_view.dart, alpha, body, build, _buildActions, _buildCommunitySlide, _buildDots, _buildGamesSlide (+23 more)
 
 ### Community 24 - "game_session.dart"
 Cohesion: 0.07
 Nodes (26): ActivityService get, AppDatabase get, ../../core/sync/asset_preloader.dart, GameData, build, clear, complete, correctAnswers (+18 more)
 
 ### Community 25 - "game_access_screen.dart"
-Cohesion: 0.09
-Nodes (24): game_launcher.dart, GameInfo get, games_providers.dart, GameInfo, GameSummaryDto, _ActivityCard, createState, disabled (+16 more)
+Cohesion: 0.07
+Nodes (29): ../../app/activity_config.dart, ../../core/sync/sync_service.dart, game_launcher.dart, GameInfo get, games_providers.dart, GameInfo, GameSummaryDto, _ActivityCard (+21 more)
 
-### Community 26 - "VoidCallback?"
-Cohesion: 0.12
-Nodes (15): build, EmptyState, ErrorState, message, OfflineBanner, onRetry, subtitle, svgAsset (+7 more)
+### Community 26 - "../../app/palette.dart"
+Cohesion: 0.08
+Nodes (24): ../../app/palette.dart, kid_card.dart, build, CoyoteLoadingIndicator, message, size, build, color (+16 more)
 
 ### Community 27 - "api_client.dart"
 Cohesion: 0.10
-Nodes (19): Exception, apiBaseUrl, apiClientProvider, ApiException, _buildErrorMessage, delete, dio, message (+11 more)
+Nodes (20): Dio, Exception, apiBaseUrl, apiClientProvider, ApiException, _buildErrorMessage, delete, dio (+12 more)
 
 ### Community 28 - "router.dart"
 Cohesion: 0.08
@@ -325,11 +330,11 @@ Nodes (25): ../features/about/about_view.dart, ../features/assignments/assignmen
 
 ### Community 29 - "profile_screen.dart"
 Cohesion: 0.06
-Nodes (36): avatar_picker_sheet.dart, ../../core/xp_utils.dart, ../games/games_providers.dart, _AnswerReviewCard, _Metric, _PairsReview, _ReviewRow, _WordList (+28 more)
+Nodes (37): avatar_picker_sheet.dart, ../../core/xp_utils.dart, ../games/games_providers.dart, _AboutPage, _GameTile, _AnswerReviewCard, _Metric, _PairsReview (+29 more)
 
 ### Community 30 - "auth_controller.dart"
-Cohesion: 0.15
-Nodes (12): AuthService get, ../../../data/services/auth_service.dart, _auth, build, isAuthenticated, loginStudent, loginVisitor, loginWithGoogle (+4 more)
+Cohesion: 0.14
+Nodes (13): AuthService get, core/storage/session_store.dart, data/services/misc_services.dart, _auth, build, isAuthenticated, loginStudent, loginVisitor (+5 more)
 
 ### Community 31 - "coyote_controller.dart"
 Cohesion: 0.09
@@ -340,11 +345,11 @@ Nodes (23): esperando,
 
 ### Community 32 - "pronunciation_practice_screen.dart"
 Cohesion: 0.06
-Nodes (36): Animation, AudioPlayer, ../../core/audio/audio_recorder_helper.dart, validadorServiceProvider, VeredictoPronunciacion, _audioPlayer, build, _buildRecordingControls (+28 more)
+Nodes (31): Animation, AudioPlayer, ../../core/audio/audio_recorder_helper.dart, VeredictoPronunciacion, _audioPlayer, build, _buildRecordingControls, _buildResultCard (+23 more)
 
 ### Community 33 - "dictionary_screen.dart"
-Cohesion: 0.13
-Nodes (14): ../../core/api/error_messages.dart, dictionary_repository.dart, _buildCategoryGrid, _buildSearchResults, _buildWordsGrid, _categoryInfo, _categoryLabel, createState (+6 more)
+Cohesion: 0.07
+Nodes (29): ../../core/api/error_messages.dart, ../dashboard/dashboard_providers.dart, dictionary_repository.dart, ../games/game_launcher.dart, activity, _AssignmentCard, AssignmentsScreen, _AssignmentsScreenState (+21 more)
 
 ### Community 34 - "kid_card.dart"
 Cohesion: 0.10
@@ -354,13 +359,13 @@ Nodes (21): accentColor, backgroundColor, build, child, color, createState, expa
 Cohesion: 0.13
 Nodes (14): AppUser? get, bool get, FlutterSecureStorage, clear, isAuthenticated, load, save, SessionStore (+6 more)
 
-### Community 36 - "../../app/activity_config.dart"
-Cohesion: 0.11
-Nodes (19): ../../app/activity_config.dart, ../auth/auth_controller.dart, ../../core/storage/app_database.dart, dart:convert, ../../data/services/activity_service.dart, cacheKey, db, fromJson (+11 more)
+### Community 36 - "dashboard_providers.dart"
+Cohesion: 0.17
+Nodes (11): ../auth/auth_controller.dart, ../../core/storage/app_database.dart, ../../data/services/activity_service.dart, cacheKey, dashboardProvider, db, fromJson, response (+3 more)
 
 ### Community 37 - "main.dart"
-Cohesion: 0.12
-Nodes (17): app/router.dart, core/storage/session_store.dart, data/services/misc_services.dart, features/auth/auth_controller.dart, features/settings/theme_controller.dart, _ThemeCard, themeModeProvider, build (+9 more)
+Cohesion: 0.15
+Nodes (14): app/router.dart, features/auth/auth_controller.dart, features/settings/theme_controller.dart, themeModeProvider, build, createState, dispose, JnatrjoApp (+6 more)
 
 ### Community 38 - "game_play_screen.dart"
 Cohesion: 0.12
@@ -371,12 +376,12 @@ Cohesion: 0.10
 Nodes (21): ../../../core/storage/media_cache_key.dart, build, color, _contentTabs, createState, _exhausted, _extra, _formatDuration (+13 more)
 
 ### Community 40 - "auth_service.dart"
-Cohesion: 0.13
-Nodes (14): _api, AuthService, LoginResult, loginStudent, loginVisitor, loginWithGoogle, raw, refreshToken (+6 more)
+Cohesion: 0.12
+Nodes (15): _api, AuthService, LoginResult, loginStudent, loginVisitor, loginWithGoogle, raw, refreshToken (+7 more)
 
-### Community 41 - "app_shell.dart"
-Cohesion: 0.09
-Nodes (28): Excepción de orientación horizontal para el mapa, ../../core/connectivity/connectivity_service.dart, ../../core/storage/media_store.dart, ../../core/sync/game_cache_service.dart, ../../core/sync/resource_update_service.dart, ../home/home_providers.dart, connectivityStreamProvider, mediaStoreProvider (+20 more)
+### Community 41 - "_AppShellState"
+Cohesion: 0.15
+Nodes (15): Excepción de orientación horizontal para el mapa, connectivityStreamProvider, mediaStoreProvider, gameCacheServiceProvider, resourceUpdateServiceProvider, build, syncControllerProvider, _confirmAndReset (+7 more)
 
 ### Community 42 - "maze_generator.dart"
 Cohesion: 0.12
@@ -386,9 +391,9 @@ Nodes (15): bottom, current, generateMaze, grid, left, MazeCell, mazeDimensions,
 Cohesion: 0.03
 Nodes (59): actual, analizarVoz, antes, cresta, cruces, desv, duracionMinimaS, end (+51 more)
 
-### Community 44 - "activity_service.dart"
-Cohesion: 0.11
-Nodes (18): Backend por defecto en DigitalOcean, ApiClient, _api, completeActivity, getGameDetails, getGamePreview, getStudentActivities, getStudentDashboard (+10 more)
+### Community 44 - "../../../core/api/api_client.dart"
+Cohesion: 0.12
+Nodes (15): Backend por defecto en DigitalOcean, ../../../core/api/api_client.dart, ApiClient, _api, catalogServiceProvider, getUpdates, _api, getAvatar (+7 more)
 
 ### Community 45 - "misc_services.dart"
 Cohesion: 0.12
@@ -406,9 +411,9 @@ Nodes (38): Duration get, _cueTimer, _defaultSubtitleFetcher, dispose, duration,
 Cohesion: 0.17
 Nodes (11): categories, generatedAt, words, ANIMALS, BODY_PARTS, CLOTHES, COLORS, FIVE_SENSES (+3 more)
 
-### Community 49 - "package:flutter_test/flutter_test.dart"
-Cohesion: 0.15
-Nodes (10): package:flutter_test/flutter_test.dart, package:jnatrjo_mobile/core/stars.dart, package:jnatrjo_mobile/core/storage/media_cache_key.dart, package:jnatrjo_mobile/data/models/models.dart, package:jnatrjo_mobile/data/services/misc_services.dart, package:jnatrjo_mobile/features/content/player/media_playback_source.dart, main, main (+2 more)
+### Community 49 - "package:jnatrjo_mobile/data/models/models.dart"
+Cohesion: 0.29
+Nodes (5): package:jnatrjo_mobile/data/models/models.dart, package:jnatrjo_mobile/data/services/misc_services.dart, package:jnatrjo_mobile/features/content/player/media_playback_source.dart, main, main
 
 ### Community 50 - "progress_ring.dart"
 Cohesion: 0.13
@@ -422,21 +427,21 @@ Nodes (27): animations, announce(), audio, clearSchedule(), closeDialog(), daily
 Cohesion: 0.14
 Nodes (10): audio, destinations, dialog, gameData, icon(), initial, listen, proposals (+2 more)
 
-### Community 53 - "stat_card.dart"
-Cohesion: 0.07
-Nodes (27): ../../app/avatar_config.dart, Color, IconData, kid_card.dart, AboutContent, AboutScreen, _AboutSection, build (+19 more)
+### Community 53 - "about_view.dart"
+Cohesion: 0.18
+Nodes (10): IconData, AboutContent, AboutScreen, _AboutSection, build, color, description, icon (+2 more)
 
 ### Community 54 - "palette.dart"
 Cohesion: 0.10
 Nodes (19): AppPalette get, Gradient, adaptBrand, backgroundGradient, border, borderLight, copyWith, dark (+11 more)
 
 ### Community 55 - "Visitor Dashboard Controller"
-Cohesion: 0.06
-Nodes (35): Arreglo: Top de Estudiantes, Cambios en archivos:, Endpoints, GET /api/dashboard/visitor, GET /api/dashboard/visitor/{username}, GET /api/dashboard/visitor/{username}/experience, GET /api/dashboard/visitor/{username}/finished, GET /api/dashboard/visitor/{username}/inrow (+27 more)
+Cohesion: 0.08
+Nodes (26): Endpoints, GET /api/dashboard/visitor, GET /api/dashboard/visitor/{username}, GET /api/dashboard/visitor/{username}/experience, GET /api/dashboard/visitor/{username}/finished, GET /api/dashboard/visitor/{username}/inrow, GET /api/dashboard/visitor/{username}/level, GET /api/dashboard/visitor/{username}/top-users (+18 more)
 
-### Community 56 - "package:flutter/material.dart"
-Cohesion: 0.11
-Nodes (16): ../../app/palette.dart, avatar_provider.dart, int?, createState, _saving, _selectedId, showAvatarPickerSheet, showModalBottomSheet (+8 more)
+### Community 56 - "../../app/theme.dart"
+Cohesion: 0.12
+Nodes (14): ../../app/avatar_config.dart, ../../app/theme.dart, avatar_provider.dart, int?, createState, _saving, _selectedId, showAvatarPickerSheet (+6 more)
 
 ### Community 57 - "Game Controller"
 Cohesion: 0.06
@@ -458,9 +463,9 @@ Nodes (23): asset_preloader.dart, DateTime?, applyGameDelta, _asInt, bundleGameI
 Cohesion: 0.23
 Nodes (14): WelcomeScreen, _WelcomeScreenState, _ProgressiveSubtitle, _ProgressiveSubtitleState, _Confetti, _ConfettiState, HomeCarousel, _HomeCarouselState (+6 more)
 
-### Community 62 - "../../app/theme.dart"
+### Community 62 - "package:flutter/material.dart"
 Cohesion: 0.10
-Nodes (20): ../../app/theme.dart, ../../core/sync/sync_service.dart, build, _buildResult, createState, initState, _message, _Status (+12 more)
+Nodes (18): Color, accentColor, _ExploreBigButton, imageAsset, onTap, subtitle, title, AvatarCircle (+10 more)
 
 ### Community 63 - "export_games.py"
 Cohesion: 0.11
@@ -474,9 +479,9 @@ Nodes (15): AnimationController, double?, EdgeInsetsGeometry, aspectRatio, borde
 Cohesion: 0.09
 Nodes (22): accents, _calcularDistanciaCoseno, _centroides, dispose, ensureCentroides, init, _initialized, _initializing (+14 more)
 
-### Community 66 - "package:flutter_riverpod/flutter_riverpod.dart"
-Cohesion: 0.29
-Nodes (6): connectivity, _hasNetwork, initial, watch, package:connectivity_plus/connectivity_plus.dart, package:flutter_riverpod/flutter_riverpod.dart
+### Community 66 - "connectivity_service.dart"
+Cohesion: 0.25
+Nodes (7): connectivity, connectivityStreamProvider, _hasNetwork, initial, isOnlineProvider, watch, package:connectivity_plus/connectivity_plus.dart
 
 ### Community 67 - "dart:math"
 Cohesion: 0.40
@@ -488,7 +493,7 @@ Nodes (28): _actionStyle, _allowed, _badgeStyle, build, color, createState, didC
 
 ### Community 69 - "ConsumerState"
 Cohesion: 0.10
-Nodes (29): ConsumerState, ConsumerStatefulWidget, VerifyEmailScreen, _VerifyEmailScreenState, DictionaryScreen, _DictionaryScreenState, GameAccessScreen, _GameAccessScreenState (+21 more)
+Nodes (28): ConsumerState, ConsumerStatefulWidget, DictionaryScreen, _DictionaryScreenState, GameAccessScreen, _GameAccessScreenState, LaberintoGameView, _LaberintoGameViewState (+20 more)
 
 ### Community 70 - "Table"
 Cohesion: 0.20
@@ -498,37 +503,37 @@ Nodes (10): @DataClassName, CachedGames, CachedMedia, CachedWords, CompletedGame
 Cohesion: 0.13
 Nodes (14): build, destination, destinations, label, _NavItem, onDestinationSelected, onTap, selected (+6 more)
 
-### Community 72 - "build"
-Cohesion: 0.20
-Nodes (10): dashboardProvider, build, avatarControllerProvider, build, _HeaderAvatar, _play, ProfileScreen, Route /perfil/acerca (+2 more)
+### Community 72 - "ConsumerWidget"
+Cohesion: 0.15
+Nodes (14): ConsumerWidget, dashboardProvider, _ActivityCard, build, avatarControllerProvider, build, _HeaderAvatar, _LeaderboardCard (+6 more)
 
 ### Community 74 - "authControllerProvider"
 Cohesion: 0.22
 Nodes (10): userSessionServiceProvider, authControllerProvider, _commit, logout, _showGoogleRegisterDialog, _submitLogin, build, _confirmLogout (+2 more)
 
-### Community 75 - "dictionary_and_pronunciation_test.dart"
+### Community 75 - "dictionary_word_delta_test.dart"
 Cohesion: 0.09
-Nodes (22): DictionaryService, Map, package:jnatrjo_mobile/core/ai/validador_service.dart, package:jnatrjo_mobile/core/storage/media_store.dart, package:jnatrjo_mobile/features/dictionary/dictionary_repository.dart, _categories, centroides, _FakeDictionaryService (+14 more)
+Nodes (22): MediaStore, DictionaryService, package:jnatrjo_mobile/core/api/api_client.dart, package:jnatrjo_mobile/core/storage/media_store.dart, package:jnatrjo_mobile/features/dictionary/dictionary_repository.dart, _FakeDictionaryService, _categories, _FakeDictionaryService (+14 more)
 
-### Community 80 - "assignments_screen.dart"
+### Community 80 - "asset_preloader.dart"
+Cohesion: 0.12
+Nodes (15): Reescritura de URLs a rutas de disco al precargar assets, CachedGames — contenido jugable por gameId, Diccionario: emisión instantánea con refresh en segundo plano, complete, localized, localizeWord, questions, resolveGameMedia (+7 more)
+
+### Community 82 - "app_shell.dart"
 Cohesion: 0.14
-Nodes (15): ../dashboard/dashboard_providers.dart, ../games/game_launcher.dart, activity, _AssignmentCard, AssignmentsScreen, _AssignmentsScreenState, build, createState (+7 more)
-
-### Community 82 - "map_screen_test.dart"
-Cohesion: 0.22
-Nodes (8): AnimatedOpacity, dart:typed_data, dart:ui, package:jnatrjo_mobile/app/map_zones.dart, package:jnatrjo_mobile/features/map/map_geometry.dart, package:jnatrjo_mobile/features/map/map_screen.dart, package:jnatrjo_mobile/features/progress/progress_providers.dart, main
+Nodes (13): ../../core/connectivity/connectivity_service.dart, ../../core/storage/media_store.dart, ../../core/sync/game_cache_service.dart, ../../core/sync/resource_update_service.dart, ../home/home_providers.dart, _branchPaths, createState, _destinations (+5 more)
 
 ### Community 83 - "pronunciation_hub_screen.dart"
-Cohesion: 0.09
-Nodes (25): class, ../dictionary/dictionary_repository.dart, ../games/widgets/game_widgets.dart, centroidesProvider, appDatabaseProvider, dictionaryServiceProvider, _openAbout, dictionaryProvider (+17 more)
+Cohesion: 0.17
+Nodes (11): class, ../dictionary/dictionary_repository.dart, ../games/widgets/game_widgets.dart, createState, onTap, _searchQuery, _syncedWordIds, word (+3 more)
 
 ### Community 84 - "resource_update_service.dart"
-Cohesion: 0.08
-Nodes (23): CachedGames — contenido jugable por gameId, ../../data/services/catalog_service.dart, ../../features/dictionary/dictionary_repository.dart, game_cache_service.dart, GameCacheService, _advance, _applyDelta, _catalog (+15 more)
+Cohesion: 0.11
+Nodes (18): ../../data/services/catalog_service.dart, ../../features/dictionary/dictionary_repository.dart, game_cache_service.dart, _advance, _applyDelta, _catalog, checkAndRefresh, _cursorFor (+10 more)
 
 ### Community 85 - "leaderboard_screen.dart"
-Cohesion: 0.12
-Nodes (16): _allUsers, createState, _currentPage, data, fromJson, _hasMore, initState, isCurrentUser (+8 more)
+Cohesion: 0.11
+Nodes (18): _allUsers, createState, _currentPage, data, fromJson, _hasMore, initState, isCurrentUser (+10 more)
 
 ### Community 86 - "Arquitectura"
 Cohesion: 0.12
@@ -538,21 +543,21 @@ Nodes (15): Arquitectura, Base de datos, Camino de aprendizaje (Inicio), Capas, 
 Cohesion: 0.07
 Nodes (28): DELETE /api/dictionary/words/{id}, Dictionary Controller, Endpoints, GET /api/dictionary/game/{gameId}, GET /api/dictionary/words/categories, GET /api/dictionary/words/daily, GET /api/dictionary/words/details/{id}, GET /api/dictionary/words/{topic} (+20 more)
 
-### Community 88 - "xp_utils.dart"
-Cohesion: 0.14
-Nodes (13): double get, int get, costToNextLevel, cumulativeXpFor, fromTotalXp, level, levelBase, levelFromXp (+5 more)
+### Community 88 - "_HomeScreenState"
+Cohesion: 0.21
+Nodes (12): isOnlineProvider, ContentScreen, dailyChallengeProvider, homeAssignmentProvider, homeGameProvider, homeMediaProvider, build, _checkDay (+4 more)
 
 ### Community 89 - "dart:async"
 Cohesion: 0.17
 Nodes (11): AudioRecorder, dart:async, _audioRecorder, AudioRecorderHelper, dispose, grabarPCM16k, hasPermission, stopRecording (+3 more)
 
 ### Community 90 - "daily_pronunciation_test.dart"
-Cohesion: 0.12
-Nodes (15): package:jnatrjo_mobile/core/sync/sync_service.dart, package:jnatrjo_mobile/data/services/daily_pronunciation_service.dart, Set, account, api, awarded, challenge, completed (+7 more)
+Cohesion: 0.11
+Nodes (18): _, @DriftDatabase, schemaVersion 1 sin MigrationStrategy, AppDatabase, package:jnatrjo_mobile/core/sync/sync_service.dart, package:jnatrjo_mobile/data/services/daily_pronunciation_service.dart, account, api (+10 more)
 
-### Community 91 - "asset_preloader.dart"
-Cohesion: 0.07
-Nodes (31): Lints por defecto de flutter_lints, sin reglas propias, activityId vs gameId (effectiveActivityId), Reescritura de URLs a rutas de disco al precargar assets, Diccionario: emisión instantánea con refresh en segundo plano, Tolerancia a alias de campos del backend, gameConfigs[0]=prompt, gameConfigs[1]=opciones, KvEntries — copias JSON de dashboards, Patrón red-primero-luego-caché en providers (+23 more)
+### Community 91 - "Tres cachés distintas en drift"
+Cohesion: 0.12
+Nodes (19): Lints por defecto de flutter_lints, sin reglas propias, activityId vs gameId (effectiveActivityId), Tolerancia a alias de campos del backend, gameConfigs[0]=prompt, gameConfigs[1]=opciones, KvEntries — copias JSON de dashboards, Patrón red-primero-luego-caché en providers, Offline-first (punto central del proyecto), PendingResults — cola de partidas sin red (+11 more)
 
 ### Community 92 - "game_launcher.dart"
 Cohesion: 0.20
@@ -568,7 +573,7 @@ Nodes (9): CustomPainter, _BubblesPainter, _BubbleTailPainter, SmokeEffectPainte
 
 ### Community 95 - "static const"
 Cohesion: 0.24
-Nodes (9): AsyncNotifier, ../../data/services/user_service.dart, userServiceProvider, AvatarController, build, _cacheKey, updateAvatar, _loadPage (+1 more)
+Nodes (9): ../../data/services/user_service.dart, userServiceProvider, AvatarController, build, _cacheKey, updateAvatar, _loadPage, package:shared_preferences/shared_preferences.dart (+1 more)
 
 ### Community 96 - "fix_animation_transparency.py"
 Cohesion: 0.32
@@ -647,24 +652,24 @@ Cohesion: 0.12
 Nodes (17): DELETE /api/media/{id}, Endpoints, GET /api/media, GET /api/media/{id}/stream, GET /api/media/recommendations, Media Controller, Notas, Path Parameters (+9 more)
 
 ### Community 129 - "map_geometry.dart"
-Cohesion: 0.13
-Nodes (14): ../../app/map_zones.dart, int width,, contains, height, load, MapLabelLayout, performLayout, placed (+6 more)
+Cohesion: 0.12
+Nodes (15): ../../app/map_zones.dart, int width,, contains, height, load, MapLabelLayout, performLayout, placed (+7 more)
 
 ### Community 130 - "_ZoneSheetState"
 Cohesion: 0.29
 Nodes (8): build, _buildGamesList, _ZoneLabel, _ZoneSheet, _ZoneSheetState, gamesForZoneProvider, gameStarsProvider, zoneProgressProvider
 
 ### Community 131 - "preproceso_audio_test.dart"
-Cohesion: 0.12
-Nodes (15): package:jnatrjo_mobile/core/ai/preproceso_audio.dart, return, amplitud, _bufferConPalabra, _distanciaCoseno, dot, inicioS, main (+7 more)
+Cohesion: 0.13
+Nodes (14): package:jnatrjo_mobile/core/ai/preproceso_audio.dart, amplitud, _bufferConPalabra, _distanciaCoseno, dot, inicioS, main, palabra (+6 more)
 
 ### Community 132 - "home_screen_test.dart"
-Cohesion: 0.18
-Nodes (10): dart:io, package:flutter/rendering.dart, package:jnatrjo_mobile/core/connectivity/connectivity_service.dart, package:jnatrjo_mobile/data/models/daily_pronunciation.dart, package:jnatrjo_mobile/features/auth/auth_controller.dart, package:jnatrjo_mobile/features/home/home_providers.dart, package:jnatrjo_mobile/features/home/home_screen.dart, build (+2 more)
+Cohesion: 0.08
+Nodes (23): AnimatedOpacity, AssetImage, dart:io, dart:typed_data, dart:ui, FileImage, package:jnatrjo_mobile/app/map_zones.dart, package:jnatrjo_mobile/app/theme.dart (+15 more)
 
 ### Community 133 - "game_cache_service_test.dart"
-Cohesion: 0.11
-Nodes (19): package:flutter_secure_storage/flutter_secure_storage.dart, package:jnatrjo_mobile/core/api/api_client.dart, package:jnatrjo_mobile/core/storage/session_store.dart, package:jnatrjo_mobile/core/sync/game_cache_service.dart, package:jnatrjo_mobile/data/services/activity_service.dart, package:jnatrjo_mobile/features/home/home_carousel.dart, _details, _detailsFailFor (+11 more)
+Cohesion: 0.10
+Nodes (19): package:flutter_secure_storage/flutter_secure_storage.dart, package:jnatrjo_mobile/core/storage/session_store.dart, package:jnatrjo_mobile/core/sync/game_cache_service.dart, package:jnatrjo_mobile/data/services/activity_service.dart, package:jnatrjo_mobile/features/home/home_carousel.dart, Set, _details, _detailsFailFor (+11 more)
 
 ### Community 134 - "List"
 Cohesion: 0.14
@@ -674,69 +679,69 @@ Nodes (13): activity_config.dart, double x, y, w,, contains, gameTypes, h, id, i
 Cohesion: 0.14
 Nodes (14): Admin Dashboard Controller, Endpoints, GET /api/dashboard/admin, GET /api/dashboard/admin/activities, GET /api/dashboard/admin/games, GET /api/dashboard/admin/groups/students, GET /api/dashboard/admin/students/inrow, GET /api/dashboard/admin/words (+6 more)
 
-### Community 136 - "vtt_parser_test.dart"
-Cohesion: 0.22
-Nodes (8): package:jnatrjo_mobile/features/content/logic/vtt_parser.dart, Primera, Segunda, 1, línea, main, NOTE, WEBVTT
+### Community 136 - "package:flutter_test/flutter_test.dart"
+Cohesion: 0.12
+Nodes (13): package:flutter_test/flutter_test.dart, package:jnatrjo_mobile/core/stars.dart, package:jnatrjo_mobile/core/storage/media_cache_key.dart, package:jnatrjo_mobile/features/content/logic/vtt_parser.dart, Primera, Segunda, main, main (+5 more)
 
 ### Community 137 - "User Controller"
 Cohesion: 0.15
 Nodes (13): Endpoints, GET /api/user/available, GET /api/user/avatar, POST /api/user/session/start, PUT /api/user/avatar, PUT /api/user/session/end, Request Body, Response Body (200 OK) (+5 more)
 
-### Community 138 - "_HomeScreenState"
-Cohesion: 0.14
-Nodes (21): ConsumerWidget, isOnlineProvider, ContentScreen, build, ExploreHubScreen, _ActivityCard, build, GamesHubScreen (+13 more)
+### Community 138 - "totalProgressProvider"
+Cohesion: 0.28
+Nodes (9): build, ExploreHubScreen, build, GamesHubScreen, gamesByTypeProvider, totalProgressProvider, Route /explorar/contenido, Route /explorar/mapa (+1 more)
 
-### Community 139 - "theme_controller.dart"
+### Community 139 - "package:flutter_riverpod/flutter_riverpod.dart"
 Cohesion: 0.25
-Nodes (7): build, _load, _prefsKey, setMode, ThemeModeController, package:shared_preferences/shared_preferences.dart, ThemeMode
+Nodes (7): build, _load, _prefsKey, setMode, ThemeModeController, package:flutter_riverpod/flutter_riverpod.dart, ThemeMode
 
 ### Community 140 - "API_Documentation.md"
-Cohesion: 0.18
-Nodes (10): Catalog Controller, Endpoints, Endpoints, GET /api/catalog/updates, GET /api/leaderboard, Leaderboard Controller, Request, Response Body (200 OK) (+2 more)
+Cohesion: 0.11
+Nodes (18): Catalog Controller, Ejemplo: palabra distinta reconocida, Ejemplo: silencio, Endpoints, Endpoints, Endpoints, GET /api/catalog/updates, GET /api/leaderboard (+10 more)
 
 ### Community 141 - "Teacher Dashboard Controller"
 Cohesion: 0.18
 Nodes (11): Endpoints, GET /api/dashboard/teacher/{group}, GET /api/dashboard/teacher/{group}/activities/assigned, GET /api/dashboard/teacher/{group}/students/alert, GET /api/dashboard/teacher/{group}/students/total, Path Parameters, Response Body (200 OK), Response Body (200 OK) (+3 more)
 
-### Community 142 - "word_image_test.dart"
-Cohesion: 0.29
-Nodes (6): AssetImage, FileImage, package:jnatrjo_mobile/app/theme.dart, package:jnatrjo_mobile/features/games/widgets/game_widgets.dart, main, _wrap
+### Community 142 - "activity_service.dart"
+Cohesion: 0.20
+Nodes (9): _api, completeActivity, getGameDetails, getGamePreview, getStudentActivities, getStudentDashboard, getVisitorDashboard, startAssignedActivity (+1 more)
 
-### Community 143 - "../../data/models/models.dart"
-Cohesion: 0.12
-Nodes (14): ../../core/ai/validador_service.dart, ../../data/models/models.dart, espSubtitlesUrl, fromStream, mazSubtitlesUrl, MediaPlaybackSource, posterUrl, title (+6 more)
+### Community 143 - "String?"
+Cohesion: 0.22
+Nodes (8): espSubtitlesUrl, fromStream, mazSubtitlesUrl, MediaPlaybackSource, posterUrl, title, url, String?
 
-### Community 144 - "routerProvider"
-Cohesion: 0.29
-Nodes (7): Release firmado con keystore de debug, Google Sign-In usa el client ID web como serverClientId, sessionStoreProvider sobreescrito en main(), routerProvider, sessionStoreProvider, Verificación de email abre el navegador, Dos modos de login: estudiante y visitante
+### Community 144 - "AuthController"
+Cohesion: 0.18
+Nodes (11): Release firmado con keystore de debug, Google Sign-In usa el client ID web como serverClientId, sessionStoreProvider sobreescrito en main(), routerProvider, sessionStoreProvider, AppUser, AuthController, Verificación de email abre el navegador (+3 more)
 
-### Community 145 - "POST /api/pronunciation/validate/{wordId}"
-Cohesion: 0.25
-Nodes (8): Ejemplo: palabra distinta reconocida, Ejemplo: silencio, Endpoints, Path Parameters, POST /api/pronunciation/validate/{wordId}, Pronunciation Controller, Request (multipart/form-data), Response Body (200 OK)
+### Community 145 - "_PronunciationHubScreenState"
+Cohesion: 0.28
+Nodes (9): centroidesProvider, appDatabaseProvider, dictionaryServiceProvider, dictionaryProvider, build, build, PronunciationHubScreen, _PronunciationHubScreenState (+1 more)
 
 ### Community 146 - "daily_pronunciation_service.dart"
 Cohesion: 0.11
 Nodes (17): api, cached, _check, complete, DailyPronunciationService, dailyPronunciationServiceProvider, db, _historyKey (+9 more)
 
-### Community 147 - "dictionary_word_delta_test.dart"
-Cohesion: 0.09
-Nodes (22): _, @DriftDatabase, schemaVersion 1 sin MigrationStrategy, AppDatabase, MediaStore, package:drift/drift.dart, package:drift/native.dart, package:jnatrjo_mobile/core/storage/app_database.dart (+14 more)
+### Community 147 - "dictionary_and_pronunciation_test.dart"
+Cohesion: 0.11
+Nodes (19): dart:convert, package:drift/drift.dart, package:drift/native.dart, package:jnatrjo_mobile/core/ai/validador_service.dart, package:jnatrjo_mobile/core/storage/app_database.dart, _categories, centroides, getCategories (+11 more)
 
-### Community 148 - "Guía de estilo — imágenes de números (assets/numbers/)"
-Cohesion: 0.33
-Nodes (5): Especificación visual (idéntica para los 20), Guía de estilo — imágenes de números (assets/numbers/), Nombres de archivo, Paleta por número (usar estos colores, es lo que da uniformidad al set), Regla dura
+### Community 148 - "_"
+Cohesion: 0.25
+Nodes (9): build, _, activitiesByTypeProvider, byType, cached, _configsFromContent, db, type (+1 more)
 
-### Community 149 - "AuthController"
-Cohesion: 0.22
-Nodes (9): AppUser, authServiceProvider, AuthController, AuthScreen, _AuthScreenState, _submitRegister, _verify, VisitorAuth (+1 more)
+### Community 149 - "verify_email_screen.dart"
+Cohesion: 0.15
+Nodes (14): ../../../data/services/auth_service.dart, authServiceProvider, _submitRegister, build, _buildResult, createState, initState, _message (+6 more)
 
 ### Community 150 - "media_cache_key.dart"
 Cohesion: 0.40
 Nodes (4): match, mediaCacheKey, _ociParSegment, replaceRange
 
 ### Community 151 - "home_providers.dart"
-Cohesion: 0.10
-Nodes (21): account, all, bundle, cached, db, dict, games, homeAccountProvider (+13 more)
+Cohesion: 0.11
+Nodes (18): account, all, bundle, cached, db, dict, games, keys (+10 more)
 
 ### Community 156 - "package:flutter/services.dart"
 Cohesion: 0.33
@@ -747,8 +752,8 @@ Cohesion: 0.11
 Nodes (17): bool completed,, DateTime startsAt,, DailyChallenge, error, expiresAt, fromJson, id, localOnly (+9 more)
 
 ### Community 158 - "home_screen.dart"
-Cohesion: 0.11
-Nodes (18): ../../data/models/daily_pronunciation.dart, ../../data/services/daily_pronunciation_service.dart, ../games/games_hub_screen.dart, home_carousel.dart, home_providers.dart, dailyChallengeProvider, _carouselVisible, _checkDay (+10 more)
+Cohesion: 0.12
+Nodes (16): ../../data/models/daily_pronunciation.dart, ../../data/services/daily_pronunciation_service.dart, ../games/games_hub_screen.dart, home_carousel.dart, home_providers.dart, _carouselVisible, _connectionNotice, createState (+8 more)
 
 ### Community 159 - "GamePlayScreen"
 Cohesion: 0.50
@@ -762,20 +767,40 @@ Nodes (4): coyote_controller.dart, coyoteGameInstruction, coyoteSectionMessages,
 Cohesion: 1.00
 Nodes (3): @immutable, AppPalette, ThemeExtension
 
-### Community 162 - "../../../core/api/api_client.dart"
+### Community 162 - "../../data/models/models.dart"
 Cohesion: 0.29
-Nodes (6): ../../../core/api/api_client.dart, _api, getAvatar, getLeaderboard, updateAvatar, UserService
+Nodes (6): ../../core/ai/validador_service.dart, ../../data/models/models.dart, contains, isPracticeWord, mz, sp
 
 ### Community 163 - "Inicio y pronunciación diaria"
 Cohesion: 0.33
 Nodes (5): Contrato del reto, Despliegue, Inicio y pronunciación diaria, Sin conexión, Validación reproducible
+
+### Community 165 - "Arreglo: Top de Estudiantes"
+Cohesion: 0.40
+Nodes (5): Arreglo: Top de Estudiantes, Cambios en archivos:, Problema Anterior, Response Body (Ejemplo Actualizado), Solución Implementada
+
+### Community 166 - "_PronunciationPracticeScreenState"
+Cohesion: 0.40
+Nodes (5): validadorServiceProvider, initState, PronunciationPracticeScreen, _PronunciationPracticeScreenState, _startRecording
+
+### Community 167 - "GET /api/dashboard/visitor/{username}/recent-activities"
+Cohesion: 0.50
+Nodes (4): GET /api/dashboard/visitor/{username}/recent-activities, Path Parameters, RecentActivityDto, Response Body (200 OK)
+
+### Community 168 - "MaterialPageRoute"
+Cohesion: 0.67
+Nodes (3): _openAbout, _buildContent, MaterialPageRoute
+
+### Community 169 - "_dailyCard"
+Cohesion: 0.67
+Nodes (3): homeAccountProvider, practiceWordsProvider, _dailyCard
 
 ## Ambiguous Edges - Review These
 - `Backend por defecto en DigitalOcean` → `Backend por defecto en Koyeb (README)`  [AMBIGUOUS]
   README.md · relation: semantically_similar_to
 
 ## Knowledge Gaps
-- **2022 isolated node(s):** `generatedAt`, `ANIMALS`, `PRONOUNS`, `CLOTHES`, `FOOD` (+2017 more)
+- **2022 isolated node(s):** `Qué es este proyecto`, `Comandos`, `Capas`, `Offline-first (el punto central del proyecto)`, `Ciclo de vida de un juego` (+2017 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **15 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -784,9 +809,9 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **What is the exact relationship between `Backend por defecto en DigitalOcean` and `Backend por defecto en Koyeb (README)`?**
   _Edge tagged AMBIGUOUS (relation: semantically_similar_to) - confidence is low._
-- **Why does `AppDatabase` connect `dictionary_word_delta_test.dart` to `app_database.dart`, `daily_pronunciation_service.dart`, `media_store.dart`, `resource_update_service.dart`, `sync_service.dart`, `dictionary_repository.dart`, `daily_pronunciation_test.dart`, `asset_preloader.dart`, `game_cache_service.dart`?**
-  _High betweenness centrality (0.008) - this node is a cross-community bridge._
-- **What connects `generatedAt`, `ANIMALS`, `PRONOUNS` to the rest of the system?**
+- **Why does `_` connect `_` to `../../data/models/models.dart`, `dashboard_providers.dart`, `totalProgressProvider`, `package:flutter_riverpod/flutter_riverpod.dart`, `dictionary_and_pronunciation_test.dart`, `game_access_screen.dart`?**
+  _High betweenness centrality (0.017) - this node is a cross-community bridge._
+- **What connects `Qué es este proyecto`, `Comandos`, `Capas` to the rest of the system?**
   _2022 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `app_database.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.009852216748768473 - nodes in this community are weakly interconnected._
@@ -795,4 +820,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `game_summary_view.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.041666666666666664 - nodes in this community are weakly interconnected._
 - **Should `word_search_generator.dart` be split into smaller, more focused modules?**
-  _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.046511627906976744 - nodes in this community are weakly interconnected._

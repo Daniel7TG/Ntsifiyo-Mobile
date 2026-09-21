@@ -1,7 +1,8 @@
 {
   ".claude/settings.local.json": {
-    "mtime": 1785457337.732589,
-    "ast_hash": "",
+    "mtime": 1787246173.9913146,
+    "seen": 1790015695.3278732,
+    "ast_hash": "7d530ce33f27afde4416359edf0adf19",
     "semantic_hash": ""
   },
   "android/app/build.gradle.kts": {
@@ -425,14 +426,15 @@
     "semantic_hash": ""
   },
   "pubspec.yaml": {
-    "mtime": 1790013015.664291,
-    "seen": 1790013356.1144924,
-    "ast_hash": "1961d3f498c08dfcbd9036114f60d6a7",
+    "mtime": 1790014312.2485456,
+    "seen": 1790015695.3280506,
+    "ast_hash": "5a6316065369f6405b241cf6f89e1297",
     "semantic_hash": ""
   },
   ".claude/settings.json": {
-    "mtime": 1785294322.37671,
-    "ast_hash": "",
+    "mtime": 1787201026.407409,
+    "seen": 1790015695.3278694,
+    "ast_hash": "8d0b8cd2cddeeba6ace4d2fd1e77577b",
     "semantic_hash": ""
   },
   "android/app/src/main/res/drawable-hdpi/ic_launcher_foreground.png": {
@@ -1395,12 +1397,6 @@
     "ast_hash": "6ff9af8dc7f1820abd65eb51c7dbc928",
     "semantic_hash": ""
   },
-  "assets/icon_foreground.png": {
-    "mtime": 1785552294.1536474,
-    "seen": 1789972666.0677044,
-    "ast_hash": "ca02634ebf917a1a2584eb4adb9a4884",
-    "semantic_hash": ""
-  },
   "assets/map/clinic.webp": {
     "mtime": 1789972384.8317876,
     "seen": 1789972666.0677059,
@@ -1465,12 +1461,6 @@
     "mtime": 1783490695.0933237,
     "seen": 1789972666.0677414,
     "ast_hash": "dd2a4fc92db73f7cb6a93d6f63af645e",
-    "semantic_hash": ""
-  },
-  "assets/svgs/celebration.svg": {
-    "mtime": 1787201026.4154088,
-    "seen": 1789972666.067747,
-    "ast_hash": "0eb1b0606ffee11c1fe53cf7178c37e6",
     "semantic_hash": ""
   },
   "assets/svgs/construction.svg": {
@@ -1653,106 +1643,10 @@
     "ast_hash": "c7793f77c1b1ddb063a6341d61cdc476",
     "semantic_hash": ""
   },
-  "assets/svgs/loading_hourglass.svg": {
-    "mtime": 1787201026.4184089,
-    "seen": 1789972666.0677886,
-    "ast_hash": "3e132a072b58f39a2c60db9a48fc2278",
-    "semantic_hash": ""
-  },
-  "assets/svgs/motivation.svg": {
-    "mtime": 1787201026.4184089,
-    "seen": 1789972666.0677938,
-    "ast_hash": "b42608d85f33214e9116173c8cfb17ee",
-    "semantic_hash": ""
-  },
   "assets/svgs/success_assignment.svg": {
     "mtime": 1787201026.4194088,
     "seen": 1789972666.0678086,
     "ast_hash": "e76936a920861b1ba28647425c6dc90c",
-    "semantic_hash": ""
-  },
-  "assets/svgs/success_game.svg": {
-    "mtime": 1787201026.4194088,
-    "seen": 1789972666.0678098,
-    "ast_hash": "9cfbbcb261dd4da969a31d7059598193",
-    "semantic_hash": ""
-  },
-  "assets/svgs/topic_anecdotes.svg": {
-    "mtime": 1787201026.4194088,
-    "seen": 1789972666.067811,
-    "ast_hash": "b825da1cde91561267a61a9308bb39cf",
-    "semantic_hash": ""
-  },
-  "assets/svgs/topic_animals.svg": {
-    "mtime": 1787201026.4194088,
-    "seen": 1789972666.0678127,
-    "ast_hash": "cc8081a6e9a22ed813ad1754206539a6",
-    "semantic_hash": ""
-  },
-  "assets/svgs/topic_body_parts.svg": {
-    "mtime": 1787201026.4194088,
-    "seen": 1789972666.0678139,
-    "ast_hash": "7a36f909dc8523ffabc8d16b35da2cd1",
-    "semantic_hash": ""
-  },
-  "assets/svgs/topic_clothes.svg": {
-    "mtime": 1787201026.4194088,
-    "seen": 1789972666.067815,
-    "ast_hash": "46ad535a0b04bf1cc2978a12c9fc50fd",
-    "semantic_hash": ""
-  },
-  "assets/svgs/topic_colors.svg": {
-    "mtime": 1787201026.4194088,
-    "seen": 1789972666.0678165,
-    "ast_hash": "8bb71e45959d4b002d1d74f9dc4f867c",
-    "semantic_hash": ""
-  },
-  "assets/svgs/topic_five_senses.svg": {
-    "mtime": 1787201026.4204087,
-    "seen": 1789972666.0678177,
-    "ast_hash": "f1346766bca7faea42f68f328b3c1d28",
-    "semantic_hash": ""
-  },
-  "assets/svgs/topic_food.svg": {
-    "mtime": 1787201026.4204087,
-    "seen": 1789972666.067819,
-    "ast_hash": "e15a57c907dd93360f8f3ace111796c2",
-    "semantic_hash": ""
-  },
-  "assets/svgs/topic_fruits.svg": {
-    "mtime": 1787201026.4204087,
-    "seen": 1789972666.06782,
-    "ast_hash": "4b7e0d509a27058df23f7a5100e294b0",
-    "semantic_hash": ""
-  },
-  "assets/svgs/topic_greetings.svg": {
-    "mtime": 1787201026.4204087,
-    "seen": 1789972666.0678215,
-    "ast_hash": "851dfd327bd7ce22ec6aab645248c514",
-    "semantic_hash": ""
-  },
-  "assets/svgs/topic_legends.svg": {
-    "mtime": 1787201026.4204087,
-    "seen": 1789972666.0678227,
-    "ast_hash": "b5a13e7cefa2ce8b5294b882ac2c1b65",
-    "semantic_hash": ""
-  },
-  "assets/svgs/topic_pronouns.svg": {
-    "mtime": 1787201026.4204087,
-    "seen": 1789972666.0678241,
-    "ast_hash": "aa3a376a30559630be7f2daa20720a4d",
-    "semantic_hash": ""
-  },
-  "assets/svgs/topic_songs.svg": {
-    "mtime": 1787201026.4214087,
-    "seen": 1789972666.067825,
-    "ast_hash": "a6257fe26944ebdc732e3204f0695cc0",
-    "semantic_hash": ""
-  },
-  "assets/svgs/topic_vowels.svg": {
-    "mtime": 1787201026.4214087,
-    "seen": 1789972666.0678265,
-    "ast_hash": "a658983a8b69f9382a26e76b865986cd",
     "semantic_hash": ""
   },
   "assets/svgs/warning.svg": {
@@ -2638,9 +2532,9 @@
     "semantic_hash": ""
   },
   "lib/features/explore/explore_hub_screen.dart": {
-    "mtime": 1788067738.464643,
-    "seen": 1789972666.0672948,
-    "ast_hash": "aa490b1014a11cb6f62d50b1da545039",
+    "mtime": 1790014292.1336517,
+    "seen": 1790015695.3279457,
+    "ast_hash": "00bbd731cd0eac64de5068b321741ba2",
     "semantic_hash": ""
   },
   "lib/features/profile/profile_screen.dart": {
@@ -2671,24 +2565,6 @@
     "mtime": 1785521626.6992424,
     "seen": 1789972666.067352,
     "ast_hash": "8259d2d39758f20e30dfaebe6b805262",
-    "semantic_hash": ""
-  },
-  "assets/svgs/camino/nodo_actual.svg": {
-    "mtime": 1785537909.9210682,
-    "seen": 1789972666.067743,
-    "ast_hash": "3e92b329a477b7aa1a5cda38870bd7ca",
-    "semantic_hash": ""
-  },
-  "assets/svgs/camino/nodo_bloqueado.svg": {
-    "mtime": 1785537909.9225798,
-    "seen": 1789972666.0677445,
-    "ast_hash": "a93c4c143393ad983dfb03e624a0b9bf",
-    "semantic_hash": ""
-  },
-  "assets/svgs/camino/nodo_completado.svg": {
-    "mtime": 1785537909.9241245,
-    "seen": 1789972666.0677457,
-    "ast_hash": "76a96de7ff44deee230844da1189f992",
     "semantic_hash": ""
   },
   "assets/svgs/medallas/medalla_bronce.svg": {
@@ -3021,24 +2897,6 @@
     "ast_hash": "b76ab7d22066ca20fc5714a19da7c156",
     "semantic_hash": ""
   },
-  "assets/coyote/animations/thinking.webm": {
-    "mtime": 1783320078.0488865,
-    "seen": 1789972666.0680156,
-    "ast_hash": "5f4d5c2cd5469f8e4e0735540abd8d85",
-    "semantic_hash": ""
-  },
-  "assets/coyote/animations/waiting.webm": {
-    "mtime": 1783319972.6180513,
-    "seen": 1789972666.0680165,
-    "ast_hash": "67d4f713249ac6e8885064babe32666a",
-    "semantic_hash": ""
-  },
-  "assets/coyote/animations/walking.webm": {
-    "mtime": 1785479196.4110758,
-    "seen": 1789972666.0680172,
-    "ast_hash": "b2b3495beb8864e87d0fedba916c4cf0",
-    "semantic_hash": ""
-  },
   "brain_scratch/test_av1.mp4": {
     "mtime": 1785477942.4626775,
     "seen": 1789972666.0681744,
@@ -3053,12 +2911,14 @@
   },
   ".codex/hooks.json": {
     "mtime": 1785973213.7463403,
-    "ast_hash": "",
+    "seen": 1790015695.3278754,
+    "ast_hash": "62620bbe38c1a78aef63576fff37408a",
     "semantic_hash": ""
   },
   "assets/modelo/centroides_y_config.json": {
-    "mtime": 1786393459.8428078,
-    "ast_hash": "",
+    "mtime": 1789972580.0,
+    "seen": 1790015695.3278902,
+    "ast_hash": "46438739d6df103d0c7b5cfed3a5924f",
     "semantic_hash": ""
   },
   "lib/app/avatar_config.dart": {
@@ -3443,30 +3303,6 @@
     "mtime": 1785571392.9302192,
     "seen": 1789972666.0674746,
     "ast_hash": "bdc3fc734c1c8e57202f6411a9b5fbeb",
-    "semantic_hash": ""
-  },
-  "assets/explore/anecdotas.png": {
-    "mtime": 1785576814.9659853,
-    "seen": 1789972666.067699,
-    "ast_hash": "c3913a7ea060878a6f2051059479965f",
-    "semantic_hash": ""
-  },
-  "assets/explore/map.png": {
-    "mtime": 1785576814.9615583,
-    "seen": 1789972666.0677004,
-    "ast_hash": "5bc6f3f1f8b2e32d54094f46a696b563",
-    "semantic_hash": ""
-  },
-  "assets/explore/pronunciacion.png": {
-    "mtime": 1785648682.9704545,
-    "seen": 1789972666.0677016,
-    "ast_hash": "4372782b1854caf17b12a7055bca72e9",
-    "semantic_hash": ""
-  },
-  "assets/svgs/diccionario/topic_numeros.svg": {
-    "mtime": 1785645886.4089034,
-    "seen": 1789972666.0677605,
-    "ast_hash": "312693a1ee7e772e67e38fd580812e6e",
     "semantic_hash": ""
   },
   "brain_scratch/test_num_0.webp": {
@@ -4310,9 +4146,9 @@
     "semantic_hash": ""
   },
   "scripts/upload_numbers.py": {
-    "mtime": 1787171758.5969315,
-    "seen": 1789972666.067384,
-    "ast_hash": "6e8a6948dcbbec70d34c3f4c9ab4e267",
+    "mtime": 1790014306.271577,
+    "seen": 1790015695.3280153,
+    "ast_hash": "e7d0f1bd60a3836dfa6b87394ab1d430",
     "semantic_hash": ""
   },
   "test/dictionary_bundle_overlay_test.dart": {
@@ -4397,252 +4233,6 @@
     "mtime": 1787248445.9964914,
     "seen": 1789972666.0674138,
     "ast_hash": "8965a97c77cceb81138ad71330437b1c",
-    "semantic_hash": ""
-  },
-  "assets/numbers/ESTILO.md": {
-    "mtime": 1787167073.445716,
-    "seen": 1789972666.0674179,
-    "ast_hash": "ac964ee11cdef6a9978b89f8f1184241",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_0.png": {
-    "mtime": 1787202711.2420619,
-    "seen": 1789972666.0677185,
-    "ast_hash": "2debf1357a310c4297f2d7f2a8873c05",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_1.png": {
-    "mtime": 1787202801.2559962,
-    "seen": 1789972666.0677197,
-    "ast_hash": "5580c986aadb6f68b4208c70ca607cf4",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_10.png": {
-    "mtime": 1787459493.0337608,
-    "seen": 1789972666.0677211,
-    "ast_hash": "cf00eda51d8a76b9ffb0f3a3216148aa",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_100.png": {
-    "mtime": 1787520969.6073227,
-    "seen": 1789972666.0677226,
-    "ast_hash": "794881eefdd6b91ecbcdcfe021c24461",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_2.png": {
-    "mtime": 1787202923.407478,
-    "seen": 1789972666.0677235,
-    "ast_hash": "bec680293a36223157f0dca6793e3920",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_20.png": {
-    "mtime": 1787459493.0351274,
-    "seen": 1789972666.0677247,
-    "ast_hash": "cad4b63b03069b5900ae4644a0ea49fd",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_3.png": {
-    "mtime": 1787203049.4388423,
-    "seen": 1789972666.067726,
-    "ast_hash": "042adec2308a3dfd106e7d79fb789829",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_30.png": {
-    "mtime": 1787170735.9429193,
-    "seen": 1789972666.0677269,
-    "ast_hash": "aa7480af0c3ff29bf43d84002ce360cf",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_4.png": {
-    "mtime": 1787203640.3736043,
-    "seen": 1789972666.0677278,
-    "ast_hash": "8cbcb1f47b397919c92bac6bd05b4df9",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_40.png": {
-    "mtime": 1787459493.0365317,
-    "seen": 1789972666.0677292,
-    "ast_hash": "536a8c69505dbb86617f7d648f9899f7",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_5.png": {
-    "mtime": 1787203787.8224652,
-    "seen": 1789972666.0677304,
-    "ast_hash": "1d0b8b00d938376e5b9373ea0942f418",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_50.png": {
-    "mtime": 1787459493.0377197,
-    "seen": 1789972666.0677314,
-    "ast_hash": "3b4708e0cc005510d3800ca08d6c4793",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_6.png": {
-    "mtime": 1787459493.0320106,
-    "seen": 1789972666.0677326,
-    "ast_hash": "fbc5d5271261a6e706d66012651879aa",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_60.png": {
-    "mtime": 1787459493.0389035,
-    "seen": 1789972666.0677338,
-    "ast_hash": "738e550e65cf113d4f3d90514d52bb7e",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_7.png": {
-    "mtime": 1787204078.0941734,
-    "seen": 1789972666.0677347,
-    "ast_hash": "63a8feb41dd24329cb72e4c04112b099",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_70.png": {
-    "mtime": 1787171025.2259638,
-    "seen": 1789972666.067736,
-    "ast_hash": "a5b1f4334f77e9dec3174b271e12ec66",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_8.png": {
-    "mtime": 1787204366.545933,
-    "seen": 1789972666.0677369,
-    "ast_hash": "de3a29884a82666bf6ed187a2f9ddd45",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_80.png": {
-    "mtime": 1787520969.6042213,
-    "seen": 1789972666.0677378,
-    "ast_hash": "523dc445785cb485bd26c84bbd801cfa",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_9.png": {
-    "mtime": 1787204523.2636015,
-    "seen": 1789972666.0677392,
-    "ast_hash": "6a3c0912f6b4638b03480c38064e4dfd",
-    "semantic_hash": ""
-  },
-  "assets/numbers/number_90.png": {
-    "mtime": 1787520969.6060562,
-    "seen": 1789972666.0677402,
-    "ast_hash": "ad684148cf63008d9192425aefc60099",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_0.mp3": {
-    "mtime": 1787171724.3863087,
-    "seen": 1789972666.0681589,
-    "ast_hash": "d902a1433f30ddc936b7bb99b5d47f49",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_1.mp3": {
-    "mtime": 1787171724.435308,
-    "seen": 1789972666.0681598,
-    "ast_hash": "5e87f150253ee98caff7abef354cb823",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_10.mp3": {
-    "mtime": 1787171724.8753033,
-    "seen": 1789972666.0681605,
-    "ast_hash": "0cffc7769faf321a54eef08f4b297535",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_100.mp3": {
-    "mtime": 1787171725.351298,
-    "seen": 1789972666.068161,
-    "ast_hash": "668923926bbe326b726fc91c192c8357",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_2.mp3": {
-    "mtime": 1787171724.4853075,
-    "seen": 1789972666.0681617,
-    "ast_hash": "c9136099c96bc3a522248524018dd07b",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_20.mp3": {
-    "mtime": 1787171724.9233027,
-    "seen": 1789972666.0681624,
-    "ast_hash": "9b92edbc3804499b18f29c3919e9bb20",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_3.mp3": {
-    "mtime": 1787171724.530307,
-    "seen": 1789972666.0681634,
-    "ast_hash": "b11dcf48f6aff3403cfc3b4aac4f17e6",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_30.mp3": {
-    "mtime": 1787171724.983302,
-    "seen": 1789972666.068164,
-    "ast_hash": "f1493cdb5d0911b57edffc15616ae920",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_4.mp3": {
-    "mtime": 1787171724.5813065,
-    "seen": 1789972666.0681648,
-    "ast_hash": "a0f6eb7cf0e905e4558f34a681eb29dc",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_40.mp3": {
-    "mtime": 1787171725.0323014,
-    "seen": 1789972666.0681655,
-    "ast_hash": "12ff0018174971ae9e5bbf2583a25662",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_5.mp3": {
-    "mtime": 1787171724.6323059,
-    "seen": 1789972666.0681665,
-    "ast_hash": "334e26aa0c4c1052330b1b877a87db4e",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_50.mp3": {
-    "mtime": 1787171725.084301,
-    "seen": 1789972666.0681674,
-    "ast_hash": "731ac207f1a4a4956bdf9eeb1d86a06d",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_6.mp3": {
-    "mtime": 1787171724.6813054,
-    "seen": 1789972666.068168,
-    "ast_hash": "c753d6a00bcac1f416beab7fc38eff9f",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_60.mp3": {
-    "mtime": 1787171725.1343005,
-    "seen": 1789972666.0681686,
-    "ast_hash": "d638372d5550c6335a1a24cf14020fa0",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_7.mp3": {
-    "mtime": 1787171724.7293048,
-    "seen": 1789972666.0681694,
-    "ast_hash": "9239dd378fbd32f9d121a236704d7a86",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_70.mp3": {
-    "mtime": 1787171725.1872997,
-    "seen": 1789972666.0681705,
-    "ast_hash": "c23d9e64c78cb783600b6bfcc29987c1",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_8.mp3": {
-    "mtime": 1787171724.7793043,
-    "seen": 1789972666.0681713,
-    "ast_hash": "c85ef9e7459aef6efdc12ac10f6b4431",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_80.mp3": {
-    "mtime": 1787171725.2402992,
-    "seen": 1789972666.068172,
-    "ast_hash": "c4fdbf523e5e7ce1ca161ec00eafe808",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_9.mp3": {
-    "mtime": 1787171724.8273036,
-    "seen": 1789972666.0681725,
-    "ast_hash": "c90f733f48863c9595ef5bba7020fbfa",
-    "semantic_hash": ""
-  },
-  "assets/numbers/audio/number_90.mp3": {
-    "mtime": 1787171725.2972987,
-    "seen": 1789972666.0681734,
-    "ast_hash": "9b830c03fef5db7ddee3aaf78e77880f",
     "semantic_hash": ""
   },
   "prototypes/inicio/prototype.js": {
@@ -4748,9 +4338,9 @@
     "semantic_hash": ""
   },
   "lib/features/home/home_screen.dart": {
-    "mtime": 1790011627.7743728,
-    "seen": 1790011798.3667421,
-    "ast_hash": "106fdb6a28c991a476aade515c867764",
+    "mtime": 1790014300.5896068,
+    "seen": 1790015695.3279665,
+    "ast_hash": "8bfabf741df227358a29fd3e543e0fd8",
     "semantic_hash": ""
   },
   "lib/features/pronunciation/practice_words.dart": {
@@ -4766,9 +4356,9 @@
     "semantic_hash": ""
   },
   "test/home_behavior_test.dart": {
-    "mtime": 1790010604.481866,
-    "seen": 1790010610.0574343,
-    "ast_hash": "72cb6d88e8e380dfcd5bd8d1e0f900b1",
+    "mtime": 1790014350.8643472,
+    "seen": 1790015695.3280246,
+    "ast_hash": "920a286cd01a30df0dda16dfa21e8f75",
     "semantic_hash": ""
   },
   "test/home_screen_test.dart": {
@@ -4787,36 +4377,6 @@
     "mtime": 1790008586.7794147,
     "seen": 1790010610.0579824,
     "ast_hash": "f95333f3ad4ccfbdbc901c840e8d6ddb",
-    "semantic_hash": ""
-  },
-  "assets/home/diccionario.png": {
-    "mtime": 1790009430.1646128,
-    "seen": 1790010610.0647218,
-    "ast_hash": "4aec4793cadb6b946470ad07cac0453a",
-    "semantic_hash": ""
-  },
-  "assets/home/historias.png": {
-    "mtime": 1790009430.1646128,
-    "seen": 1790010610.0647233,
-    "ast_hash": "ca0b6476d66300e8f231c377c5df2e05",
-    "semantic_hash": ""
-  },
-  "assets/home/mapa-juego.png": {
-    "mtime": 1790009430.1646128,
-    "seen": 1790010610.0647295,
-    "ast_hash": "6c76ef466bf499f84f427fe90c187aa3",
-    "semantic_hash": ""
-  },
-  "assets/home/pronunciacion.png": {
-    "mtime": 1790009430.1646128,
-    "seen": 1790010610.064731,
-    "ast_hash": "24e76f27eb5ffcbdbc9033ca8ccfaf06",
-    "semantic_hash": ""
-  },
-  "assets/home/tarea.png": {
-    "mtime": 1790009430.1646128,
-    "seen": 1790010610.064732,
-    "ast_hash": "227e55a5f8f56a13a2ded29d07ca0b09",
     "semantic_hash": ""
   },
   "prototypes/inicio-v2/illustrations-2d/diccionario.png": {
@@ -4841,6 +4401,60 @@
     "mtime": 1789976447.496389,
     "seen": 1790010610.0719485,
     "ast_hash": "227e55a5f8f56a13a2ded29d07ca0b09",
+    "semantic_hash": ""
+  },
+  "prototypes/inicio-v2/demo-data.json": {
+    "mtime": 1789974594.4877634,
+    "seen": 1790015695.3279927,
+    "ast_hash": "ea7ab8971aab4debdc73b8845bb0909e",
+    "semantic_hash": ""
+  },
+  "assets/explore/anecdotas.webp": {
+    "mtime": 1790014277.8277285,
+    "seen": 1790015695.3282146,
+    "ast_hash": "9be6456f3436e9420c18cc8086798aad",
+    "semantic_hash": ""
+  },
+  "assets/explore/map.webp": {
+    "mtime": 1790014277.5787299,
+    "seen": 1790015695.3282154,
+    "ast_hash": "41cc929a745f74a02c74964f9f063d1c",
+    "semantic_hash": ""
+  },
+  "assets/explore/pronunciacion.webp": {
+    "mtime": 1790014278.0587273,
+    "seen": 1790015695.3282158,
+    "ast_hash": "ae56145347e24e0ca8a3cf1139714309",
+    "semantic_hash": ""
+  },
+  "assets/home/diccionario.webp": {
+    "mtime": 1790014278.2157264,
+    "seen": 1790015695.3282163,
+    "ast_hash": "a96f69d2c8df78ea68d0e9b4b0f5e7d7",
+    "semantic_hash": ""
+  },
+  "assets/home/historias.webp": {
+    "mtime": 1790014278.3797257,
+    "seen": 1790015695.3282173,
+    "ast_hash": "d354e99cd02343a007f3cc9f31ed288b",
+    "semantic_hash": ""
+  },
+  "assets/home/mapa-juego.webp": {
+    "mtime": 1790014278.5997243,
+    "seen": 1790015695.3282182,
+    "ast_hash": "87866a571f592b4f7f48c7927dbeecde",
+    "semantic_hash": ""
+  },
+  "assets/home/pronunciacion.webp": {
+    "mtime": 1790014278.7377236,
+    "seen": 1790015695.328219,
+    "ast_hash": "016f204bfc375ce95d00f91c449899e4",
+    "semantic_hash": ""
+  },
+  "assets/home/tarea.webp": {
+    "mtime": 1790014278.9067228,
+    "seen": 1790015695.3282194,
+    "ast_hash": "78108ab1ccb210c6517741d24623e715",
     "semantic_hash": ""
   }
 }
