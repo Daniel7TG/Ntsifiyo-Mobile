@@ -64,7 +64,7 @@ class GameCacheService {
 
   /// Ids de los juegos compilados en `assets/games/manifest.json` — el
   /// universo cerrado sobre el que se calcula el progreso del mapa (ver
-  /// CLAUDE.md, «Camino de aprendizaje»/mapa). Un juego que llegue después
+  /// «Camino de aprendizaje»/mapa). Un juego que llegue después
   /// por `GET /api/catalog/updates` se cachea, se lista y se juega igual
   /// desde el panel libre, pero no aparece aquí: si el mapa contara el
   /// catálogo vivo, publicar contenido nuevo haría *retroceder* el anillo de

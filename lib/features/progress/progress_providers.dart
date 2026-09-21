@@ -107,8 +107,8 @@ ProgressSnapshot computeProgressSnapshot({
 }
 
 /// Foto del progreso local: catálogo cacheado ∩ juegos compilados en el
-/// bundle, más las partidas terminadas. El backend no expone progreso (ver
-/// CLAUDE.md), así que todo esto es inferencia del cliente sobre
+/// bundle, más las partidas terminadas. El backend no expone progreso,
+/// así que todo esto es inferencia del cliente sobre
 /// `CachedGames` + `CompletedGames` (`computeProgressSnapshot`).
 final progressSnapshotProvider =
     FutureProvider<ProgressSnapshot>((ref) async {

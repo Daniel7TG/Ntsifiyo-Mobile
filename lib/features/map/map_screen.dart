@@ -27,7 +27,7 @@ Future<void> enterMapChrome() => enterImmersiveLandscape();
 Future<void> exitMapChrome() => exitImmersiveLandscape();
 
 /// Mapa interactivo por zonas, a pantalla completa y en horizontal. El mapa
-/// es *la* progresión de la app (ver CLAUDE.md): cada zona lleva un anillo
+/// es *la* progresión de la app: cada zona lleva un anillo
 /// con el porcentaje de estrellas ganadas sobre las posibles
 /// (`zoneProgressProvider`), calculado sobre un universo cerrado — solo los
 /// juegos compilados en `assets/games/manifest.json`

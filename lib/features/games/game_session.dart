@@ -173,7 +173,7 @@ class GameSessionController extends Notifier<GameSession?> {
   }
 
   /// Registra el juego en el progreso local del mapa. El backend no expone
-  /// progreso por tema (ver CLAUDE.md); esta tabla es una inferencia del
+  /// progreso por tema; esta tabla es una inferencia del
   /// cliente a partir del `topic` que quedó guardado en `CachedGames` al
   /// iniciar la partida.
   Future<void> _markCompleted(GameSession session, GameOutcome outcome) async {

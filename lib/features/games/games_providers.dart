@@ -42,7 +42,7 @@ final activitiesByTypeProvider = FutureProvider.autoDispose
 /// (`progress_providers.dart`), esto **no** se recorta a
 /// `GameCacheService.bundleGameIds()`: el panel es acceso libre y crece con
 /// cada juego que llegue por `GET /api/catalog/updates`, sin entrar nunca en
-/// ninguna zona ni mover ningún anillo (ver CLAUDE.md). Una sola lectura de
+/// ninguna zona ni mover ningún anillo. Una sola lectura de
 /// `CachedGames`, agrupada en memoria.
 final gamesByTypeProvider =
     FutureProvider.autoDispose<Map<String, List<GameSummaryDto>>>((ref) async {

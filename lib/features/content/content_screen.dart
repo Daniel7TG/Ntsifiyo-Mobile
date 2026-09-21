@@ -110,7 +110,7 @@ class _MediaListState extends ConsumerState<_MediaList> {
   bool _loadingMore = false;
   // true en cuanto una página (la primera o una siguiente) vuelve con menos
   // de mediaPageSize elementos: el backend no informa totalPages, así que
-  // esa es la única señal de "ya no hay más" (ver CLAUDE.md/plan).
+  // esa es la única señal de "ya no hay más".
   bool _exhausted = false;
 
   Future<void> _loadMore() async {
