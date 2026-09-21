@@ -94,13 +94,6 @@ app_expo/
 
 # ------------------------------------------------------------------------------
 # graphify
-# Se versionan graph.json y GRAPH_REPORT.md; el resto es regenerable o local
 # ------------------------------------------------------------------------------
-graphify-out/graph.html
-graphify-out/cache/
-graphify-out/.graphify_*
-graphify-out/memory/
-graphify-out/reflections/
-graphify-out/cost.json
-graphify-out/manifest.json
-graphify-out/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+graphify-out/
+**/graphify-out/
